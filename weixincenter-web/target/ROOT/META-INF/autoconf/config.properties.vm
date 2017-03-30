@@ -1,0 +1,54 @@
+#=====db settings=======
+db.url =${db.url}
+db.username=${db.username}
+db.password=${db.password}
+db.pool.minIdle=${db.pool.minIdle}
+db.pool.maxIdle=${db.pool.maxIdle}
+db.pool.maxActive=${db.pool.maxActive}
+
+log.home  = ${log.home}
+app.name=${app.name}
+
+#===== zk,dubbo sttings =====#
+zk.address = ${zk.address}
+zk.port = ${zk.port}
+export.dubbo.timeout = ${export.dubbo.timeout}
+export.dubbo.version = ${export.dubbo.version}
+consumer.idgen.dubbo.version = ${consumer.idgen.dubbo.version}
+dubbo.retries = ${dubbo.retries}
+consumer.dubbo.timeout = ${consumer.dubbo.timeout}
+consumer.dubbo.check = ${consumer.dubbo.check}
+consumer.user.dubbo.version			= ${consumer.user.dubbo.version}
+
+#======tair settings========
+tair.configServer.main = ${tair.configServer.main}
+tair.configServer.slave = ${tair.configServer.slave}
+tair.groupName.per = ${tair.groupName.per}
+tair.groupName.temp = ${tair.groupName.temp}
+tair.namespace = ${tair.namespace}
+tair.timeout = ${tair.timeout}
+
+#=======tfs settings ==============
+tfs.tair.namespace  = ${tfs.tair.namespace}
+tfs.nsip = ${tfs.nsip}
+
+#===== scheduler settings ========
+wx.sheduler.fan                   = ${wx.sheduler.fan}
+wx.sheduler.fan.subscribe.statis  = ${wx.sheduler.fan.subscribe.statis}
+
+
+###########################mq settings ##########################################
+rocketmq.server.name = ${rocketmq.server.name}
+weixin.consume.subscribe.group = ${weixin.consume.subscribe.group}
+weixin.consume.group.subscribe_or_unsubscribe = ${weixin.consume.group.subscribe_or_unsubscribe}
+weixin.consume.group.subscribe_record = ${weixin.consume.group.subscribe_record}
+weixin.consume.group.subscribe_register = ${weixin.consume.group.subscribe_register}
+
+wx.idgen.subscriberecord.key = ${wx.idgen.subscriberecord.key}
+wx.idgen.subscribe.key = ${wx.idgen.subscribe.key}
+wx.idgen.allocount = ${wx.idgen.allocount}
+
+##############################weixin api settings ########################################
+weixinapi.domain=${weixinapi.domain}
+#wap版本适用的公众号
+wapWeixinAccount=${wapWeixinAccount}

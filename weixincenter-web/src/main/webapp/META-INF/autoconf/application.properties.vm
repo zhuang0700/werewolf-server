@@ -1,0 +1,29 @@
+#============================#
+#====== Global sttings ======#
+#============================#
+
+#page settings dev
+page.pageSize=10
+
+#============================#
+#===== Spring settings ======#
+#============================#
+
+#home page path
+web.view.index=/index
+
+#internal resource view resolver
+web.view.prefix=/WEB-INF/views/
+web.view.suffix=.jsp
+
+#max upload size. 10M=10*1024*1024(B)=10485760 bytes
+web.maxUploadSize=10485760
+
+sys.code=GF
+sys.imagePath=${sys.imagePath}
+
+sys.securityUrl=http://localhost:8180/yihg-gf-admin
+sys.adminIndexUrl=http://localhost:8080/weixincenter-web/adminMain/1_index.shtml
+#sys.basePathUrl=http://www.jielunxiao.com/weixincenter-web
+sys.basePathUrl=${sys.basePathUrl}
+sys.oAuthVisitUserId=25

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <group name="dubbo">
+        <property name="zk.address" defaultValue="192.168.1.202:2181" description="dubbo注册的zookeeper地址"/>
+        <property name="zk.port" defaultValue="-1" description="dubbo服务使用的端口号"/>
+        <property name="export.dubbo.timeout" defaultValue="5000" description="activity提供dubbo服务的默认超时时间"/>
+        <property name="export.dubbo.version" defaultValue="1.0.0.test" description="activity暴露dubbo的版本号"/>
+        <property name="dubbo.retries" defaultValue="0" description="dubbo调用不重试"/>
+    	<property name="consumer.dubbo.timeout" defaultValue="5000" description="dubbo服务的超市时间"/>
+        <property name="consumer.dubbo.check" defaultValue="false" description="启东时是否强依赖其他服务，如果true那么依赖的服务必须先启动；如果false,其他服务可以不存在，但是调用的时候，如果服务依然不存在，则报错"/>
+        <property name="consumer.idgen.dubbo.version" defaultValue="1.0.0.test" description="消费idgen的版本号"/>
+        <property name="consumer.user.dubbo.version" defaultValue="1.0.0.test" description="消费user的版本号"/>
+    </group>
+    
+    <group name="db">
+    	<property name="app.name" defaultValue="weixin" description="应用名称"/>
+        <property name="log.home" defaultValue="/home/admin/logs/weixin" description="activity日志输出目录"/>
+        <property name="db.url"
+                  defaultValue="jdbc:mysql://192.168.1.202:3306/weixincenter?autoReconnect=true&amp;useUnicode=true&amp;characterset=utf8mb4"
+                  description="activity数据库链接url"/>
+        <property name="db.username" defaultValue="root" description="数据库用户名"/>
+        <property name="db.password" defaultValue="123456" description="数据库密码"/>
+        <property name="db.pool.minIdle" defaultValue="5" description="db最小空闲连接数"/>
+        <property name="db.pool.maxIdle" defaultValue="30" description="db最大空闲连接数"/>
+        <property name="db.pool.maxActive" defaultValue="100" description="db最大活跃连接数"/>
+    </group>
+
+    <group name="tair">
+        <property name="tair.groupName.per" defaultValue="group_1" description="image 非持久化tair的namespace"/>
+         <property name="tair.groupName.temp" defaultValue="group_1" description="image 非持久化tair的namespace"/>
+        <property name="tair.timeout" defaultValue="5000" description="image tair超时"/>
+        <property name="tair.configServer.main" defaultValue="192.168.1.209:5198" description="image tair服务器的地址"/>
+        <property name="tair.configServer.slave" defaultValue="192.168.1.209:5198" description="image tair服务器的地址"/>
+    	<property name="tair.namespace" defaultValue="8" description=""></property>
+    </group>
+
+	 <group name="tfs">
+    	<property name="tfs.tair.namespace" defaultValue="16" description=""></property>
+    	<property name="tfs.nsip" defaultValue="192.168.1.209:9999" description=""></property>
+    </group>
+ 
+    <group name="scheduler">
+    	<property name="wx.sheduler.fan.subscribe.statis" defaultValue="0/3 * * * * ?" description="任务执行时间"></property>
+    	<property name="wx.sheduler.fan" defaultValue="0 0 2 * * ?" description="任务执行时间"></property>
+    </group>
+    
+    <group name="mq">
+        <property name="rocketmq.server.name" defaultValue="192.168.1.206:9876" description="rocketmq的注册中心地址"/>
+        <property name="weixin.consume.subscribe.group" defaultValue="weixin_consumer_subscribe_group" description=""/>
+        <property name="weixin.consume.group.subscribe_or_unsubscribe" defaultValue="weixin_consumer_subscribe_or_unsubscribe_group" description=""/>
+        <property name="weixin.consume.group.subscribe_record" defaultValue="weixin_consumer_subscribe_record_group" description=""/>
+        <property name="weixin.consume.group.subscribe_register" defaultValue="weixin_consumer_subscribe_register" description=""/>
+        <property name="wx.idgen.subscriberecord.key" defaultValue="subscribe_record" description=""/>
+        <property name="wx.idgen.subscribe.key" defaultValue="subscribe" description=""/>
+        <property name="wx.idgen.allocount" defaultValue="20" description=""/>
+    </group>
+   
+    <group name="weixin">
+        <property name="weixinapi.domain" defaultValue="wxapi.test.yimayholiday.com" description="weixincenter服务器的域名"/>
+    	<property name="wapWeixinAccount" defaultValue="" description="wap版本适用的公众号"/>
+    </group>
+    
+    <group name="application">
+        <property name="sys.imagePath" defaultValue="" description="5"/>
+    	<property name="sys.basePathUrl" defaultValue="" description="3"/>
+    </group>
+    
+    <script>
+        <generate template="config.properties.vm" destfile="WEB-INF/config.properties" charset="UTF-8"/>
+        <generate template="logback.xml" destfile="WEB-INF/logback.xml" charset="UTF-8"/>
+        <generate template="application.properties.vm" destfile="WEB-INF/classes/application.properties" charset="UTF-8"/>
+    </script>
+</config>
+

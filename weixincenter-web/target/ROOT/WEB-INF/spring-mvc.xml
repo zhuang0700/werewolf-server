@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd"  default-lazy-init="true">
+
+
+	<description>Spring MVC Configuration dev</description>
+	 <mvc:annotation-driven></mvc:annotation-driven>
+    
+    <context:property-placeholder ignore-unresolvable="true" location="WEB-INF/config.properties" />
+    <context:property-placeholder ignore-unresolvable="true" location="classpath*:/application.properties" />
+	<!-- 使用Annotation自动注册Bean,只扫描@Controller -->
+ 	 <context:component-scan base-package="com.telan.werewolf.**"><!-- base-package 如果多个，用“,”分隔 -->
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>  
+	
+
+	<!-- 设置请求映射编码，解决@ResponseBody乱码问题 -->
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                    <property name="supportedMediaTypes">
+                        <list>
+                            <value>text/plain;charset=UTF-8</value>
+                        </list>
+                    </property>
+                </bean>
+            </list>
+        </property>
+    </bean>
+    
+	<!--  启动注解,默认的注解映射的支持，org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping -->
+	<mvc:annotation-driven/>
+
+	<!-- 对静态资源文件的访问， 将无法mapping到Controller的path交给default servlet handler处理 -->
+	<mvc:default-servlet-handler/>
+	<!-- 视图文件解析配置 -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"></property>
+	<property name="prefix" value="/WEB-INF/views/"/>
+	<property name="suffix" value=".jsp"/>
+	</bean>
+	
+	<!-- 定义无Controller的path<->view直接映射 -->
+	<mvc:view-controller path="/" view-name="redirect:/index"/>
+
+	
+	<!-- 静态文件（css、js、images）配置不经过DispatchServelet处理 
+	<mvc:resources location="/resources/" mapping="/resources/**" />
+	-->
+	<!-- 定义无Controller的path<->view直接映射
+	<mvc:interceptors>
+		
+		<mvc:interceptor>
+	        	<mvc:mapping path="/**"/>  
+				<bean class="com.yihg.gf.weixin.interceptor.AuthenticationInterceptor">
+					<property name="excludedUrls">  
+						<list>  
+							<value>/**/microshop/**</value>  
+							<value>/**/customer/**</value>  
+							<value>/**/yihgCourse/**</value>  
+							<value>/**/OAuth2/**</value>  
+							<value>/**/URLOAuth2/**</value>  
+							<value>/**/OfflineOAuth2/**</value>  
+						</list>  
+					</property>  -->
+					<!-- <property name="noAuthorityUrls">  
+						<list>  
+							<value>/org/getChild</value>  
+							<value>/employee/validationName.json</value>  
+							<value>/security/nopower</value>
+							<value>/</value>
+						</list>  
+					</property>  -->
+				<!-- </bean>
+		</mvc:interceptor>
+	</mvc:interceptors> -->
+	
+	
+	
+	<!-- 上传文件拦截，设置最大上传文件大小   10M=10*1024*1024(B)=10485760 bytes -->  
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
+        <property name="maxUploadSize" value="10485760" />  
+    </bean>
+    
+	<!-- 异常解析器 -->
+	
+	<!-- <bean id="simpleMappingExceptionResolver"
+		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+				<prop
+					key="org.springframework.web.HttpRequestMethodNotSupportedException">common/500</prop>
+			</props>
+		</property>
+	</bean> -->
+	
+</beans>
+

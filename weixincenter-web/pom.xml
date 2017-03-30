@@ -1,0 +1,370 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.telan.werewolf</groupId>
+		<artifactId>werewolf</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<artifactId>weixincenter-web</artifactId>
+	<packaging>war</packaging>
+
+	<name>weixincenter-web Maven Webapp</name>
+
+
+	<properties>
+		<!-- <spring.version>3.2.5.RELEASE</spring.version> -->
+		<javassist.version>3.15.0-GA</javassist.version>
+		<netty.version>3.2.5.Final</netty.version>
+		<httpclient.version>4.1.2</httpclient.version>
+		<!-- <fastjson.version>1.1.41</fastjson.version> -->
+		<zookeeper.version>3.4.6</zookeeper.version>
+		<zkclient.version>0.1</zkclient.version>
+		<jedis.version>2.4.1</jedis.version>
+		<xmemcached.version>1.3.6</xmemcached.version>
+		<jfreechart.version>1.0.13</jfreechart.version>
+		<hessian.version>4.0.7</hessian.version>
+		<servlet.version>2.5</servlet.version>
+		<!-- <validation.version>1.0.0.GA</validation.version> -->
+		<hibernate.validator.version>4.2.0.Final</hibernate.validator.version>
+		<cglib.version>2.2</cglib.version>
+		<freemarker.version>2.3.20</freemarker.version>
+		<jstl.version>1.2</jstl.version>
+		<velocity.version>1.7</velocity.version>
+
+		<!-- Log libs -->
+		<slf4j.version>1.7.5</slf4j.version>
+		<!-- commons -->
+		<commons-logging.version>1.1</commons-logging.version>
+		<commons-validator.version>1.4.0</commons-validator.version>
+		<commons-digester.version>1.8.1</commons-digester.version>
+		<commons-configuration.version>1.9</commons-configuration.version>
+		<commons-beanutils.version>1.8.3</commons-beanutils.version>
+		<commons-fileupload.version>1.3</commons-fileupload.version>
+
+		<commons-httpclient.version>3.1</commons-httpclient.version>
+		<commons-codec.version>1.5</commons-codec.version>
+		<!-- Test libs -->
+		<junit.version>4.10</junit.version>
+		<!-- Build args -->
+		<skip_maven_deploy>false</skip_maven_deploy>
+		<updateReleaseInfo>true</updateReleaseInfo>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<log4j-version>1.2.9</log4j-version>
+	</properties>
+	
+	<dependencies>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.4</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+		</dependency>
+		<!--<dependency>-->
+				<!--<groupId>com.taobao.tair</groupId>-->
+				<!--<artifactId>tair-client</artifactId>-->
+		<!--</dependency>	-->
+		<!--&lt;!&ndash;tfs文件存储 &ndash;&gt;-->
+		<!--<dependency>-->
+			<!--<groupId>com.taobao.common.tfs</groupId>-->
+			<!--<artifactId>common-tfs</artifactId>-->
+			<!--<version>2.1.6</version>-->
+		<!--</dependency>-->
+		<!-- 父项目移入 -->
+		<dependency>
+			<groupId>com.telan.werewolf</groupId>
+			<artifactId>weixincenter-client</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.telan.werewolf</groupId>
+			<artifactId>weixincenter-biz</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aspects</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>${javassist.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>${httpclient.version}</version>
+		</dependency>
+		<!-- <dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+		</dependency> -->
+		<dependency>
+			<groupId>org.apache.zookeeper</groupId>
+			<artifactId>zookeeper</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.googlecode.xmemcached</groupId>
+			<artifactId>xmemcached</artifactId>
+			<version>${xmemcached.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>jstl</groupId>
+			<artifactId>jstl</artifactId>
+			<version>${jstl.version}</version>
+		</dependency>
+		<!-- Log libs -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j-version}</version>
+		</dependency>
+
+		<!-- common -->
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>${commons-logging.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-validator</groupId>
+			<artifactId>commons-validator</artifactId>
+			<version>${commons-validator.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>${commons-fileupload.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>${commons-codec.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-digester</groupId>
+			<artifactId>commons-digester</artifactId>
+			<version>${commons-digester.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-configuration</groupId>
+			<artifactId>commons-configuration</artifactId>
+			<version>${commons-configuration.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>${commons-beanutils.version}</version>
+		</dependency>
+		<!-- end common -->
+		<!-- Test libs -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!--&lt;!&ndash; 图片服务器 &ndash;&gt;-->
+		<!--<dependency>-->
+			<!--<groupId>org.csource</groupId>-->
+			<!--<artifactId>fastdfs-client</artifactId>-->
+			<!--<version>1.24.1</version>-->
+		<!--</dependency>-->
+
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib-nodep</artifactId>
+			<version>${cglib.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>dubbo</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework</groupId>
+					<artifactId>spring</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- <dependency>
+			<groupId>net.sf.json-lib</groupId>
+			<artifactId>json-lib-ext-spring</artifactId>
+			<version>1.0.2</version>
+		</dependency> -->
+
+		<!--&lt;!&ndash; editor &ndash;&gt;-->
+		<!--<dependency>-->
+			<!--<groupId>com.baidu</groupId>-->
+			<!--<artifactId>ueditor</artifactId>-->
+			<!--<version>1.1.1</version>-->
+		<!--</dependency>-->
+		<!--<dependency>-->
+			<!--<groupId>com.baidu</groupId>-->
+			<!--<artifactId>uedtior-json</artifactId>-->
+			<!--<version>1.0</version>-->
+		<!--</dependency>-->
+
+		<dependency>
+			<groupId>itext</groupId>
+			<artifactId>itext</artifactId>
+			<version>1.3.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>1.6.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>fluent-hc</artifactId>
+			<version>4.3.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient-cache</artifactId>
+			<version>4.3.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>4.3.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<version>4.3.4</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.zxing</groupId>
+			<artifactId>core</artifactId>
+			<version>2.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.thoughtworks.xstream</groupId>
+			<artifactId>xstream</artifactId>
+			<version>1.3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+		</dependency>
+	</dependencies>
+	<build>
+		<finalName>ROOT</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+					<encoding>UTF-8</encoding>
+					<showWarnings>true</showWarnings>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<archiveClasses>false</archiveClasses>
+					<outputDirectory>./target/</outputDirectory>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
