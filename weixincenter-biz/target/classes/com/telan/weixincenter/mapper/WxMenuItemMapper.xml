@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyweekend.weixincenter.mapper.base.WxMenuItemMapper" >
+  <resultMap id="BaseResultMap" type="com.telan.weixincenter.domain.base.WxMenuItemDO" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="menu_id" property="menuId" jdbcType="BIGINT" />
+    <result column="item_name" property="itemName" jdbcType="VARCHAR" />
+    <result column="material_id" property="materialId" jdbcType="BIGINT" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="material_name" property="materialName" jdbcType="VARCHAR" />
+    <result column="material_type_id" property="materialTypeId" jdbcType="INTEGER" />
+    <result column="material_url" property="materialUrl" jdbcType="VARCHAR" />
+    <result column="activity_id" property="activityId" jdbcType="BIGINT" />
+    <result column="scratchcard_name" property="scratchcardName" jdbcType="VARCHAR" />
+    <result column="text" property="text" jdbcType="VARCHAR" />
+    <result column="gmt_created" property="gmtCreated" jdbcType="TIMESTAMP" />
+	<result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, menu_id, item_name, material_id, content, material_name, material_type_id, 
+    material_url, activity_id, scratchcard_name, text,gmt_created,gmt_modified
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from wx_menu_item
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <select id="queryItemListByMenuId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+   	select * from wx_menu_item as item where item.menu_id=#{menuId} 
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from wx_menu_item
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  
+  <delete id="deleteByMenuId" parameterType="java.lang.Long" >
+    delete from wx_menu_item
+    where menu_id = #{menuId}
+  </delete>
+  
+  <insert id="insert" parameterType="com.telan.weixincenter.domain.base.WxMenuItemDO" >
+    insert into wx_menu_item ( menu_id, item_name, 
+      material_id, content, material_name, 
+      material_type_id, material_url, activity_id, 
+      scratchcard_name, text,gmt_created,gmt_modified)
+    values (#{menuId,jdbcType=BIGINT}, #{itemName,jdbcType=VARCHAR}, 
+      #{materialId,jdbcType=BIGINT}, #{content,jdbcType=VARCHAR}, #{materialName,jdbcType=VARCHAR}, 
+      #{materialTypeId,jdbcType=INTEGER}, #{materialUrl,jdbcType=VARCHAR}, #{activityId,jdbcType=BIGINT}, 
+      #{scratchcardName,jdbcType=VARCHAR}, #{text,jdbcType=VARCHAR},now(),now())
+  </insert>
+  <insert id="insertSelective" parameterType="com.telan.weixincenter.domain.base.WxMenuItemDO" >
+    insert into wx_menu_item
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="menuId != null" >
+        menu_id,
+      </if>
+      <if test="itemName != null" >
+        item_name,
+      </if>
+      <if test="materialId != null" >
+        material_id,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="materialName != null" >
+        material_name,
+      </if>
+      <if test="materialTypeId != null" >
+        material_type_id,
+      </if>
+      <if test="materialUrl != null" >
+        material_url,
+      </if>
+      <if test="activityId != null" >
+        activity_id,
+      </if>
+      <if test="scratchcardName != null" >
+        scratchcard_name,
+      </if>
+      <if test="text != null" >
+        text,
+      </if>
+      gmt_created,
+      gmt_modified
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="menuId != null" >
+        #{menuId,jdbcType=BIGINT},
+      </if>
+      <if test="itemName != null" >
+        #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="materialId != null" >
+        #{materialId,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="materialName != null" >
+        #{materialName,jdbcType=VARCHAR},
+      </if>
+      <if test="materialTypeId != null" >
+        #{materialTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="materialUrl != null" >
+        #{materialUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="activityId != null" >
+        #{activityId,jdbcType=BIGINT},
+      </if>
+      <if test="scratchcardName != null" >
+        #{scratchcardName,jdbcType=VARCHAR},
+      </if>
+      <if test="text != null" >
+        #{text,jdbcType=VARCHAR},
+      </if>
+      now(),now()
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.telan.weixincenter.domain.base.WxMenuItemDO" >
+    update wx_menu_item
+    <set >
+      <if test="menuId != null" >
+        menu_id = #{menuId,jdbcType=BIGINT},
+      </if>
+      <if test="itemName != null" >
+        item_name = #{itemName,jdbcType=VARCHAR},
+      </if>
+      <if test="materialId != 0" >
+        material_id = #{materialId,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="materialName != null" >
+        material_name = #{materialName,jdbcType=VARCHAR},
+      </if>
+      <if test="materialTypeId != null" >
+        material_type_id = #{materialTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="materialUrl != null" >
+        material_url = #{materialUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="activityId != null" >
+        activity_id = #{activityId,jdbcType=BIGINT},
+      </if>
+      <if test="scratchcardName != null" >
+        scratchcard_name = #{scratchcardName,jdbcType=VARCHAR},
+      </if>
+      <if test="text != null" >
+        text = #{text,jdbcType=VARCHAR},
+      </if>
+      gmt_modified = now()
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.telan.weixincenter.domain.base.WxMenuItemDO" >
+    update wx_menu_item
+    set menu_id = #{menuId,jdbcType=BIGINT},
+      item_name = #{itemName,jdbcType=VARCHAR},
+      material_id = #{materialId,jdbcType=BIGINT},
+      content = #{content,jdbcType=VARCHAR},
+      material_name = #{materialName,jdbcType=VARCHAR},
+      material_type_id = #{materialTypeId,jdbcType=INTEGER},
+      material_url = #{materialUrl,jdbcType=VARCHAR},
+      activity_id = #{activityId,jdbcType=BIGINT},
+      scratchcard_name = #{scratchcardName,jdbcType=VARCHAR},
+      text = #{text,jdbcType=VARCHAR},gmt_modified = now()
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  
+  	<select id="queryWxItemInfo"  resultMap="BaseResultMap">
+	   select * from wx_menu_item where menu_id=(select id from wx_menu where wx_merchant_id=#{wxMerchantId}
+	    <if test="evenkeyNum == 10 ||evenkeyNum == 11">limit 1) limit 0,1</if>
+	    <if test="evenkeyNum == 12">limit 1) limit 1,1</if>
+	    <if test="evenkeyNum == 13">limit 1) limit 2,1</if>
+	    <if test="evenkeyNum == 14">limit 1) limit 3,1</if>
+	    <if test="evenkeyNum == 15">limit 1) limit 4,1</if>
+	    
+	    <if test="evenkeyNum == 20 ||evenkeyNum == 21">limit 1,1) limit 0,1</if>
+	    <if test="evenkeyNum == 22">limit 1,1) limit 1,1</if>
+	    <if test="evenkeyNum == 23">limit 1,1) limit 2,1</if>
+	    <if test="evenkeyNum == 24">limit 1,1) limit 3,1</if>
+	    <if test="evenkeyNum == 25">limit 1,1) limit 4,1</if>
+	    
+	    <if test="evenkeyNum == 30 ||evenkeyNum == 31">limit 2,1) limit 0,1</if>
+	    <if test="evenkeyNum == 32">limit 2,1) limit 1,1</if>
+	    <if test="evenkeyNum == 33">limit 2,1) limit 2,1</if>
+	    <if test="evenkeyNum == 34">limit 2,1) limit 3,1</if>
+	    <if test="evenkeyNum == 35">limit 2,1) limit 4,1</if>
+	</select>
+  
+  <!-- 分别查询二级菜单 -->
+	<select id="queryWxItemInfo10" parameterType="int" resultMap="BaseResultMap">
+		select * from wx_menu_item where menu_id=(select menu_id from wx_menu where wx_merchant_id=#{wxMerchantId} limit 1) limit 0,1
+	</select>
+	<select id="queryWxItemInfo11" parameterType="int" resultMap="BaseResultMap">
+	    select * from wx_menu_item where menu_id=(select menu_id from wx_menu where wx_merchant_id=#{wxMerchantId} limit 1) limit 0,1
+	</select>
+	<!--eventKey.equals("12")  查询素材信息根据类型封装给req-->
+	<select id="queryWxItemInfo12" parameterType="int" resultMap="BaseResultMap">
+	    select * from wx_menu_item where menu_id=(select menu_id from wx_menu where wx_merchant_id=#{wxMerchantId} limit 1) limit 1,1
+	</select>
+	<!--  -->
+	<select id="queryWxItemInfo13" parameterType="int" resultMap="BaseResultMap">
+	    select * from wx_menu_item where menu_id=(select menu_id from wx_menu where wx_merchant_id=#{wxMerchantId} limit 1) limit 2,1
+	</select>
+	<!--  -->
+	<select id="queryWxItemInfo14" parameterType="int" resultMap="BaseResultMap">
+	    select * from wx_menu_item where menu_id=(select menu_id from wx_menu where wx_merchant_id=#{wxMerchantId} limit 1) limit 3,1
+	</select>
+	<!--  -->
+	<select id="queryWxItemInfo15" parameterType="int" resultMap="BaseResultMap">
+	    select * from wx_menu_item where menu_id=(select menu_id from wx_menu where wx_merchant_id=#{wxMerchantId} limit 1) limit 4,1
+	</select>
+	<!-- 当EventKey为20的情况下,第三个一级菜单只有一个二级菜单,这时这个二级菜单的顶替一级菜单,sql语句与EventKey为21时相同 -->
+	<select id="queryWxItemInfo20" parameterType="int" resultMap="BaseResultMap">
+	    select * from wx_menu_item where menu_id=(select menu_id from wx_menu where wx_merchant_id=#{wxMerchantId} limit 1,1) limit 0,1
+	</select>
+	<select id="queryWxItemInfo21" parameterType="int" resultMap="BaseResultMap">
+	    select * from wx_menu_item where menu_id=(select menu_id from wx_menu where wx_merchant_id=#{wxMerchantId} limit 1,1) limit 0,1
+	</select>
+	<select id="queryWxItemInfo22" parameterType="int" resultMap="BaseResultMap">
+	    select * from wx_menu_item where menu_id=(select menu_id from wx_menu where wx_merchant_id=#{wxMerchantId} limit 1,1) limit 1,1
+	</select>
+	<select id="queryWxItemInfo23" parameterType="int" resultMap="BaseResultMap">
+	    select * from wx_menu_item where menu_id=(select menu_id from wx_menu where wx_merchant_id=#{wxMerchantId} limit 1,1) limit 2,1
+	</select>
+	<select id="queryWxItemInfo24" parameterType="int" resultMap="BaseResultMap">
+	    select * from wx_menu_item where menu_id=(select menu_id from wx_menu where wx_merchant_id=#{wxMerchantId} limit 1,1) limit 3,1
+	</select>
+	<select id="queryWxItemInfo25" parameterType="int" resultMap="BaseResultMap">
+	    select * from wx_menu_item where menu_id=(select menu_id from wx_menu where wx_merchant_id=#{wxMerchantId} limit 1,1) limit 4,1
+	</select>
+	<!-- 当EventKey为30的情况下,第三个一级菜单只有一个二级菜单,这时这个二级菜单的顶替一级菜单,sql语句与EventKey为31时相同 -->
+	<select id="queryWxItemInfo30" parameterType="int" resultMap="BaseResultMap">
+	    select * from wx_menu_item where menu_id=(select menu_id from wx_menu where wx_merchant_id=#{wxMerchantId} limit 2,1) limit 0,1
+	</select>
+	<select id="queryWxItemInfo31" parameterType="int" resultMap="BaseResultMap">
+	    select * from wx_menu_item where menu_id=(select menu_id from wx_menu where wx_merchant_id=#{wxMerchantId} limit 2,1) limit 0,1
+	</select>
+	<select id="queryWxItemInfo32" parameterType="int" resultMap="BaseResultMap">
+	    select * from wx_menu_item where menu_id=(select menu_id from wx_menu where wx_merchant_id=#{wxMerchantId} limit 2,1) limit 1,1
+	</select>
+	<select id="queryWxItemInfo33" parameterType="int" resultMap="BaseResultMap">
+	    select * from wx_menu_item where menu_id=(select menu_id from wx_menu where wx_merchant_id=#{wxMerchantId} limit 2,1) limit 2,1
+	</select>
+	<select id="queryWxItemInfo34" parameterType="int" resultMap="BaseResultMap">
+	    select * from wx_menu_item where menu_id=(select menu_id from wx_menu where wx_merchant_id=#{wxMerchantId} limit 2,1) limit 3,1
+	</select>
+	<select id="queryWxItemInfo35" parameterType="int" resultMap="BaseResultMap">
+	    select * from wx_menu_item where menu_id=(select menu_id from wx_menu where wx_merchant_id=#{wxMerchantId} limit 2,1) limit 4,1
+	</select>
+  
+</mapper>

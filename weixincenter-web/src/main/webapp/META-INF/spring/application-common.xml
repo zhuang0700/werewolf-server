@@ -34,11 +34,11 @@
 	</bean>
 
 
-	<bean id="weixinApiUrlHolder" class="com.telan.werewolf.core.util.WeixinApiUrlHolder">
+	<bean id="weixinApiUrlHolder" class="com.telan.weixincenter.core.util.WeixinApiUrlHolder">
 		<property name="weixinapiDomain" value="${weixinapi.domain}" />
 	</bean>
 
-	<bean id="weixinApiProxy" class="com.telan.werewolf.core.util.WeixinApiProxy">
+	<bean id="weixinApiProxy" class="com.telan.weixincenter.core.util.WeixinApiProxy">
 	</bean>
 
 

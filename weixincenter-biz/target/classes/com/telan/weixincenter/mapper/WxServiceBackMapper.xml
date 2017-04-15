@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyweekend.weixincenter.mapper.base.WxServiceBackMapper" >
+  <resultMap id="BaseResultMap" type="com.telan.weixincenter.domain.base.WxServiceBackDO" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="back_type" property="backType" jdbcType="INTEGER" />
+    <result column="back_content" property="backContent" jdbcType="INTEGER" />
+    <result column="material_id" property="materialId" jdbcType="BIGINT" />
+    <result column="material_type_id" property="materialTypeId" jdbcType="INTEGER" />
+    <result column="wx_merchant_id" property="wxMerchantId" jdbcType="BIGINT" />
+    <result column="gmt_created" property="gmtCreated" jdbcType="TIMESTAMP" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+    <result column="reserve" property="reserve" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.telan.weixincenter.domain.base.WxServiceBackDO" extends="BaseResultMap" >
+    <result column="back_content" property="backContent" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, back_type, material_id, wx_merchant_id, gmt_created,gmt_modified, material_type_id, reserve
+  </sql>
+  <sql id="Blob_Column_List" >
+    back_content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from wx_service_back
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <select id="queryWxBackByMerchantIdAndBackType" resultMap="ResultMapWithBLOBs"  >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from wx_service_back
+    where wx_merchant_id = #{wxMerchantId} and back_type = #{backType}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from wx_service_back
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.telan.weixincenter.domain.base.WxServiceBackDO" >
+    insert into wx_service_back (id, back_type, material_id, 
+      wx_merchant_id, gmt_created,gmt_modified, material_type_id, 
+      reserve, back_content)
+    values (#{id,jdbcType=INTEGER}, #{backType,jdbcType=INTEGER}, #{materialId,jdbcType=INTEGER}, 
+      #{wxMerchantId,jdbcType=INTEGER}, #{gmt_created,jdbcType=TIMESTAMP},#{gmt_modified,jdbcType=TIMESTAMP}, #{materialTypeId,jdbcType=INTEGER}, 
+      #{reserve,jdbcType=VARCHAR}, #{backContent,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.telan.weixincenter.domain.base.WxServiceBackDO" >
+    insert into wx_service_back
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+
+      <if test="backType != null" >
+        back_type,
+      </if>
+      <if test="materialId != null" >
+        material_id,
+      </if>
+      <if test="wxMerchantId != null" >
+        wx_merchant_id,
+      </if>
+        gmt_created,
+        gmt_modified,
+      <if test="materialTypeId != null" >
+        material_type_id,
+      </if>
+      <if test="reserve != null" >
+        reserve,
+      </if>
+      <if test="backContent != null" >
+        back_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="backType != null" >
+        #{backType,jdbcType=INTEGER},
+      </if>
+      <if test="materialId != null" >
+        #{materialId,jdbcType=BIGINT},
+      </if>
+      <if test="wxMerchantId != null" >
+        #{wxMerchantId,jdbcType=BIGINT},
+      </if>
+      now(),
+      now(),
+      <if test="materialTypeId != null" >
+        #{materialTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="reserve != null" >
+        #{reserve,jdbcType=VARCHAR},
+      </if>
+      <if test="backContent != null" >
+        #{backContent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.telan.weixincenter.domain.base.WxServiceBackDO" >
+    update wx_service_back
+    <set >
+      <if test="backType != null" >
+        back_type = #{backType,jdbcType=INTEGER},
+      </if>
+      <if test="materialId != null" >
+        material_id = #{materialId,jdbcType=BIGINT},
+      </if>
+      <if test="wxMerchantId != null" >
+        wx_merchant_id = #{wxMerchantId,jdbcType=BIGINT},
+      </if>
+        gmt_modified = now(),
+      <if test="materialTypeId != null" >
+        material_type_id = #{materialTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="reserve != null" >
+        reserve = #{reserve,jdbcType=VARCHAR},
+      </if>
+      <if test="backContent != null" >
+        back_content = #{backContent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.telan.weixincenter.domain.base.WxServiceBackDO" >
+    update wx_service_back
+    set back_type = #{backType,jdbcType=INTEGER},
+      material_id = #{materialId,jdbcType=BIGINT},
+      wx_merchant_id = #{wxMerchantId,jdbcType=BIGINT},
+      gmt_modified = now(),
+      material_type_id = #{materialTypeId,jdbcType=INTEGER},
+      reserve = #{reserve,jdbcType=VARCHAR},
+      back_content = #{backContent,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.telan.weixincenter.domain.base.WxServiceBackDO" >
+    update wx_service_back
+    set back_type = #{backType,jdbcType=INTEGER},
+      material_id = #{materialId,jdbcType=BIGINT},
+      wx_merchant_id = #{wxMerchantId,jdbcType=BIGINT},
+      gmt_modified = now(),
+      material_type_id = #{materialTypeId,jdbcType=INTEGER},
+      reserve = #{reserve,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

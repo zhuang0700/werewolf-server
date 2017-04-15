@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyweekend.weixincenter.mapper.base.WxMenuMapper" >
+  <resultMap id="BaseResultMap" type="com.telan.weixincenter.domain.base.WxMenuDO" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="menu_name" property="menuName" jdbcType="VARCHAR" />
+    <result column="wx_merchant_id" property="wxMerchantId" jdbcType="BIGINT" />
+    <result column="material_id" property="materialId" jdbcType="BIGINT" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="gmt_created" property="gmtCreated" jdbcType="TIMESTAMP" />
+	<result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, menu_name, wx_merchant_id, material_id, content, state,gmt_created,gmt_modified
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from wx_menu
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  
+  <select id="findAllWxMenu" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    SELECT * from wx_menu where wx_merchant_id=#{wxMerchantId} order by id asc limit 0,3
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from wx_menu
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.telan.weixincenter.domain.base.WxMenuDO" >
+    insert into wx_menu ( menu_name, wx_merchant_id, 
+      material_id, content, state,gmt_created,gmt_modified
+      )
+    values ( #{menuName,jdbcType=VARCHAR}, #{wxMerchantId,jdbcType=BIGINT}, 
+      #{materialId,jdbcType=BIGINT}, #{content,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER},now(),now()
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.telan.weixincenter.domain.base.WxMenuDO" >
+    insert into wx_menu
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="menuName != null" >
+        menu_name,
+      </if>
+      <if test="wxMerchantId != null" >
+        wx_merchant_id,
+      </if>
+      <if test="materialId != null" >
+        material_id,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      gmt_created,
+      gmt_modified
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="menuName != null" >
+        #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="wxMerchantId != null" >
+        #{wxMerchantId,jdbcType=BIGINT},
+      </if>
+      <if test="materialId != null" >
+        #{materialId,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      now(),now()
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.telan.weixincenter.domain.base.WxMenuDO" >
+    update wx_menu
+    <set >
+      <if test="menuName != null" >
+        menu_name = #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="wxMerchantId != null" >
+        wx_merchant_id = #{wxMerchantId,jdbcType=BIGINT},
+      </if>
+      <if test="materialId != null" >
+        material_id = #{materialId,jdbcType=BIGINT},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      gmt_modified = now()
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.telan.weixincenter.domain.base.WxMenuDO" >
+    update wx_menu
+    set menu_name = #{menuName,jdbcType=VARCHAR},
+      wx_merchant_id = #{wxMerchantId,jdbcType=BIGINT},
+      material_id = #{materialId,jdbcType=BIGINT},
+      content = #{content,jdbcType=VARCHAR},
+      state = #{state,jdbcType=INTEGER},
+      gmt_modified=now()
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

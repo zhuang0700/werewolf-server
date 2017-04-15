@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.joyweekend.weixincenter.mapper.base.WxSubscribeMapper">
+	<resultMap id="BaseResultMap"
+		type="com.telan.weixincenter.domain.base.WxSubscribeDO">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="subscribe" jdbcType="INTEGER" property="subscribe" />
+		<result column="open_id" jdbcType="VARCHAR" property="openId" />
+		<result column="nick_name" jdbcType="VARCHAR" property="nickName" />
+		<result column="sex" jdbcType="VARCHAR" property="sex" />
+		<result column="birthdays" jdbcType="VARCHAR" property="birthdays" />
+		<result column="language" jdbcType="VARCHAR" property="language" />
+		<result column="city" jdbcType="VARCHAR" property="city" />
+		<result column="province" jdbcType="VARCHAR" property="province" />
+		<result column="country" jdbcType="VARCHAR" property="country" />
+		<result column="headimgurl" jdbcType="VARCHAR" property="headimgurl" />
+		<result column="subscribe_time" jdbcType="TIMESTAMP" property="subscribeTime" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="source" jdbcType="INTEGER" property="source" />
+		<result column="channel_id" jdbcType="BIGINT" property="channelId" />
+		<result column="integral" jdbcType="INTEGER" property="integral" />
+		<result column="level" jdbcType="VARCHAR" property="level" />
+		<result column="application_time" jdbcType="TIMESTAMP" property="applicationTime" />
+		<result column="use_time" jdbcType="TIMESTAMP" property="useTime" />
+		<result column="phone_num" jdbcType="VARCHAR" property="phoneNum" />
+		<result column="company_name" jdbcType="VARCHAR" property="companyName" />
+		<result column="vip_num" jdbcType="VARCHAR" property="vipNum" />
+		<result column="vip_name" jdbcType="VARCHAR" property="vipName" />
+		<result column="wx_merchant_id" jdbcType="BIGINT" property="wxMerchantId" />
+		<result column="cancel_attention_time" property="cancelAttentionTime"
+			jdbcType="TIMESTAMP" />
+		<result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated" />
+		<result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+		<result column="user_id" jdbcType="BIGINT" property="userId" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, subscribe, open_id, nick_name, sex, birthdays, language, city,
+		province, country,
+		headimgurl, subscribe_time, remark, source,channel_id, integral, level,
+		application_time, use_time,
+		phone_num, company_name, vip_num, vip_name,
+		wx_merchant_id,cancel_attention_time,gmt_created,gmt_modified,user_id
+	</sql>
+	<sql id="Base_Column_channel_id_List">
+		channel_id
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="long"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from wx_subscribe
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<select id="getSubscribeDO"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from wx_subscribe
+		where open_id = #{openId} and wx_merchant_id = #{wxMerchantId}
+		limit 0 , 1
+	</select>
+	
+	<select id="queryWxSubscribeByUserId" parameterType="java.lang.Long"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from wx_subscribe
+		where user_id = #{userId,jdbcType=BIGINT}
+	</select>
+
+	<select id="getWxSubscribeListByOpenIdAndMerchantId" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from wx_subscribe
+		where open_id = #{fromUserName} and wx_merchant_id = #{wxMerchantId}
+	</select>
+
+	<select id="getWxSubscribeCountByChannelIdAndMerchantId"
+		resultType="java.lang.Long">
+		select
+		COUNT(*)
+		from wx_subscribe
+		where channel_id = #{channelId} and wx_merchant_id = #{wxMerchantId}
+	</select>
+
+	<select id="getSubscribeNumByMerchantIdAndChannelId" resultType="java.lang.Integer">
+		select
+		COUNT(*)
+		from wx_subscribe
+		where wx_merchant_id = #{wxMerchantId} and channel_id = #{channelId} and
+		subscribe = #{subscribe}
+	</select>
+
+	<select id="queryChannelFansListByChannelId" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from wx_subscribe
+		where wx_merchant_id = #{wxMerchantId} and channel_id = #{channelId}
+	</select>
+
+	<select id="queryWxSubscribeByOpenIdAndMerchantId" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_channel_id_List" />
+		from wx_subscribe
+		where wx_merchant_id = #{wxMerchantId} and open_id = #{fromUserName}
+	</select>
+	
+	<select id="getWxSubscribeInfoByOpenId" resultMap="BaseResultMap">
+		select
+		*
+		from wx_subscribe
+		where  open_id = #{openId} limit 1
+	</select>
+
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from wx_subscribe
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="com.telan.weixincenter.domain.base.WxSubscribeDO">
+		insert into wx_subscribe (id, subscribe, open_id,
+		nick_name, sex, birthdays,
+		language, city, province,
+		country, headimgurl, subscribe_time,
+		remark, source, channel_id,integral,
+		level, application_time, use_time,
+		phone_num, company_name, vip_num,
+		vip_name, wx_merchant_id,gmt_created,gmt_modified,user_id)
+		values (#{id,jdbcType=INTEGER}, #{subscribe,jdbcType=INTEGER},
+		#{openId,jdbcType=VARCHAR},
+		#{nickName,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, #{birthdays,jdbcType=VARCHAR},
+		#{language,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR},
+		#{province,jdbcType=VARCHAR},
+		#{country,jdbcType=VARCHAR}, #{headimgurl,jdbcType=VARCHAR}, #{subscribeTime,jdbcType=VARCHAR},
+		#{remark,jdbcType=VARCHAR}, #{source,jdbcType=INTEGER},
+		#{channelId,jdbcType=INTEGER}, #{integral,jdbcType=INTEGER},
+		#{level,jdbcType=VARCHAR}, #{applicationTime,jdbcType=TIMESTAMP},
+		#{useTime,jdbcType=TIMESTAMP},
+		#{phoneNum,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR}, #{vipNum,jdbcType=VARCHAR},
+		#{vipName,jdbcType=VARCHAR},
+		#{wxMerchantId,jdbcType=BIGINT},#{gmtCreated,jdbcType=TIMESTAMP},#{gmtModified,jdbcType=TIMESTAMP},#{userId,jdbcType=BIGINT})
+	</insert>
+	<insert id="insertSelective" parameterType="com.telan.weixincenter.domain.base.WxSubscribeDO">
+		insert into wx_subscribe
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="subscribe != null">
+				subscribe,
+			</if>
+			<if test="openId != null">
+				open_id,
+			</if>
+			<if test="nickName != null">
+				nick_name,
+			</if>
+			<if test="sex != null">
+				sex,
+			</if>
+			<if test="birthdays != null">
+				birthdays,
+			</if>
+			<if test="language != null">
+				language,
+			</if>
+			<if test="city != null">
+				city,
+			</if>
+			<if test="province != null">
+				province,
+			</if>
+			<if test="country != null">
+				country,
+			</if>
+			<if test="headimgurl != null">
+				headimgurl,
+			</if>
+			<if test="subscribeTime != null">
+				subscribe_time,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="source != null">
+				source,
+			</if>
+			<if test="channelId != null">
+				channel_id,
+			</if>
+			<if test="integral != null">
+				integral,
+			</if>
+			<if test="level != null">
+				level,
+			</if>
+			<if test="applicationTime != null">
+				application_time,
+			</if>
+			<if test="useTime != null">
+				use_time,
+			</if>
+			<if test="phoneNum != null">
+				phone_num,
+			</if>
+			<if test="companyName != null">
+				company_name,
+			</if>
+			<if test="vipNum != null">
+				vip_num,
+			</if>
+			<if test="vipName != null">
+				vip_name,
+			</if>
+			<if test="wxMerchantId != null">
+				wx_merchant_id,
+			</if>
+			gmt_created,
+			gmt_modified,
+			<if test="userId != null">
+				user_id,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+	
+			<if test="subscribe != null">
+				#{subscribe,jdbcType=INTEGER},
+			</if>
+			<if test="openId != null">
+				#{openId,jdbcType=VARCHAR},
+			</if>
+			<if test="nickName != null">
+				#{nickName,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				#{sex,jdbcType=VARCHAR},
+			</if>
+			<if test="birthdays != null">
+				#{birthdays,jdbcType=VARCHAR},
+			</if>
+			<if test="language != null">
+				#{language,jdbcType=VARCHAR},
+			</if>
+			<if test="city != null">
+				#{city,jdbcType=VARCHAR},
+			</if>
+			<if test="province != null">
+				#{province,jdbcType=VARCHAR},
+			</if>
+			<if test="country != null">
+				#{country,jdbcType=VARCHAR},
+			</if>
+			<if test="headimgurl != null">
+				#{headimgurl,jdbcType=VARCHAR},
+			</if>
+			<if test="subscribeTime != null">
+				#{subscribeTime,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="source != null">
+				#{source,jdbcType=INTEGER},
+			</if>
+			<if test="channelId != null">
+				#{channelId,jdbcType=INTEGER},
+			</if>
+			<if test="integral != null">
+				#{integral,jdbcType=INTEGER},
+			</if>
+			<if test="level != null">
+				#{level,jdbcType=VARCHAR},
+			</if>
+			<if test="applicationTime != null">
+				#{applicationTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="useTime != null">
+				#{useTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="phoneNum != null">
+				#{phoneNum,jdbcType=VARCHAR},
+			</if>
+			<if test="companyName != null">
+				#{companyName,jdbcType=VARCHAR},
+			</if>
+			<if test="vipNum != null">
+				#{vipNum,jdbcType=VARCHAR},
+			</if>
+			<if test="vipName != null">
+				#{vipName,jdbcType=VARCHAR},
+			</if>
+			<if test="wxMerchantId != null">
+				#{wxMerchantId,jdbcType=BIGINT},
+			</if>
+			now(),
+			now(),
+			<if test="userId != null">
+				#{userId,jdbcType=BIGINT},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateById" parameterType="com.telan.weixincenter.domain.base.WxSubscribeDO">
+		update wx_subscribe set  
+			subscribe = #{subscribe,jdbcType=INTEGER},
+			open_id = #{openId,jdbcType=VARCHAR},
+			nick_name = #{nickName,jdbcType=VARCHAR},
+			sex = #{sex,jdbcType=VARCHAR},
+			birthdays = #{birthdays,jdbcType=VARCHAR},
+			language = #{language,jdbcType=VARCHAR},
+			city = #{city,jdbcType=VARCHAR},
+			province = #{province,jdbcType=VARCHAR},
+			country = #{country,jdbcType=VARCHAR},
+			headimgurl = #{headimgurl,jdbcType=VARCHAR},
+			subscribe_time = #{subscribeTime,jdbcType=VARCHAR},
+			remark = #{remark,jdbcType=VARCHAR},
+			source = #{source,jdbcType=INTEGER},
+			channel_id = #{channelId,jdbcType=INTEGER},
+			integral = #{integral,jdbcType=INTEGER},
+			level = #{level,jdbcType=VARCHAR},
+			application_time = #{applicationTime,jdbcType=TIMESTAMP},
+			use_time = #{useTime,jdbcType=TIMESTAMP},
+			phone_num = #{phoneNum,jdbcType=VARCHAR},
+			company_name = #{companyName,jdbcType=VARCHAR},
+			vip_num = #{vipNum,jdbcType=VARCHAR},
+			vip_name = #{vipName,jdbcType=VARCHAR},
+			wx_merchant_id = #{wxMerchantId,jdbcType=BIGINT},
+			user_id = #{userId,jdbcType=BIGINT},
+			gmt_modified = #{gmtModified},
+			cancel_attention_time = #{cancelAttentionTime}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+<!-- 	<update id="updateByPrimaryKeySelective" parameterType="WxSubscribeDO">
+		update wx_subscribe
+		<set>
+			<if test="subscribe != null">
+				subscribe = #{subscribe,jdbcType=INTEGER},
+			</if>
+			<if test="openId != null">
+				open_id = #{openId,jdbcType=VARCHAR},
+			</if>
+			<if test="nickName != null">
+				nick_name = #{nickName,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				sex = #{sex,jdbcType=VARCHAR},
+			</if>
+			<if test="birthdays != null">
+				birthdays = #{birthdays,jdbcType=VARCHAR},
+			</if>
+			<if test="language != null">
+				language = #{language,jdbcType=VARCHAR},
+			</if>
+			<if test="city != null">
+				city = #{city,jdbcType=VARCHAR},
+			</if>
+			<if test="province != null">
+				province = #{province,jdbcType=VARCHAR},
+			</if>
+			<if test="country != null">
+				country = #{country,jdbcType=VARCHAR},
+			</if>
+			<if test="headimgurl != null">
+				headimgurl = #{headimgurl,jdbcType=VARCHAR},
+			</if>
+			<if test="subscribeTime != null">
+				subscribe_time = #{subscribeTime,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="source != null">
+				source = #{source,jdbcType=INTEGER},
+			</if>
+			<if test="channelId != null">
+				channel_id = #{channelId,jdbcType=INTEGER},
+			</if>
+			<if test="integral != null">
+				integral = #{integral,jdbcType=INTEGER},
+			</if>
+			<if test="level != null">
+				level = #{level,jdbcType=VARCHAR},
+			</if>
+			<if test="applicationTime != null">
+				application_time = #{applicationTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="useTime != null">
+				use_time = #{useTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="phoneNum != null">
+				phone_num = #{phoneNum,jdbcType=VARCHAR},
+			</if>
+			<if test="companyName != null">
+				company_name = #{companyName,jdbcType=VARCHAR},
+			</if>
+			<if test="vipNum != null">
+				vip_num = #{vipNum,jdbcType=VARCHAR},
+			</if>
+			<if test="vipName != null">
+				vip_name = #{vipName,jdbcType=VARCHAR},
+			</if>
+			<if test="wxMerchantId != null">
+				wx_merchant_id = #{wxMerchantId,jdbcType=BIGINT},
+			</if>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=BIGINT},
+			</if>
+			gmt_modified = now(),
+			cancel_attention_time = now()
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update> -->
+	
+	<update id="updateByOpenId" parameterType="com.telan.weixincenter.domain.base.WxSubscribeDO">
+		update wx_subscribe
+		<set>
+			<if test="subscribe != null">
+				subscribe = #{subscribe,jdbcType=INTEGER},
+			</if>
+			<if test="openId != null">
+				open_id = #{openId,jdbcType=VARCHAR},
+			</if>
+			<if test="nickName != null">
+				nick_name = #{nickName,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				sex = #{sex,jdbcType=VARCHAR},
+			</if>
+			<if test="birthdays != null">
+				birthdays = #{birthdays,jdbcType=VARCHAR},
+			</if>
+			<if test="language != null">
+				language = #{language,jdbcType=VARCHAR},
+			</if>
+			<if test="city != null">
+				city = #{city,jdbcType=VARCHAR},
+			</if>
+			<if test="province != null">
+				province = #{province,jdbcType=VARCHAR},
+			</if>
+			<if test="country != null">
+				country = #{country,jdbcType=VARCHAR},
+			</if>
+			<if test="headimgurl != null">
+				headimgurl = #{headimgurl,jdbcType=VARCHAR},
+			</if>
+			<if test="subscribeTime != null">
+				subscribe_time = #{subscribeTime,jdbcType=VARCHAR},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="source != null">
+				source = #{source,jdbcType=INTEGER},
+			</if>
+			<if test="channelId != null">
+				channel_id = #{channelId,jdbcType=INTEGER},
+			</if>
+			<if test="integral != null">
+				integral = #{integral,jdbcType=INTEGER},
+			</if>
+			<if test="level != null">
+				level = #{level,jdbcType=VARCHAR},
+			</if>
+			<if test="applicationTime != null">
+				application_time = #{applicationTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="useTime != null">
+				use_time = #{useTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="phoneNum != null">
+				phone_num = #{phoneNum,jdbcType=VARCHAR},
+			</if>
+			<if test="companyName != null">
+				company_name = #{companyName,jdbcType=VARCHAR},
+			</if>
+			<if test="vipNum != null">
+				vip_num = #{vipNum,jdbcType=VARCHAR},
+			</if>
+			<if test="vipName != null">
+				vip_name = #{vipName,jdbcType=VARCHAR},
+			</if>
+			<if test="wxMerchantId != null">
+				wx_merchant_id = #{wxMerchantId,jdbcType=BIGINT},
+			</if>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=BIGINT},
+			</if>
+		</set>
+		where open_id = #{openId,jdbcType=VARCHAR}
+	</update>
+	
+	
+	
+	
+	<update id="updateByPrimaryKey" parameterType="com.telan.weixincenter.domain.base.WxSubscribeDO">
+		update wx_subscribe
+		set subscribe = #{subscribe,jdbcType=INTEGER},
+		open_id = #{openId,jdbcType=VARCHAR},
+		nick_name = #{nickName,jdbcType=VARCHAR},
+		sex = #{sex,jdbcType=VARCHAR},
+		birthdays = #{birthdays,jdbcType=VARCHAR},
+		language = #{language,jdbcType=VARCHAR},
+		city = #{city,jdbcType=VARCHAR},
+		province = #{province,jdbcType=VARCHAR},
+		country = #{country,jdbcType=VARCHAR},
+		headimgurl = #{headimgurl,jdbcType=VARCHAR},
+		subscribe_time = #{subscribeTime,jdbcType=VARCHAR},
+		remark = #{remark,jdbcType=VARCHAR},
+		source = #{source,jdbcType=INTEGER},
+		channel_id = #{channelId,jdbcType=INTEGER},
+		integral = #{integral,jdbcType=INTEGER},
+		level = #{level,jdbcType=VARCHAR},
+		application_time = #{applicationTime,jdbcType=TIMESTAMP},
+		use_time = #{useTime,jdbcType=TIMESTAMP},
+		phone_num = #{phoneNum,jdbcType=VARCHAR},
+		company_name = #{companyName,jdbcType=VARCHAR},
+		vip_num = #{vipNum,jdbcType=VARCHAR},
+		vip_name = #{vipName,jdbcType=VARCHAR},
+		wx_merchant_id = #{wxMerchantId,jdbcType=INTEGER},
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+
+	<update id="updateSubscribeByOpenId" parameterType="com.telan.weixincenter.domain.base.WxSubscribeDO">
+		update wx_subscribe
+		set subscribe = #{subscribeType} ,cancel_attention_time = now()
+		where open_id = #{fromUserName} and wx_merchant_id = #{wxMerchantId}
+	</update>
+</mapper>

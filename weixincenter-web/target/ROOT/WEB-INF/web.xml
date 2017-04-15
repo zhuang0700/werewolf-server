@@ -16,7 +16,7 @@
 	</context-param>
 	
 	<listener>
-		<listener-class>com.telan.werewolf.listener.Log4jConfigListener</listener-class>
+		<listener-class>com.telan.weixincenter.listener.Log4jConfigListener</listener-class>
 	</listener>
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -47,7 +47,7 @@
 	</filter-mapping>
 	<filter>
 		<filter-name>originFilter</filter-name>
-		<filter-class>com.telan.werewolf.filter.OriginFilter</filter-class>
+		<filter-class>com.telan.weixincenter.filter.OriginFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>originFilter</filter-name>

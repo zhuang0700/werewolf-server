@@ -6,18 +6,18 @@
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 	<context:annotation-config />
 
-	<bean id="defaultEventProcessor" class="com.telan.werewolf.event.processer.BaseProcessor" />
+	<bean id="defaultEventProcessor" class="com.telan.weixincenter.event.processer.BaseProcessor" />
 	
-	<bean id="eventAcceptor" class="com.telan.werewolf.event.DefaultEventAcceptor" />
+	<bean id="eventAcceptor" class="com.telan.weixincenter.event.DefaultEventAcceptor" />
 	
 	
-	<bean id="eventDistributor" class="com.telan.werewolf.event.DefaultEventDistributor" />
+	<bean id="eventDistributor" class="com.telan.weixincenter.event.DefaultEventDistributor" />
 	
-	<bean id="xmlParser" class="com.telan.werewolf.event.parser.BaseParser" />
+	<bean id="xmlParser" class="com.telan.weixincenter.event.parser.BaseParser" />
 	
-	<bean id="wapWeixinProcessor" class="com.telan.werewolf.event.processer.WapWeixinProcessor"/>
+	<bean id="wapWeixinProcessor" class="com.telan.weixincenter.event.processer.WapWeixinProcessor"/>
 	<!-- -->
-	<bean id="processorMatcher" class="com.telan.werewolf.event.processer.SimpleNameProcessorMatcher">
+	<bean id="processorMatcher" class="com.telan.weixincenter.event.processer.SimpleNameProcessorMatcher">
 	<property name="processors">
 		<map>
 			<entry key="${wapWeixinAccount}" value-ref="wapWeixinProcessor" />

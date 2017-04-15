@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyweekend.weixincenter.mapper.fans.WxFansMapper" >
+  <resultMap id="BaseResultMap" type="com.telan.weixincenter.domain.fans.WxFansDO" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="subscribe" property="subscribe" jdbcType="INTEGER" />
+    <result column="openid" property="openid" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="INTEGER" />
+    <result column="language" property="language" jdbcType="VARCHAR" />
+    <result column="nickname" property="nickname" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="country" property="country" jdbcType="VARCHAR" />
+    <result column="headimgurl" property="headimgurl" jdbcType="VARCHAR" />
+    <result column="subscribe_time" property="subscribeTime" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="gmt_created" property="gmtCreated" jdbcType="TIMESTAMP" />
+     <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+    <result column="wx_merchant_id" property="wxMerchantId" jdbcType="BIGINT" />
+    <result column="groupId" property="groupId" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, subscribe, openid, sex, nickname, language, city, province, country, headimgurl, subscribe_time, 
+    remark, gmt_created,gmt_modified, wx_merchant_id, groupId,user_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from wx_fans
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="getFans" resultMap="BaseResultMap" parameterType="long" >
+    select 
+    <include refid="Base_Column_List" />
+    from wx_fans
+    where user_id = #{userId}
+  </select>
+  
+  <select id="getCountFansNumsByAll"  parameterType="java.lang.Long" resultType="java.lang.Integer">
+  	select count(*) from wx_fans 
+    where wx_merchant_id = #{wxMerchantId}
+  </select>
+  
+  <select id="getTodayAddFansNums"   resultType="java.lang.Integer">
+  	select count(*) from wx_fans 
+    where wx_merchant_id = #{wxMerchantId}
+    <![CDATA[  
+  		and subscribe_time LIKE CONCAT(CONCAT('%', #{dateToday}),'%')
+	]]> 
+  </select>
+  
+  <select id="getMonthAddFansNums"   resultType="java.lang.Integer">
+  	select count(*) from wx_fans 
+    where wx_merchant_id = #{wxMerchantId}
+	<![CDATA[  
+   		and DATE_FORMAT(subscribe_time, '%Y-%m-%d') >=  DATE_FORMAT(#{firstDay}, '%Y-%m-%d')
+	]]> 
+	<![CDATA[
+     	and DATE_FORMAT(subscribe_time, '%Y-%m-%d') <=  DATE_FORMAT(#{lastDay}, '%Y-%m-%d')
+    ]]>  
+  </select>
+
+  
+	<select id="getFansTagByMerchantId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		select * from wx_fans_tag where 1=1 and wx_merchant_id = #{wxMerchantId}
+	</select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from wx_fans
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+   <!-- 删除所有粉丝 根据id -->
+  <delete id="delFansByMerchantId" parameterType="java.lang.Long" >
+    delete from wx_fans
+    where wx_merchant_id =#{wxMerchantId}
+  </delete>
+  <insert id="insert" parameterType="com.telan.weixincenter.domain.fans.WxFansDO" >
+    insert into wx_fans (id, subscribe, openid, 
+      sex, language, city, 
+      province, country, headimgurl, 
+      subscribe_time, remark, gmt_created, gmt_modified,
+      wx_merchant_id, groupId, nickname,user_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{subscribe,jdbcType=INTEGER}, #{openid,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=INTEGER}, #{language,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
+      #{province,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, #{headimgurl,jdbcType=VARCHAR}, 
+      #{subscribeTime,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{gmtCreated,jdbcType=TIMESTAMP},  #{gmtModified,jdbcType=TIMESTAMP}, 
+      #{wxMerchantId,jdbcType=BIGINT}, #{groupId,jdbcType=INTEGER}, #{nickname,jdbcType=LONGVARBINARY}, #{userId,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.telan.weixincenter.domain.fans.WxFansDO" >
+    insert into wx_fans
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="subscribe != null" >
+        subscribe,
+      </if>
+      <if test="openid != null" >
+        openid,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="language != null" >
+        language,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="country != null" >
+        country,
+      </if>
+      <if test="headimgurl != null" >
+        headimgurl,
+      </if>
+      <if test="subscribeTime != null" >
+        subscribe_time,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+        gmt_created,
+        gmt_modified,
+      <if test="wxMerchantId != null" >
+        wx_merchant_id,
+      </if>
+      <if test="groupId != null" >
+        groupId,
+      </if>
+      <if test="nickname != null" >
+        nickname,
+      </if>
+      
+      <if test="userId != null" >
+        user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="subscribe != null" >
+        #{subscribe,jdbcType=INTEGER},
+      </if>
+      <if test="openid != null" >
+        #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="language != null" >
+        #{language,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null" >
+        #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="headimgurl != null" >
+        #{headimgurl,jdbcType=VARCHAR},
+      </if>
+      <if test="subscribeTime != null" >
+        #{subscribeTime,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      now(),
+      now(),
+      <if test="wxMerchantId != null" >
+        #{wxMerchantId,jdbcType=BIGINT},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="nickname != null" >
+        #{nickname,jdbcType=LONGVARBINARY},
+      </if>
+      <if test="userId != null" >
+         #{userId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.telan.weixincenter.domain.fans.WxFansDO" >
+    update wx_fans
+    <set >
+      <if test="subscribe != null" >
+        subscribe = #{subscribe,jdbcType=INTEGER},
+      </if>
+      <if test="openid != null" >
+        openid = #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="language != null" >
+        language = #{language,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null" >
+        country = #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="headimgurl != null" >
+        headimgurl = #{headimgurl,jdbcType=VARCHAR},
+      </if>
+      <if test="subscribeTime != null" >
+        subscribe_time = #{subscribeTime,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+        gmt_modified = now(),
+      <if test="wxMerchantId != null" >
+        wx_merchant_id = #{wxMerchantId,jdbcType=BIGINT},
+      </if>
+      <if test="groupId != null" >
+        groupId = #{groupId,jdbcType=BIGINT},
+      </if>
+      <if test="nickname != null" >
+        nickname = #{nickname,jdbcType=LONGVARBINARY},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.telan.weixincenter.domain.fans.WxFansDO" >
+    update wx_fans
+    set subscribe = #{subscribe,jdbcType=INTEGER},
+      openid = #{openid,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=INTEGER},
+      language = #{language,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      country = #{country,jdbcType=VARCHAR},
+      headimgurl = #{headimgurl,jdbcType=VARCHAR},
+      subscribe_time = #{subscribeTime,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      wx_merchant_id = #{wxMerchantId,jdbcType=BIGINT},
+      groupId = #{groupId,jdbcType=BIGINT},
+      nickname = #{nickname,jdbcType=LONGVARBINARY},
+      user_id = #{userId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.telan.weixincenter.domain.fans.WxFansDO" >
+    update wx_fans
+    set subscribe = #{subscribe,jdbcType=INTEGER},
+      openid = #{openid,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=INTEGER},
+      language = #{language,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      country = #{country,jdbcType=VARCHAR},
+      headimgurl = #{headimgurl,jdbcType=VARCHAR},
+      subscribe_time = #{subscribeTime,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+      gmt_modified = #{gmtModified,jdbcType=TIMESTAMP},
+      wx_merchant_id = #{wxMerchantId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      groupId = #{groupId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <!-- 修改用户分组 -->
+	<update id="updateFansByOpenid" parameterType="com.telan.weixincenter.domain.fans.WxFansDO">
+		update wx_fans set groupId = #{groupid} where openid = #{openidli}
+	</update>
+</mapper>

@@ -29,23 +29,23 @@
 		<!--</plugin>-->
 	<!--</plugins>-->
 	<mappers>
-		<!-- <mapper resource="com/yimayhd/werewolf/mapper/WxChannelClassMapper.xml" />
-		<mapper resource="com/yimayhd/werewolf/mapper/WxChannelMapper.xml" />
-		<mapper resource="com/yimayhd/werewolf/mapper/WxFansGroupMapper.xml" />
-		<mapper resource="com/yimayhd/werewolf/mapper/WxFansMapper.xml" />
-		<mapper resource="com/yimayhd/werewolf/mapper/WxFansTagMapper.xml" />
-		<mapper resource="com/yimayhd/werewolf/mapper/WxMaterialMapper.xml" />
-		<mapper resource="com/yimayhd/werewolf/mapper/WxMenuItemMapper.xml" />
-		<mapper resource="com/yimayhd/werewolf/mapper/WxMenuMapper.xml" />
-		<mapper resource="com/yimayhd/werewolf/mapper/WxMerchantMapper.xml" />
-		<mapper resource="com/yimayhd/werewolf/mapper/WxServiceBackMapper.xml" />
-		<mapper resource="com/yimayhd/werewolf/mapper/WxServiceKeywordMapper.xml" />
-		<mapper resource="com/yimayhd/werewolf/mapper/WxServiceRuleMapper.xml" />
-		<mapper resource="com/yimayhd/werewolf/mapper/WxSubscribeMapper.xml" />
-		<mapper resource="com/yimayhd/werewolf/mapper/WxSubscribeRecordDOMapper.xml" />
-		<mapper resource="com/yimayhd/werewolf/mapper/WxSubScribeStatisDOMapper.xml" />
-		<mapper resource="com/yimayhd/werewolf/mapper/WxTemplatesHistoryMapper.xml" />
-		<mapper resource="com/yimayhd/werewolf/mapper/WxTemplatesItemMapper.xml" />
-		<mapper resource="com/yimayhd/werewolf/mapper/WxTemplatesMapper.xml" />  -->
+		<!-- <mapper resource="com/yimayhd/weixincenter/mapper/WxChannelClassMapper.xml" />
+		<mapper resource="com/yimayhd/weixincenter/mapper/WxChannelMapper.xml" />
+		<mapper resource="com/yimayhd/weixincenter/mapper/WxFansGroupMapper.xml" />
+		<mapper resource="com/yimayhd/weixincenter/mapper/WxFansMapper.xml" />
+		<mapper resource="com/yimayhd/weixincenter/mapper/WxFansTagMapper.xml" />
+		<mapper resource="com/yimayhd/weixincenter/mapper/WxMaterialMapper.xml" />
+		<mapper resource="com/yimayhd/weixincenter/mapper/WxMenuItemMapper.xml" />
+		<mapper resource="com/yimayhd/weixincenter/mapper/WxMenuMapper.xml" />
+		<mapper resource="com/yimayhd/weixincenter/mapper/WxMerchantMapper.xml" />
+		<mapper resource="com/yimayhd/weixincenter/mapper/WxServiceBackMapper.xml" />
+		<mapper resource="com/yimayhd/weixincenter/mapper/WxServiceKeywordMapper.xml" />
+		<mapper resource="com/yimayhd/weixincenter/mapper/WxServiceRuleMapper.xml" />
+		<mapper resource="com/yimayhd/weixincenter/mapper/WxSubscribeMapper.xml" />
+		<mapper resource="com/yimayhd/weixincenter/mapper/WxSubscribeRecordDOMapper.xml" />
+		<mapper resource="com/yimayhd/weixincenter/mapper/WxSubScribeStatisDOMapper.xml" />
+		<mapper resource="com/yimayhd/weixincenter/mapper/WxTemplatesHistoryMapper.xml" />
+		<mapper resource="com/yimayhd/weixincenter/mapper/WxTemplatesItemMapper.xml" />
+		<mapper resource="com/yimayhd/weixincenter/mapper/WxTemplatesMapper.xml" />  -->
 	</mappers>
 </configuration>

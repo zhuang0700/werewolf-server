@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyweekend.weixincenter.mapper.fans.WxFansToTagMapper" >
+  <resultMap id="BaseResultMap" type="com.telan.weixincenter.domain.fans.WxFansToTagDO" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="wx_merchant_id" property="wxMerchantId" jdbcType="INTEGER" />
+    <result column="oppen_id" property="oppenId" jdbcType="VARCHAR" />
+    <result column="tag_id" property="tagId" jdbcType="BIGINT" />
+    <result column="gmt_created" property="gmtCreated" jdbcType="TIMESTAMP" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+    <association  property="wxFansTag"  javaType="com.telan.weixincenter.domain.fans.WxFansTagDO" >
+    	<id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="wx_merchant_id" property="wxMerchantId" jdbcType="BIGINT" />
+	    <result column="tag_name" property="tagName" jdbcType="VARCHAR" />
+    </association >
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, wx_merchant_id, oppen_id, tag_id, gmt_created,gmt_modified
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from wx_fans_to_tag
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <!-- 根据openid查询粉丝绑定的标签 -->
+	<select id="getFansToTagByopenId" parameterType="com.telan.weixincenter.domain.fans.WxFansDO" resultMap="BaseResultMap">
+		SELECT wftt.*,wf.* FROM wx_fans_to_tag AS wftt 
+		INNER JOIN wx_fans_tag AS wf ON wftt.tag_id = wf.id
+		WHERE 1=1 AND wftt.wx_merchant_id = #{wxMerchantId} AND wftt.oppen_id = #{openid} 
+	</select>
+	<!-- 删除粉丝绑定的标签信息 -->
+	<delete id="delFansToTagByOppenid" parameterType="com.telan.weixincenter.domain.fans.WxFansToTagDO">
+		delete from wx_fans_to_tag where 1=1 and wx_merchant_id = #{wxMerchantId} and oppen_id = #{oppenId}
+	</delete> 
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from wx_fans_to_tag
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.telan.weixincenter.domain.fans.WxFansToTagDO" >
+    insert into wx_fans_to_tag (id, wx_merchant_id, oppen_id, 
+      tag_id, gmt_created,gmt_modified)
+    values (#{id,jdbcType=INTEGER}, #{wxMerchantId,jdbcType=BIGINT}, #{oppenId,jdbcType=VARCHAR}, 
+      #{tagId,jdbcType=BIGINT}, now(),now())
+  </insert>
+  <insert id="insertSelective" parameterType="com.telan.weixincenter.domain.fans.WxFansToTagDO" >
+    insert into wx_fans_to_tag
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="wxMerchantId != null" >
+        wx_merchant_id,
+      </if>
+      <if test="oppenId != null" >
+        oppen_id,
+      </if>
+      <if test="tagId != null" >
+        tag_id,
+      </if>
+        gmt_created,
+        gmt_modified
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="wxMerchantId != null" >
+        #{wxMerchantId,jdbcType=BIGINT},
+      </if>
+      <if test="oppenId != null" >
+        #{oppenId,jdbcType=VARCHAR},
+      </if>
+      <if test="tagId != null" >
+        #{tagId,jdbcType=BIGINT},
+      </if>
+      now(),
+      now(),
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.telan.weixincenter.domain.fans.WxFansToTagDO" >
+    update wx_fans_to_tag
+    <set >
+      <if test="wxMerchantId != null" >
+        wx_merchant_id = #{wxMerchantId,jdbcType=BIGINT},
+      </if>
+      <if test="oppenId != null" >
+        oppen_id = #{oppenId,jdbcType=VARCHAR},
+      </if>
+      <if test="tagId != null" >
+        tag_id = #{tagId,jdbcType=BIGINT},
+      </if>
+      
+      gmt_modified = now()
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.telan.weixincenter.domain.fans.WxFansToTagDO" >
+    update wx_fans_to_tag
+    set wx_merchant_id = #{wxMerchantId,jdbcType=BIGINT},
+      oppen_id = #{oppenId,jdbcType=VARCHAR},
+      tag_id = #{tagId,jdbcType=BIGINT},
+      gmt_modified = now()
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

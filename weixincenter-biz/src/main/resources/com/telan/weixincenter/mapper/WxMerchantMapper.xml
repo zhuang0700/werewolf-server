@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyweekend.weixincenter.mapper.base.WxMerchantMapper">
+	<resultMap id="BaseResultMap"
+		type="com.telan.weixincenter.domain.base.WxMerchantDO">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="info_name" property="infoName" jdbcType="VARCHAR" />
+		<result column="info_logo" property="infoLogo" jdbcType="VARCHAR" />
+		<result column="weixin_id" property="weixinId" jdbcType="VARCHAR" />
+		<result column="account_type" property="accountType" jdbcType="INTEGER" />
+		<result column="certification" property="certification" jdbcType="INTEGER" />
+		<result column="app_id" property="appId" jdbcType="VARCHAR" />
+		<result column="app_secret" property="appSecret" jdbcType="VARCHAR" />
+		<result column="app_state" property="appState" jdbcType="INTEGER" />
+		<result column="gmt_created" property="gmtCreated" jdbcType="TIMESTAMP" />
+		<result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+		<result column="employee_id" property="employeeId" jdbcType="BIGINT" />
+		<result column="open_id" property="openId" jdbcType="VARCHAR" />
+		<result column="state" property="state" jdbcType="INTEGER" />
+		<result column="pcEnabledKef" property="pcenabledkef" jdbcType="INTEGER" />
+		<result column="version" property="version" jdbcType="BIGINT" />
+		<result column="merchant_id" property="merchantId" jdbcType="BIGINT" />
+		<result column="domain_id" property="domainId" jdbcType="BIGINT" />
+		<result column="domain_app_id" property="domainAppId" jdbcType="BIGINT" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, info_name, info_logo, weixin_id, account_type,
+		certification, app_id,
+		app_secret,
+		app_state, gmt_created,gmt_modified, employee_id,merchant_id,
+		open_id, state, pcEnabledKef,gmt_created,gmt_modified,version, domain_id, domain_app_id
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from wx_merchant
+		where id = #{id}
+	</select>
+
+	<!-- 获取所有用户列表 -->
+	<select id="getAllMerchantInfo" resultMap="BaseResultMap">
+		SELECT * FROM
+		wx_merchant
+	</select>
+	<select id="selectByAppId" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from wx_merchant
+		where state=1 and app_id = #{appId} limit 1;
+	</select>
+	<select id="selectByOpenId" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from wx_merchant
+		where open_id = #{toUserName}
+	</select>
+	<select id="selectWxMerchantByEmployeeId" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from wx_merchant
+		where employee_id =
+		#{employeeId}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		wx_merchant
+		where id = #{id}
+	</delete>
+	<insert id="insert" parameterType="com.telan.weixincenter.domain.base.WxMerchantDO">
+		insert into wx_merchant
+		(info_name, info_logo,
+		weixin_id, account_type, certification,
+		app_id, app_secret, app_state,
+		gmt_created,gmt_modified, employee_id, open_id,merchant_id,
+		state, pcEnabledKef,version, domain_id, domain_app_id)
+		values (
+		#{infoName}, #{infoLogo},
+		#{weixinId}, #{accountType}, #{certification},
+		#{appId}, #{appSecret}, #{appState},
+		now(),now(), #{employeeId}, #{openId}, #{merchantId},
+		#{state}, #{pcenabledkef},#{version} ,  #{domainId}, #{domainAppId} )
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="com.telan.weixincenter.domain.base.WxMerchantDO">
+		update
+		wx_merchant
+		set info_name = #{infoName},
+		info_logo =#{infoLogo},
+		weixin_id =	#{weixinId},
+		account_type =#{accountType},
+		certification =#{certification},
+		app_id = #{appId},
+		app_secret = #{appSecret},
+		app_state =#{appState},
+		employee_id = #{employeeId},
+		open_id = #{openId},
+		state = #{state},
+		pcEnabledKef = #{pcenabledkef},
+		merchant_id = #{merchantId},
+		domain_id = #{domainId},
+		domain_app_id = #{domainAppId},
+		gmt_modified =now()
+		where id = #{id}
+	</update>
+</mapper>

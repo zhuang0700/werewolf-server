@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyweekend.weixincenter.mapper.channel.WxSubScribeStatisDOMapper" >
+  <resultMap id="BaseResultMap" type="com.telan.weixincenter.domain.channel.SubScribeStatisDO" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="day" property="day" jdbcType="DATE" />
+    <result column="channel_id" property="channelId" jdbcType="BIGINT" />
+    <result column="wx_merchant_id" property="wxMerchantId" jdbcType="BIGINT" />
+    <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+    <result column="subscribe_num" property="subscribeNum" jdbcType="INTEGER" />
+    <result column="cancel_subscribe_num" property="cancelSubscribeNum" jdbcType="INTEGER" />
+    <result column="gmt_created" property="gmtCreated" jdbcType="TIMESTAMP" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, day, channel_id,wx_merchant_id, channel_name, subscribe_num, cancel_subscribe_num, gmt_created, 
+    gmt_modified
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="long" >
+    select 
+    <include refid="Base_Column_List" />
+    from wx_subscribe_statis
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <select id="queryChannelFansStatisListByMerchantId" resultMap="BaseResultMap" parameterType="long" >
+    select 
+    <include refid="Base_Column_List" />
+    from wx_subscribe_statis
+    where wx_merchant_id = #{wxMerchantId,jdbcType=BIGINT}
+  </select>
+  
+  <select id="getSubScribeStatisDOByMerchantIdAndChannelId" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from wx_subscribe_statis
+    where wx_merchant_id = #{wxMerchantId} and channel_id = #{channelId} and day = #{dBefore,jdbcType=DATE}
+  </select>
+  
+  <!-- coalesce()解释：返回参数中的第一个非空表达式（从左向右） -->
+  <select id="getSubscribeNumByMerchantIdAndChannelIdForChannelUpdate"  resultType="java.lang.Integer">
+  	SELECT 
+  	<if test="subscribeType==1">COALESCE(SUM(subscribe_num),0)</if>
+  	<if test="subscribeType==0">COALESCE(SUM(cancel_subscribe_num),0)</if>
+    FROM wx_subscribe_statis
+    WHERE  wx_merchant_id = #{wxMerchantId} AND channel_id =#{channelId}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="long" >
+    delete from wx_subscribe_statis
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  
+  <delete id="deleteByMerchantId" parameterType="long" >
+    delete from wx_subscribe_statis
+    where wx_merchant_id = #{wxMerchantId,jdbcType=BIGINT}
+  </delete>
+  
+  <insert id="insert" parameterType="com.telan.weixincenter.domain.channel.SubScribeStatisDO" useGeneratedKeys="true" keyProperty="id" >
+    insert into wx_subscribe_statis (day, channel_id,wx_merchant_id, channel_name, 
+      subscribe_num, cancel_subscribe_num, gmt_created, 
+      gmt_modified)
+    values (#{day,jdbcType=DATE}, #{channelId,jdbcType=BIGINT}, #{wxMerchantId,jdbcType=BIGINT}, #{channelName,jdbcType=VARCHAR}, 
+      #{subscribeNum,jdbcType=INTEGER}, #{cancelSubscribeNum,jdbcType=INTEGER}, now(), 
+      now())
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.telan.weixincenter.domain.channel.SubScribeStatisDO" >
+    update wx_subscribe_statis
+    set day = #{day,jdbcType=DATE},
+      channel_id = #{channelId,jdbcType=BIGINT},
+      wx_merchant_id =  #{wxMerchantId,jdbcType=BIGINT},
+      channel_name = #{channelName,jdbcType=VARCHAR},
+      subscribe_num = #{subscribeNum,jdbcType=INTEGER},
+      cancel_subscribe_num = #{cancelSubscribeNum,jdbcType=INTEGER},
+      gmt_modified = now()
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  
+   <update id="updateByPrimaryKeySelective" parameterType="com.telan.weixincenter.domain.channel.SubScribeStatisDO" >
+    update wx_subscribe_statis
+    <set>
+    	<if test="channelId != null">
+    	channel_id = #{channelId,jdbcType=BIGINT},
+    	</if>
+    	<if test="channelName != null">
+    		channel_name = #{channelName,jdbcType=VARCHAR},
+    	</if>
+    	<if test="subscribeNum != null" >
+    		subscribe_num = #{subscribeNum,jdbcType=INTEGER},
+    	</if>
+    	<if test="cancelSubscribeNum != null">
+    		 cancel_subscribe_num = #{cancelSubscribeNum,jdbcType=INTEGER},
+    	</if>
+    	 gmt_modified = now()
+    	  where id = #{id,jdbcType=BIGINT}
+    </set>
+  
+  </update>
+ 
+</mapper>

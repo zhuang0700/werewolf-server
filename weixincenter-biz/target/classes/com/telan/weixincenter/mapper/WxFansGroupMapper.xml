@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyweekend.weixincenter.mapper.fans.WxFansGroupMapper" >
+  <resultMap id="BaseResultMap" type="com.telan.weixincenter.domain.fans.WxFansGroupDO" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="wx_merchant_id" property="wxMerchantId" jdbcType="BIGINT" />
+    <result column="group_name" property="groupName" jdbcType="VARCHAR" />
+    <result column="fans_count" property="fansCount" jdbcType="INTEGER" />
+    <result column="gmt_created" property="gmtCreated" jdbcType="TIMESTAMP" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, wx_merchant_id, group_name, fans_count, gmt_created,gmt_modified
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from wx_fans_group
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from wx_fans_group
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.telan.weixincenter.domain.fans.WxFansGroupDO" >
+    insert into wx_fans_group (id, wx_merchant_id, group_name, 
+      fans_count, gmt_created,gmt_modified)
+    values (#{id,jdbcType=INTEGER}, #{wxMerchantId,jdbcType=INTEGER}, #{groupName,jdbcType=VARCHAR}, 
+      #{fansCount,jdbcType=INTEGER}, now(),now())
+  </insert>
+  <insert id="insertSelective" parameterType="com.telan.weixincenter.domain.fans.WxFansGroupDO" >
+    insert into wx_fans_group
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="wxMerchantId != null" >
+        wx_merchant_id,
+      </if>
+      <if test="groupName != null" >
+        group_name,
+      </if>
+      <if test="fansCount != null" >
+        fans_count,
+      </if>
+      <if test="gmtCreated != null" >
+        gmt_created,
+      </if>
+      <if test="gmtModified != null" >
+        gmt_modified,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="wxMerchantId != null" >
+        #{wxMerchantId,jdbcType=BIGINT},
+      </if>
+      <if test="groupName != null" >
+        #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="fansCount != null" >
+        #{fansCount,jdbcType=INTEGER},
+      </if>
+     now(),
+     now()
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.telan.weixincenter.domain.fans.WxFansGroupDO" >
+    update wx_fans_group
+    <set >
+      <if test="wxMerchantId != null" >
+        wx_merchant_id = #{wxMerchantId,jdbcType=INTEGER},
+      </if>
+      <if test="groupName != null" >
+        group_name = #{groupName,jdbcType=VARCHAR},
+      </if>
+      <if test="fansCount != null" >
+        fans_count = #{fansCount,jdbcType=INTEGER},
+      </if>
+      
+        gmt_modified = now(),
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.telan.weixincenter.domain.fans.WxFansGroupDO" >
+    update wx_fans_group
+    set wx_merchant_id = #{wxMerchantId,jdbcType=INTEGER},
+      group_name = #{groupName,jdbcType=VARCHAR},
+      fans_count = #{fansCount,jdbcType=INTEGER},
+      gmt_modified = now()
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

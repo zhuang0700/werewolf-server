@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyweekend.weixincenter.mapper.templates.WxTemplatesItemMapper" >
+  <resultMap id="BaseResultMap" type="com.telan.weixincenter.domain.templates.WxTemplatesItemDO" >
+    <id column="template_item_id" property="templateItemId" jdbcType="BIGINT" />
+    <result column="template_id" property="templateId" jdbcType="BIGINT" />
+    <result column="wx_merchant_id" property="wxMerchantId" jdbcType="INTEGER" />
+    <result column="field_name" property="fieldName" jdbcType="VARCHAR" />
+    <result column="field_value" property="fieldValue" jdbcType="VARCHAR" />
+    <result column="field_color" property="fieldColor" jdbcType="VARCHAR" />
+    <result column="gmt_created" property="gmtCreated" jdbcType="TIMESTAMP" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    template_item_id, template_id, wx_merchant_id, field_name, field_value, field_color, gmt_created,gmt_modified
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from wx_templates_item
+    where template_item_id = #{templateItemId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from wx_templates_item
+    where template_item_id = #{templateItemId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.telan.weixincenter.domain.templates.WxTemplatesItemDO" >
+    insert into wx_templates_item (template_id, wx_merchant_id, 
+      field_name, field_value, field_color, 
+      gmt_created,gmt_modified)
+    values (#{templateId,jdbcType=BIGINT}, #{wxMerchantId,jdbcType=BIGINT}, 
+      #{fieldName,jdbcType=VARCHAR}, #{fieldValue,jdbcType=VARCHAR}, #{fieldColor,jdbcType=VARCHAR}, 
+      now(),now())
+  </insert>
+  <insert id="insertSelective" parameterType="com.telan.weixincenter.domain.templates.WxTemplatesItemDO" >
+    insert into wx_templates_item
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="templateId != null" >
+        template_id,
+      </if>
+      <if test="wxMerchantId != null" >
+        wx_merchant_id,
+      </if>
+      <if test="fieldName != null" >
+        field_name,
+      </if>
+      <if test="fieldValue != null" >
+        field_value,
+      </if>
+      <if test="fieldColor != null" >
+        field_color,
+      </if>
+     gmt_created,
+     gmt_modified
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="templateId != null" >
+        #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="wxMerchantId != null" >
+        #{wxMerchantId,jdbcType=BIGINT},
+      </if>
+      <if test="fieldName != null" >
+        #{fieldName,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldValue != null" >
+        #{fieldValue,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldColor != null" >
+        #{fieldColor,jdbcType=VARCHAR},
+      </if>
+     now(),now()
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.telan.weixincenter.domain.templates.WxTemplatesItemDO" >
+    update wx_templates_item
+    <set >
+      <if test="templateId != null" >
+        template_id = #{templateId,jdbcType=BIGINT},
+      </if>
+      <if test="wxMerchantId != null" >
+        wx_merchant_id = #{wxMerchantId,jdbcType=BIGINT},
+      </if>
+      <if test="fieldName != null" >
+        field_name = #{fieldName,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldValue != null" >
+        field_value = #{fieldValue,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldColor != null" >
+        field_color = #{fieldColor,jdbcType=VARCHAR},
+      </if>
+      gmt_modified= now()
+    </set>
+    where template_item_id = #{templateItemId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.telan.weixincenter.domain.templates.WxTemplatesItemDO" >
+    update wx_templates_item
+    set template_id = #{templateId,jdbcType=BIGINT},
+      wx_merchant_id = #{wxMerchantId,jdbcType=BIGINT},
+      field_name = #{fieldName,jdbcType=VARCHAR},
+      field_value = #{fieldValue,jdbcType=VARCHAR},
+      field_color = #{fieldColor,jdbcType=VARCHAR},
+       gmt_modified= now()
+    where template_item_id = #{templateItemId,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -37,14 +37,14 @@
 	<!-- 配置ibatis映射信息 -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"/>
-		<property name="mapperLocations" value="classpath:com/telan/werewolf/mapper/*.xml"/>
-		<property name="typeAliasesPackage" value="com.telan.werewolf.domain"/>
+		<property name="mapperLocations" value="classpath:com/telan/weixincenter/mapper/*.xml"/>
+		<property name="typeAliasesPackage" value="com.telan.weixincenter.domain"/>
 		<property name="configLocation" value="classpath:mybatis-config.xml"/>
 	</bean>
 
 	<!-- 扫描mapper类 -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.telan.werewolf.mapper.**" />
+		<property name="basePackage" value="com.telan.weixincenter.mapper.**" />
 	</bean>
 
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" scope="prototype">

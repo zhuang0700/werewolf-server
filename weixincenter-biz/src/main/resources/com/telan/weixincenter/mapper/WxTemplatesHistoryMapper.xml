@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyweekend.weixincenter.mapper.templates.WxTemplatesHistoryMapper" >
+  <resultMap id="BaseResultMap" type="com.telan.weixincenter.domain.templates.WxTemplatesHistoryDO" >
+    <id column="mass_history_id" property="massHistoryId" jdbcType="BIGINT" />
+    <result column="wx_merchant_id" property="wxMerchantId" jdbcType="BIGINT" />
+    <result column="templatename" property="templatename" jdbcType="VARCHAR" />
+    <result column="sendtotals" property="sendtotals" jdbcType="INTEGER" />
+    <result column="arrivedtotals" property="arrivedtotals" jdbcType="INTEGER" />
+    <result column="templateid" property="templateid" jdbcType="VARCHAR" />
+    <result column="failemsg" property="failemsg" jdbcType="VARCHAR" />
+    <result column="gmt_created" property="gmtCreated" jdbcType="TIMESTAMP" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    mass_history_id, wx_merchant_id, templatename, sendtotals, arrivedtotals, templateid, failemsg, 
+    gmt_created,gmt_modified
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from wx_templates_history
+    where mass_history_id = #{massHistoryId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from wx_templates_history
+    where mass_history_id = #{massHistoryId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.telan.weixincenter.domain.templates.WxTemplatesHistoryDO" >
+    insert into wx_templates_history (wx_merchant_id, templatename, 
+      sendtotals, arrivedtotals, templateid, 
+      failemsg, gmt_created,gmt_modified)
+    values ( #{wxMerchantId,jdbcType=BIGINT}, #{templatename,jdbcType=VARCHAR}, 
+      #{sendtotals,jdbcType=INTEGER}, #{arrivedtotals,jdbcType=INTEGER}, #{templateid,jdbcType=VARCHAR}, 
+      #{failemsg,jdbcType=VARCHAR}, now(),now())
+  </insert>
+  <insert id="insertSelective" parameterType="com.telan.weixincenter.domain.templates.WxTemplatesHistoryDO" >
+    insert into wx_templates_history
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="wxMerchantId != null" >
+        wx_merchant_id,
+      </if>
+      <if test="templatename != null" >
+        templatename,
+      </if>
+      <if test="sendtotals != null" >
+        sendtotals,
+      </if>
+      <if test="arrivedtotals != null" >
+        arrivedtotals,
+      </if>
+      <if test="templateid != null" >
+        templateid,
+      </if>
+      <if test="failemsg != null" >
+        failemsg,
+      </if>
+     gmt_created,
+     gmt_modified
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="wxMerchantId != null" >
+        #{wxMerchantId,jdbcType=INTEGER},
+      </if>
+      <if test="templatename != null" >
+        #{templatename,jdbcType=VARCHAR},
+      </if>
+      <if test="sendtotals != null" >
+        #{sendtotals,jdbcType=INTEGER},
+      </if>
+      <if test="arrivedtotals != null" >
+        #{arrivedtotals,jdbcType=INTEGER},
+      </if>
+      <if test="templateid != null" >
+        #{templateid,jdbcType=VARCHAR},
+      </if>
+      <if test="failemsg != null" >
+        #{failemsg,jdbcType=VARCHAR},
+      </if>
+      <if test="inserttime != null" >
+        #{inserttime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.telan.weixincenter.domain.templates.WxTemplatesHistoryDO" >
+    update wx_templates_history
+    <set >
+      <if test="wxMerchantId != null" >
+        wx_merchant_id = #{wxMerchantId,jdbcType=INTEGER},
+      </if>
+      <if test="templatename != null" >
+        templatename = #{templatename,jdbcType=VARCHAR},
+      </if>
+      <if test="sendtotals != null" >
+        sendtotals = #{sendtotals,jdbcType=INTEGER},
+      </if>
+      <if test="arrivedtotals != null" >
+        arrivedtotals = #{arrivedtotals,jdbcType=INTEGER},
+      </if>
+      <if test="templateid != null" >
+        templateid = #{templateid,jdbcType=VARCHAR},
+      </if>
+      <if test="failemsg != null" >
+        failemsg = #{failemsg,jdbcType=VARCHAR},
+      </if>
+        gmtModified = now()
+    </set>
+    where mass_history_id = #{massHistoryId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.telan.weixincenter.domain.templates.WxTemplatesHistoryDO" >
+    update wx_templates_history
+    set wx_merchant_id = #{wxMerchantId,jdbcType=BIGINT},
+      templatename = #{templatename,jdbcType=VARCHAR},
+      sendtotals = #{sendtotals,jdbcType=INTEGER},
+      arrivedtotals = #{arrivedtotals,jdbcType=INTEGER},
+      templateid = #{templateid,jdbcType=VARCHAR},
+      failemsg = #{failemsg,jdbcType=VARCHAR},
+      gmt_created = now()
+    where mass_history_id = #{massHistoryId,jdbcType=BIGINT}
+  </update>
+</mapper>

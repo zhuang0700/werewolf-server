@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyweekend.weixincenter.mapper.channel.WxSubscribeRecordDOMapper" >
+  <resultMap id="BaseResultMap" type="com.telan.weixincenter.domain.channel.SubscribeRecordDO" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="channel_id" property="channelId" jdbcType="BIGINT" />
+    <result column="open_id" property="openId" jdbcType="VARCHAR" />
+    <result column="subscribe" property="subscribe" jdbcType="TINYINT" />
+    <result column="from_type" property="fromType" jdbcType="BIGINT" />
+    <result column="day" property="day" jdbcType="DATE" />
+    <result column="wx_merchant_id" property="wxMerchantId" jdbcType="BIGINT" />
+    <result column="record_time" property="recordTime" jdbcType="TIMESTAMP" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+    <result column="gmt_created" property="gmtCreated" jdbcType="TIMESTAMP" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, channel_id, open_id, subscribe, from_type, day, wx_merchant_id, record_time, gmt_modified, gmt_created,user_id
+  </sql>
+  <resultMap id="BaseResultMapForChannelId" type="com.telan.weixincenter.domain.channel.SubScribeRecordGroupDO" >
+    <result column="channel_id" property="channelId" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Base_Column_channelId_List" >
+    channel_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="long" >
+    select 
+    <include refid="Base_Column_List" />
+    from wx_subscribe_record
+    where id = #{id}
+  </select>
+  
+  <select id="getSubscribeNumByMerchantIdAndChannelId"  resultType="java.lang.Integer">
+    select 
+    COUNT(DISTINCT open_id)
+    from wx_subscribe_record
+    where  wx_merchant_id = #{wxMerchantId} and channel_id = #{channelId} and subscribe = #{subscribe} and day = #{dBefore}
+  </select>
+  
+  <select id="getWxSubscribeRecordDoListByOpenIdAndMerchantId"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from wx_subscribe_record
+    where open_id = #{fromUserName} and wx_merchant_id = #{wxMerchantId}
+    order by gmt_created asc 
+    limit 0, 1
+  </select>
+  
+  <select id="querySubscribeRecordByMerchantIdGroupByChannel"  resultMap="BaseResultMapForChannelId">
+    SELECT 
+	<include refid="Base_Column_channelId_List" />
+	FROM wx_subscribe_record WHERE wx_merchant_id = #{wxMerchantId} and day = #{dBefore} GROUP BY channel_id
+  </select>
+  
+  <select id="getSubScribeRecordDOByMerchantIdAndOpenId"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from wx_subscribe_record
+    where open_id = #{fromUserName} and wx_merchant_id = #{wxMerchantId}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="long" >
+    delete from wx_subscribe_record
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.telan.weixincenter.domain.channel.SubscribeRecordDO" >
+    insert into wx_subscribe_record (id, channel_id, open_id, subscribe, 
+      from_type, day, wx_merchant_id, gmt_modified, record_time, 
+      gmt_created,user_id)
+    values (#{id},#{channelId}, #{openId}, #{subscribe}, 
+      #{fromType}, #{day}, #{wxMerchantId}, #{gmtModified},  #{recordTime}, 
+       #{gmtCreated},#{userId})
+  </insert>
+  
+  <update id="updateByPrimaryKey" parameterType="com.telan.weixincenter.domain.channel.SubscribeRecordDO" >
+    update wx_subscribe_record
+    set channel_id = #{channelId},
+      open_id = #{openId},
+      subscribe = #{subscribe},
+      from_type = #{fromType},
+      day = #{day},
+      wx_merchant_id = #{wxMerchantId},
+      gmt_modified = #{gmtModified},
+      record_time = #{recordTime},
+      user_id=#{userId}
+    where id = #{id}
+  </update>
+</mapper>

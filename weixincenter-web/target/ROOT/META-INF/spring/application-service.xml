@@ -7,5 +7,5 @@
 	<context:annotation-config />
 	<bean id="messageReplyService"
 
-		  class="com.telan.werewolf.service.Impl.MessageReplyServiceImpl" />
+		  class="com.telan.weixincenter.service.Impl.MessageReplyServiceImpl" />
 </beans>

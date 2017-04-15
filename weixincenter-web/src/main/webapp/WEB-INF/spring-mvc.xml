@@ -14,7 +14,7 @@
     <context:property-placeholder ignore-unresolvable="true" location="WEB-INF/config.properties" />
     <context:property-placeholder ignore-unresolvable="true" location="classpath*:/application.properties" />
 	<!-- 使用Annotation自动注册Bean,只扫描@Controller -->
- 	 <context:component-scan base-package="com.telan.werewolf.**"><!-- base-package 如果多个，用“,”分隔 -->
+ 	 <context:component-scan base-package="com.telan.weixincenter.**"><!-- base-package 如果多个，用“,”分隔 -->
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
 	</context:component-scan>  
 	

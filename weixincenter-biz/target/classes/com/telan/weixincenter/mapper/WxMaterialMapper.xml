@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyweekend.weixincenter.mapper.base.WxMaterialMapper">
+	<resultMap id="BaseResultMap"
+		type="com.telan.weixincenter.domain.base.WxMaterialDO">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="material_writer" property="materialWriter"
+			jdbcType="VARCHAR" />
+		<result column="material_title" property="materialTitle"
+			jdbcType="VARCHAR" />
+		<result column="material_img_url" property="materialImgUrl"
+			jdbcType="VARCHAR" />
+		<result column="material_img_is_show" property="materialImgIsShow"
+			jdbcType="INTEGER" />
+		<result column="material_digest" property="materialDigest"
+			jdbcType="VARCHAR" />
+		<result column="business_select_type" property="businessSelectType"
+			jdbcType="VARCHAR" />
+		<result column="material_source_url" property="materialSourceUrl"
+			jdbcType="VARCHAR" />
+		<result column="gmt_created" property="gmtCreated" jdbcType="TIMESTAMP" />
+		<result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+		<result column="material_type_id" property="materialTypeId"
+			jdbcType="INTEGER" />
+		<result column="material_next_id" property="materialNextId"
+			jdbcType="BIGINT" />
+		<result column="wx_merchant_id" property="wxMerchantId"
+			jdbcType="BIGINT" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="material_addr" property="materialAddr"
+			jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs"
+		type="com.telan.weixincenter.domain.base.WxMaterialDO" extends="BaseResultMap">
+		<result column="material_text" property="materialText"
+			jdbcType="LONGVARCHAR" />
+		<result column="material_link_url" property="materialLinkUrl"
+			jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, material_writer, material_title, material_img_url,
+		material_img_is_show,business_select_type,
+		material_digest,
+		gmt_created,gmt_modified, material_type_id, material_next_id,
+		wx_merchant_id, status,
+		material_addr,material_source_url
+	</sql>
+	<sql id="Blob_Column_List">
+		material_text, material_link_url
+	</sql>
+
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from wx_material
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="queryWxMaterialTypeid" resultMap="ResultMapWithBLOBs">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from wx_material
+		where material_next_id = #{id,jdbcType=BIGINT} and
+		wx_merchant_id =
+		#{wxMerchantId,jdbcType=BIGINT}
+	</select>
+
+	<select id="queryWxMaterialByMerchantId" resultMap="ResultMapWithBLOBs">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from wx_material
+		where wx_merchant_id = #{wxMerchantId,jdbcType=BIGINT}
+	</select>
+
+	<!-- 回复单图文、多图文时使用 -->
+	<select id="queryWxMaterialByMaterialTypeId" resultMap="ResultMapWithBLOBs">
+		SELECT *
+		from wx_material where material_type_id =#{materialTypeId} and
+		wx_merchant_id =#{wxMerchantId}
+		and material_next_id=0 ORDER BY
+		gmt_created DESC
+	</select>
+
+
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		wx_material where id = #{id}
+	</delete>
+
+	<delete id="deleteByMaterialNextId">
+		delete from wx_material
+		where material_next_id = #{id}
+		and wx_merchant_id=#{wxMerchantId}
+	</delete>
+	<insert id="insert" parameterType="com.telan.weixincenter.domain.base.WxMaterialDO">
+		insert into wx_material (
+		material_writer, material_title,
+		material_img_url,
+		material_img_is_show,business_select_type,
+		material_digest,
+		gmt_created,gmt_modified, material_type_id, material_next_id,
+		wx_merchant_id, status, material_addr,
+		material_text,
+		material_link_url,material_source_url)
+		values (
+		#{materialWriter,jdbcType=VARCHAR},
+		#{materialTitle,jdbcType=VARCHAR},
+		#{materialImgUrl,jdbcType=VARCHAR},
+		#{materialImgIsShow,jdbcType=INTEGER},#{businessSelectType,jdbcType=VARCHAR},
+		#{materialDigest,jdbcType=VARCHAR},
+		#{gmtCreated,jdbcType=TIMESTAMP},#{gmtModified,jdbcType=TIMESTAMP},
+		#{materialTypeId,jdbcType=INTEGER}, #{materialNextId,jdbcType=BIGINT},
+		#{wxMerchantId,jdbcType=BIGINT}, #{status,jdbcType=INTEGER},
+		#{materialAddr,jdbcType=VARCHAR},
+		#{materialText,jdbcType=LONGVARCHAR},
+		#{materialLinkUrl,jdbcType=LONGVARCHAR},
+		#{materialSourceUrl,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.telan.weixincenter.domain.base.WxMaterialDO">
+		insert into wx_material
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<!-- <if test="id != null"> id, </if> -->
+			<if test="materialWriter != null">
+				material_writer,
+			</if>
+			<if test="materialTitle != null">
+				material_title,
+			</if>
+			<if test="materialImgUrl != null">
+				material_img_url,
+			</if>
+			<if test="materialImgIsShow != null">
+				material_img_is_show,
+			</if>
+			<if test="businessSelectType != null">
+				business_select_type,
+			</if>
+			<if test="materialDigest != null">
+				material_digest,
+			</if>
+			gmt_created,
+			gmt_modified,
+			<if test="materialTypeId != null">
+				material_type_id,
+			</if>
+			<if test="materialNextId != null">
+				material_next_id,
+			</if>
+			<if test="wxMerchantId != null">
+				wx_merchant_id,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="materialAddr != null">
+				material_addr,
+			</if>
+			<if test="materialText != null">
+				material_text,
+			</if>
+			<if test="materialLinkUrl != null">
+				material_link_url,
+			</if>
+			<if test="materialSourceUrl != null">
+				material_source_url,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<!-- 
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			 -->
+			<if test="materialWriter != null">
+				#{materialWriter,jdbcType=VARCHAR},
+			</if>
+			<if test="materialTitle != null">
+				#{materialTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="materialImgUrl != null">
+				#{materialImgUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="materialImgIsShow != null">
+				#{materialImgIsShow,jdbcType=INTEGER},
+			</if>
+			<if test="businessSelectType != null">
+				#{businessSelectType,jdbcType=VARCHAR},
+			</if>
+			<if test="materialDigest != null">
+				#{materialDigest,jdbcType=VARCHAR},
+			</if>
+			now(),
+			now(),
+			<if test="materialTypeId != null">
+				#{materialTypeId,jdbcType=INTEGER},
+			</if>
+			<if test="materialNextId != null">
+				#{materialNextId,jdbcType=BIGINT},
+			</if>
+			<if test="wxMerchantId != null">
+				#{wxMerchantId,jdbcType=BIGINT},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="materialAddr != null">
+				#{materialAddr,jdbcType=VARCHAR},
+			</if>
+			<if test="materialText != null">
+				#{materialText,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="materialLinkUrl != null">
+				#{materialLinkUrl,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="materialSourceUrl != null">
+				#{materialSourceUrl,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+		<!-- 
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long"> SELECT
+			LAST_INSERT_ID()
+		</selectKey>
+		 -->
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.telan.weixincenter.domain.base.WxMaterialDO">
+		update wx_material
+		<set>
+			<if test="materialWriter != null">
+				material_writer = #{materialWriter,jdbcType=VARCHAR},
+			</if>
+			<if test="materialTitle != null">
+				material_title = #{materialTitle,jdbcType=VARCHAR},
+			</if>
+			<if test="materialImgUrl != null">
+				material_img_url = #{materialImgUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="materialImgIsShow != null">
+				material_img_is_show =
+				#{materialImgIsShow,jdbcType=INTEGER},
+			</if>
+			<if test="businessSelectType != null">
+				business_select_type =
+				#{businessSelectType,jdbcType=VARCHAR},
+			</if>
+			<if test="materialDigest != null">
+				material_digest = #{materialDigest,jdbcType=VARCHAR},
+			</if>
+			<!-- 
+			<if test="gmtCreated != null">
+				gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
+			</if>
+			 -->
+			gmt_modified = now(),
+			<if test="materialTypeId != null">
+				material_type_id = #{materialTypeId,jdbcType=INTEGER},
+			</if>
+			<if test="materialNextId != null">
+				material_next_id = #{materialNextId,jdbcType=BIGINT},
+			</if>
+			<if test="wxMerchantId != null">
+				wx_merchant_id = #{wxMerchantId,jdbcType=BIGINT},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="materialAddr != null">
+				material_addr = #{materialAddr,jdbcType=VARCHAR},
+			</if>
+			<if test="materialText != null">
+				material_text = #{materialText,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="materialLinkUrl != null">
+				material_link_url =
+				#{materialLinkUrl,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="materialSourceUrl != null">
+				material_source_url =
+				#{materialSourceUrl,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs" parameterType="com.telan.weixincenter.domain.base.WxMaterialDO">
+		update
+		wx_material
+		set material_writer = #{materialWriter,jdbcType=VARCHAR},
+		material_title = #{materialTitle,jdbcType=VARCHAR},
+		material_img_url =
+		#{materialImgUrl,jdbcType=VARCHAR},
+		material_img_is_show =
+		#{materialImgIsShow,jdbcType=INTEGER},
+		business_select_type =
+		#{businessSelectType,jdbcType=VARCHAR},
+		material_digest =
+		#{materialDigest,jdbcType=VARCHAR},
+		gmt_created =
+		#{gmtCreated,jdbcType=TIMESTAMP},
+		gmt_modified =
+		#{gmtModified,jdbcType=TIMESTAMP},
+		material_type_id =
+		#{materialTypeId,jdbcType=INTEGER},
+		material_next_id =
+		#{materialNextId,jdbcType=INTEGER},
+		wx_merchant_id =
+		#{wxMerchantId,jdbcType=BIGINT},
+		status = #{status,jdbcType=INTEGER},
+		material_addr = #{materialAddr,jdbcType=VARCHAR},
+		material_text =
+		#{materialText,jdbcType=LONGVARCHAR},
+		material_link_url =
+		#{materialLinkUrl,jdbcType=LONGVARCHAR},
+		material_source_url =
+		#{materialSourceUrl,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.telan.weixincenter.domain.base.WxMaterialDO">
+		update wx_material
+		set material_writer = #{materialWriter,jdbcType=VARCHAR},
+		material_title = #{materialTitle,jdbcType=VARCHAR},
+		material_img_url =
+		#{materialImgUrl,jdbcType=VARCHAR},
+		material_img_is_show =
+		#{materialImgIsShow,jdbcType=INTEGER},
+		business_select_type =
+		#{businessSelectType,jdbcType=VARCHAR},
+		material_digest =
+		#{materialDigest,jdbcType=VARCHAR},
+		gmt_created =
+		#{gmtCreated,jdbcType=TIMESTAMP},
+		gmt_modified =
+		#{gmt_modified,jdbcType=TIMESTAMP},
+		material_type_id =
+		#{materialTypeId,jdbcType=INTEGER},
+		material_next_id =
+		#{materialNextId,jdbcType=BIGINT},
+		wx_merchant_id =
+		#{wxMerchantId,jdbcType=BIGINT},
+		status = #{status,jdbcType=INTEGER},
+		material_addr = #{materialAddr,jdbcType=VARCHAR}
+		material_source_url =
+		#{materialSourceUrl,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+
+
+
+	<select id="queryEventKey" resultMap="BaseResultMap">
+		select * from wx_material where id = (select material_id from wx_menu_item
+		where menu_id=(select id from wx_menu where
+		wx_merchant_id=#{wxMerchantId}
+		<if test="evenkeyNum == 10 ||evenkeyNum == 11">limit 1) limit 0,1</if>
+		<if test="evenkeyNum == 12">limit 1) limit 1,1</if>
+		<if test="evenkeyNum == 13">limit 1) limit 2,1</if>
+		<if test="evenkeyNum == 14">limit 1) limit 3,1</if>
+		<if test="evenkeyNum == 15">limit 1) limit 4,1</if>
+
+		<if test="evenkeyNum == 20 ||evenkeyNum == 21">limit 1,1) limit 0,1</if>
+		<if test="evenkeyNum == 22">limit 1,1) limit 1,1</if>
+		<if test="evenkeyNum == 23">limit 1,1) limit 2,1</if>
+		<if test="evenkeyNum == 24">limit 1,1) limit 3,1</if>
+		<if test="evenkeyNum == 25">limit 1,1) limit 4,1</if>
+
+		<if test="evenkeyNum == 30 ||evenkeyNum == 31">limit 2,1) limit 0,1</if>
+		<if test="evenkeyNum == 32">limit 2,1) limit 1,1</if>
+		<if test="evenkeyNum == 33">limit 2,1) limit 2,1</if>
+		<if test="evenkeyNum == 34">limit 2,1) limit 3,1</if>
+		<if test="evenkeyNum == 35">limit 2,1) limit 4,1</if>
+		)
+	</select>
+
+	<!-- 自定义菜单相应事件-依次查询menu->item对应素材信息 -->
+	<!-- 当EventKey为10的情况下,第三个一级菜单只有一个二级菜单,这时这个二级菜单的顶替一级菜单,sql语句与EventKey为11时相同 -->
+	<select id="queryEventKey10" parameterType="int" resultMap="BaseResultMap">
+		select * from wx_material where id = (select id from wx_menu_item
+		where menu_id=(select menu_id from wx_menu where
+		wx_merchant_id=#{wxMerchantId} limit 1) limit 0,1)
+	</select>
+	<!--eventKey.equals("11") 查询素材信息根据类型封装给req -->
+	<select id="queryEventKey11" parameterType="int" resultMap="BaseResultMap">
+		select * from wx_material where id = (select id from wx_menu_item
+		where menu_id=(select menu_id from wx_menu where
+		wx_merchant_id=#{wxMerchantId} limit 1) limit 0,1)
+	</select>
+	<!--eventKey.equals("12") 查询素材信息根据类型封装给req -->
+	<select id="queryEventKey12" parameterType="int" resultMap="BaseResultMap">
+		select * from wx_material where id = (select id from wx_menu_item
+		where menu_id=(select menu_id from wx_menu where
+		wx_merchant_id=#{wxMerchantId} limit 1) limit 1,1)
+	</select>
+	<!-- -->
+	<select id="queryEventKey13" parameterType="int" resultMap="BaseResultMap">
+		select * from wx_material where id = (select id from wx_menu_item
+		where menu_id=(select menu_id from wx_menu where
+		wx_merchant_id=#{wxMerchantId} limit 1) limit 2,1)
+	</select>
+	<!-- -->
+	<select id="queryEventKey14" parameterType="int" resultMap="BaseResultMap">
+		select * from wx_material where id = (select id from wx_menu_item
+		where menu_id=(select menu_id from wx_menu where
+		wx_merchant_id=#{wxMerchantId} limit 1) limit 3,1)
+	</select>
+	<!-- -->
+	<select id="queryEventKey15" parameterType="int" resultMap="BaseResultMap">
+		select * from wx_material where id = (select id from wx_menu_item
+		where menu_id=(select menu_id from wx_menu where
+		wx_merchant_id=#{wxMerchantId} limit 1) limit 4,1)
+	</select>
+	<!-- 当EventKey为20的情况下,第三个一级菜单只有一个二级菜单,这时这个二级菜单的顶替一级菜单,sql语句与EventKey为21时相同 -->
+	<select id="queryEventKey20" parameterType="int" resultMap="BaseResultMap">
+		select * from wx_material where id = (select id from wx_menu_item
+		where menu_id=(select menu_id from wx_menu where
+		wx_merchant_id=#{wxMerchantId} limit 1,1) limit 0,1)
+	</select>
+	<select id="queryEventKey21" parameterType="int" resultMap="BaseResultMap">
+		select * from wx_material where id = (select id from wx_menu_item
+		where menu_id=(select menu_id from wx_menu where
+		wx_merchant_id=#{wxMerchantId} limit 1,1) limit 0,1)
+	</select>
+	<select id="queryEventKey22" parameterType="int" resultMap="BaseResultMap">
+		select * from wx_material where id = (select id from wx_menu_item
+		where menu_id=(select menu_id from wx_menu where
+		wx_merchant_id=#{wxMerchantId} limit 1,1) limit 1,1)
+	</select>
+	<select id="queryEventKey23" parameterType="int" resultMap="BaseResultMap">
+		select * from wx_material where id = (select id from wx_menu_item
+		where menu_id=(select menu_id from wx_menu where
+		wx_merchant_id=#{wxMerchantId} limit 1,1) limit 2,1)
+	</select>
+	<select id="queryEventKey24" parameterType="int" resultMap="BaseResultMap">
+		select * from wx_material where id = (select id from wx_menu_item
+		where menu_id=(select menu_id from wx_menu where
+		wx_merchant_id=#{wxMerchantId} limit 1,1) limit 3,1)
+	</select>
+	<select id="queryEventKey25" parameterType="int" resultMap="BaseResultMap">
+		select * from wx_material where id = (select id from wx_menu_item
+		where menu_id=(select menu_id from wx_menu where
+		wx_merchant_id=#{wxMerchantId} limit 1,1) limit 4,1)
+	</select>
+	<!-- 当EventKey为30的情况下,第三个一级菜单只有一个二级菜单,这时这个二级菜单的顶替一级菜单,sql语句与EventKey为31时相同 -->
+	<select id="queryEventKey30" parameterType="int" resultMap="BaseResultMap">
+		select * from wx_material where id = (select id from wx_menu_item
+		where menu_id=(select menu_id from wx_menu where
+		wx_merchant_id=#{wxMerchantId} limit 2,1) limit 0,1)
+	</select>
+	<select id="queryEventKey31" parameterType="int" resultMap="BaseResultMap">
+		select * from wx_material where id = (select id from wx_menu_item
+		where menu_id=(select menu_id from wx_menu where
+		wx_merchant_id=#{wxMerchantId} limit 2,1) limit 0,1)
+	</select>
+	<select id="queryEventKey32" parameterType="int" resultMap="BaseResultMap">
+		select * from wx_material where id = (select id from wx_menu_item
+		where menu_id=(select menu_id from wx_menu where
+		wx_merchant_id=#{wxMerchantId} limit 2,1) limit 1,1)
+	</select>
+	<select id="queryEventKey33" parameterType="int" resultMap="BaseResultMap">
+		select * from wx_material where id = (select id from wx_menu_item
+		where menu_id=(select menu_id from wx_menu where
+		wx_merchant_id=#{wxMerchantId} limit 2,1) limit 2,1)
+	</select>
+	<select id="queryEventKey34" parameterType="int" resultMap="BaseResultMap">
+		select * from wx_material where id = (select id from wx_menu_item
+		where menu_id=(select menu_id from wx_menu where
+		wx_merchant_id=#{wxMerchantId} limit 2,1) limit 3,1)
+	</select>
+	<select id="queryEventKey35" parameterType="int" resultMap="BaseResultMap">
+		select * from wx_material where id = (select id from wx_menu_item
+		where menu_id=(select menu_id from wx_menu where
+		wx_merchant_id=#{wxMerchantId} limit 2,1) limit 4,1)
+	</select>
+
+
+
+</mapper>

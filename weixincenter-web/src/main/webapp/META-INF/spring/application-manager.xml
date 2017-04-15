@@ -8,5 +8,8 @@
            http://www.springframework.org/schema/aop     http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 	<context:annotation-config />
 
-
+    <bean id="wxSessionManager" class="com.telan.weixincenter.manager.WxSessionManager">
+        <property name="wxspAppid" value="${wx.werewolf.appid}"/>
+        <property name="wxspSecret" value="${wx.werewolf.appsecret}" />
+    </bean>
 </beans>

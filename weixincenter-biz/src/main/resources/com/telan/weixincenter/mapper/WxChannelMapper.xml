@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyweekend.weixincenter.mapper.channel.WxChannelMapper" >
+  <resultMap id="BaseResultMap" type="com.telan.weixincenter.domain.channel.WxChannelDO" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="wx_merchant_id" property="wxMerchantId" jdbcType="BIGINT" />
+    <result column="channel_name" property="channelName" jdbcType="VARCHAR" />
+    <result column="channel_type" property="channelType" jdbcType="INTEGER" />
+    <result column="channel_p" property="channelP" jdbcType="VARCHAR" />
+    <result column="channel_c" property="channelC" jdbcType="VARCHAR" />
+    <result column="channel_a" property="channelA" jdbcType="VARCHAR" />
+    <result column="channel_address" property="channelAddress" jdbcType="VARCHAR" />
+    <result column="channel_class_id" property="channelClassId" jdbcType="INTEGER" />
+    <result column="channel_code_img" property="channelCodeImg" jdbcType="VARCHAR" />
+    <result column="channel_logo" property="channelLogo" jdbcType="VARCHAR" />
+    <result column="channel_url" property="channelUrl" jdbcType="VARCHAR" />
+    <result column="channelbeizhu" property="channelbeizhu" jdbcType="VARCHAR" />
+    <result column="total_nums" property="totalNums" jdbcType="INTEGER" />
+    <result column="total_cancel_num" property="totalCancelNum" jdbcType="INTEGER" />
+    <result column="delete_type" property="deleteType" jdbcType="INTEGER" />
+    <result column="gmt_created" property="gmtCreated" jdbcType="TIMESTAMP" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+    <collection property="wxChannelClass" javaType="com.telan.weixincenter.domain.channel.WxChannelClassDO">
+		<id column="id" property="id" jdbcType="BIGINT" />
+	    <result column="wx_merchant_id" property="wxMerchantId" jdbcType="BIGINT" />
+	    <result column="channel_class_name" property="channelClassName" jdbcType="VARCHAR" />
+	    <result column="order_num" property="orderNum" jdbcType="INTEGER" />
+	    <result column="gmt_created" property="gmtCreated" jdbcType="TIMESTAMP" />
+    	<result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+	</collection>
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.telan.weixincenter.domain.channel.WxChannelDO" extends="BaseResultMap" >
+    <result column="channel_remark" property="channelRemark" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, wx_merchant_id, channel_name, channel_type, channel_p, channel_c, channel_a, 
+    channel_address, channel_class_id, channel_code_img, channel_logo, channel_url, channelbeizhu, 
+    total_nums,total_cancel_num, gmt_created,gmt_modified
+  </sql>
+  <sql id="Blob_Column_List" >
+    channel_remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from wx_channel
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <select id="queryChannelListByWxChannelClassId" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+		select * from wx_channel where 1=1 and id = #{id} and delete_type=0
+	</select>
+  <!-- 查询渠道类型信息 返回 -->
+	<select id="queryChannelListByMerchantId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		select wc.*,wcc.* from wx_channel as wc 
+		inner join wx_channel_class as wcc 
+		on wc.channel_class_id = wcc.id
+		 where 1=1 and wc.wx_merchant_id=#{wxMerchantId} and wc.delete_type=0
+	</select>
+  <select id="queryChannelListByWxChannel" parameterType="com.telan.weixincenter.domain.channel.WxChannelDO" resultMap="BaseResultMap">
+		select wc.*,wcc.* from wx_channel as wc 
+		inner join wx_channel_class as wcc 
+		on wc.channel_class_id = wcc.id
+		 where 1=1 and wc.wx_merchant_id=#{wxMerchantId} and wc.delete_type=0
+		 <if test="channelType!=null and channelType!=''">
+			and wc.channel_type = #{channelType}
+		</if>
+		<if test="keyword!=null and keyword!=''">
+			and wc.channel_name LIKE CONCAT(CONCAT('%', #{keyword}),'%')  
+		</if>
+	</select> 	
+  <!-- <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from wx_channel
+    where channel_id = #{channelId,jdbcType=INTEGER}
+  </delete> -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    update wx_channel set delete_type=1
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.telan.weixincenter.domain.channel.WxChannelDO" >
+    insert into wx_channel (id, wx_merchant_id, channel_name, 
+      channel_type, channel_p, channel_c, 
+      channel_a, channel_address, channel_class_id, 
+      channel_code_img, channel_logo, channel_url, 
+      channelbeizhu, total_nums,total_cancel_num,
+      channel_remark)
+    values (#{id,jdbcType=BIGINT}, #{wxMerchantId,jdbcType=BIGINT}, #{channelName,jdbcType=VARCHAR}, 
+      #{channelType,jdbcType=INTEGER}, #{channelP,jdbcType=VARCHAR}, #{channelC,jdbcType=VARCHAR}, 
+      #{channelA,jdbcType=VARCHAR}, #{channelAddress,jdbcType=VARCHAR}, #{channelClassId,jdbcType=INTEGER}, 
+      #{channelCodeImg,jdbcType=VARCHAR}, #{channelLogo,jdbcType=VARCHAR}, #{channelUrl,jdbcType=VARCHAR}, 
+      #{channelbeizhu,jdbcType=VARCHAR}, #{totalNums,jdbcType=INTEGER}, #{totalCancelNum,jdbcType=INTEGER},
+      #{channelRemark,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective"  useGeneratedKeys="true" keyProperty="id" parameterType="com.telan.weixincenter.domain.channel.WxChannelDO" >
+    insert into wx_channel
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="wxMerchantId != null" >
+        wx_merchant_id,
+      </if>
+      <if test="channelName != null" >
+        channel_name,
+      </if>
+      <if test="channelType != null" >
+        channel_type,
+      </if>
+      <if test="channelP != null" >
+        channel_p,
+      </if>
+      <if test="channelC != null" >
+        channel_c,
+      </if>
+      <if test="channelA != null" >
+        channel_a,
+      </if>
+      <if test="channelAddress != null" >
+        channel_address,
+      </if>
+      <if test="channelClassId != null" >
+        channel_class_id,
+      </if>
+      <if test="channelCodeImg != null" >
+        channel_code_img,
+      </if>
+      <if test="channelLogo != null" >
+        channel_logo,
+      </if>
+      <if test="channelUrl != null" >
+        channel_url,
+      </if>
+      <if test="channelbeizhu != null" >
+        channelbeizhu,
+      </if>
+      <if test="totalNums != null" >
+        total_nums,
+      </if>
+      <if test="totalCancelNum != null" >
+        total_cancel_num,
+      </if>
+      <if test="channelRemark != null" >
+        channel_remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="wxMerchantId != null" >
+        #{wxMerchantId,jdbcType=BIGINT},
+      </if>
+      <if test="channelName != null" >
+        #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="channelType != null" >
+        #{channelType,jdbcType=INTEGER},
+      </if>
+      <if test="channelP != null" >
+        #{channelP,jdbcType=VARCHAR},
+      </if>
+      <if test="channelC != null" >
+        #{channelC,jdbcType=VARCHAR},
+      </if>
+      <if test="channelA != null" >
+        #{channelA,jdbcType=VARCHAR},
+      </if>
+      <if test="channelAddress != null" >
+        #{channelAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="channelClassId != null" >
+        #{channelClassId,jdbcType=INTEGER},
+      </if>
+      <if test="channelCodeImg != null" >
+        #{channelCodeImg,jdbcType=VARCHAR},
+      </if>
+      <if test="channelLogo != null" >
+        #{channelLogo,jdbcType=VARCHAR},
+      </if>
+      <if test="channelUrl != null" >
+        #{channelUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="channelbeizhu != null" >
+        #{channelbeizhu,jdbcType=VARCHAR},
+      </if>
+      <if test="totalNums != null" >
+        #{totalNums,jdbcType=INTEGER},
+      </if>
+      <if test="totalCancelNum != null" >
+        #{totalCancelNum,jdbcType=INTEGER},
+      </if>
+      <if test="channelRemark != null" >
+        #{channelRemark,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.telan.weixincenter.domain.channel.WxChannelDO" >
+    update wx_channel
+    <set >
+      <if test="wxMerchantId != null" >
+        wx_merchant_id = #{wxMerchantId,jdbcType=BIGINT},
+      </if>
+      <if test="channelName != null" >
+        channel_name = #{channelName,jdbcType=VARCHAR},
+      </if>
+      <if test="channelType != null" >
+        channel_type = #{channelType,jdbcType=INTEGER},
+      </if>
+      <if test="channelP != null" >
+        channel_p = #{channelP,jdbcType=VARCHAR},
+      </if>
+      <if test="channelC != null" >
+        channel_c = #{channelC,jdbcType=VARCHAR},
+      </if>
+      <if test="channelA != null" >
+        channel_a = #{channelA,jdbcType=VARCHAR},
+      </if>
+      <if test="channelAddress != null" >
+        channel_address = #{channelAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="channelClassId != null" >
+        channel_class_id = #{channelClassId,jdbcType=INTEGER},
+      </if>
+      <if test="channelCodeImg != null" >
+        channel_code_img = #{channelCodeImg,jdbcType=VARCHAR},
+      </if>
+      <if test="channelLogo != null" >
+        channel_logo = #{channelLogo,jdbcType=VARCHAR},
+      </if>
+      <if test="channelUrl != null" >
+        channel_url = #{channelUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="channelbeizhu != null" >
+        channelbeizhu = #{channelbeizhu,jdbcType=VARCHAR},
+      </if>
+      <if test="totalNums != null" >
+        total_nums = #{totalNums,jdbcType=INTEGER},
+      </if>
+      <if test="totalCancelNum != null" >
+        total_cancel_num = #{totalCancelNum,jdbcType=INTEGER},
+      </if>
+      <if test="channelRemark != null" >
+        channel_remark = #{channelRemark,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.telan.weixincenter.domain.channel.WxChannelDO" >
+    update wx_channel
+    set wx_merchant_id = #{wxMerchantId,jdbcType=BIGINT},
+      channel_name = #{channelName,jdbcType=VARCHAR},
+      channel_type = #{channelType,jdbcType=INTEGER},
+      channel_p = #{channelP,jdbcType=VARCHAR},
+      channel_c = #{channelC,jdbcType=VARCHAR},
+      channel_a = #{channelA,jdbcType=VARCHAR},
+      channel_address = #{channelAddress,jdbcType=VARCHAR},
+      channel_class_id = #{channelClassId,jdbcType=INTEGER},
+      channel_code_img = #{channelCodeImg,jdbcType=VARCHAR},
+      channel_logo = #{channelLogo,jdbcType=VARCHAR},
+      channel_url = #{channelUrl,jdbcType=VARCHAR},
+      channelbeizhu = #{channelbeizhu,jdbcType=VARCHAR},
+      total_nums = #{totalNums,jdbcType=INTEGER},
+      total_cancel_num = #{totalCancelNum,jdbcType=INTEGER},
+      channel_remark = #{channelRemark,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.telan.weixincenter.domain.channel.WxChannelDO" >
+    update wx_channel
+    set wx_merchant_id = #{wxMerchantId,jdbcType=BIGINT},
+      channel_name = #{channelName,jdbcType=VARCHAR},
+      channel_type = #{channelType,jdbcType=INTEGER},
+      channel_p = #{channelP,jdbcType=VARCHAR},
+      channel_c = #{channelC,jdbcType=VARCHAR},
+      channel_a = #{channelA,jdbcType=VARCHAR},
+      channel_address = #{channelAddress,jdbcType=VARCHAR},
+      channel_class_id = #{channelClassId,jdbcType=INTEGER},
+      channel_code_img = #{channelCodeImg,jdbcType=VARCHAR},
+      channel_logo = #{channelLogo,jdbcType=VARCHAR},
+      channel_url = #{channelUrl,jdbcType=VARCHAR},
+      channelbeizhu = #{channelbeizhu,jdbcType=VARCHAR},
+      total_nums = #{totalNums,jdbcType=INTEGER},
+      total_cancel_num = #{totalCancelNum,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

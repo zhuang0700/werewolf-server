@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyweekend.weixincenter.mapper.base.WxServiceKeywordMapper">
+	<resultMap id="BaseResultMap"
+		type="com.telan.weixincenter.domain.base.WxServiceKeywordDO">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="keyword_name" property="keywordName" jdbcType="VARCHAR" />
+		<result column="keyword_content" property="keywordContent"
+			jdbcType="VARCHAR" />
+		<result column="rule_id" property="ruleId" jdbcType="BIGINT" />
+		<result column="gmt_created" property="gmtCreated" jdbcType="TIMESTAMP" />
+		<result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+		<result column="reserve" property="reserve" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, keyword_name, keyword_content, rule_id, gmt_created,gmt_modified,
+		reserve
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from wx_service_keyword
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="queryWxKeyWordListByRuleId" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from wx_service_keyword
+		where rule_id = #{ruleId,jdbcType=BIGINT}
+	</select>
+
+	<!-- 输入信息与关键字进行匹配 -->
+	<select id="infoKeyWordLike" resultMap="BaseResultMap">
+		SELECT * FROM
+		wx_service_keyword AS k,wx_service_rule AS r WHERE k.rule_id=r.id
+		AND r.wx_merchant_id = #{wxMerchantId} and k.keyword_name LIKE
+		concat('%',#{content},'%') ORDER BY k.gmt_created DESC
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from wx_service_keyword
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<delete id="deleteByRuId" parameterType="java.lang.Long">
+		delete from wx_service_keyword
+		where rule_id = #{ruleId,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert"
+		parameterType="com.telan.weixincenter.domain.base.WxServiceKeywordDO">
+		insert into wx_service_keyword (id, keyword_name, keyword_content,
+		rule_id, gmt_created,gmt_modified, reserve
+		)
+		values (#{id,jdbcType=BIGINT}, #{keywordName,jdbcType=VARCHAR},
+		#{keywordContent,jdbcType=VARCHAR},
+		#{ruleId,jdbcType=INTEGER}, now(),now(), #{reserve,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.telan.weixincenter.domain.base.WxServiceKeywordDO">
+		insert into wx_service_keyword
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="keywordName != null">
+				keyword_name,
+			</if>
+			<if test="keywordContent != null">
+				keyword_content,
+			</if>
+			<if test="ruleId != null">
+				rule_id,
+			</if>
+
+			gmt_created,
+			gmt_modified,
+			<if test="reserve != null">
+				reserve,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="keywordName != null">
+				#{keywordName,jdbcType=VARCHAR},
+			</if>
+			<if test="keywordContent != null">
+				#{keywordContent,jdbcType=VARCHAR},
+			</if>
+			<if test="ruleId != null">
+				#{ruleId,jdbcType=BIGINT},
+			</if>
+			now(),
+			now(),
+			<if test="reserve != null">
+				#{reserve,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.telan.weixincenter.domain.base.WxServiceKeywordDO">
+		update wx_service_keyword
+		<set>
+			<if test="keywordName != null">
+				keyword_name = #{keywordName,jdbcType=VARCHAR},
+			</if>
+			<if test="keywordContent != null">
+				keyword_content = #{keywordContent,jdbcType=VARCHAR},
+			</if>
+			<if test="ruleId != null">
+				rule_id = #{ruleId,jdbcType=BIGINT},
+			</if>
+			gmt_modified = now(),
+			<if test="reserve != null">
+				reserve = #{reserve,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.telan.weixincenter.domain.base.WxServiceKeywordDO">
+		update wx_service_keyword
+		set keyword_name = #{keywordName,jdbcType=VARCHAR},
+		keyword_content = #{keywordContent,jdbcType=VARCHAR},
+		rule_id = #{ruleId,jdbcType=BIGINT},
+		gmt_modified = now(),
+		reserve = #{reserve,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+</mapper>

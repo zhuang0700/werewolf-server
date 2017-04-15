@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joyweekend.weixincenter.mapper.base.WxServiceRuleMapper">
+	<resultMap id="BaseResultMap"
+		type="com.telan.weixincenter.domain.base.WxServiceRuleDO">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="rule_name" property="ruleName" jdbcType="VARCHAR" />
+		<result column="material_id" property="materialId" jdbcType="BIGINT" />
+		<result column="wx_merchant_id" property="wxMerchantId"
+			jdbcType="BIGINT" />
+		<result column="material_type_id" property="materialTypeId"
+			jdbcType="INTEGER" />
+		<result column="gmt_created" property="gmtCreated" jdbcType="TIMESTAMP" />
+		<result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+		<result column="reserve" property="reserve" jdbcType="INTEGER" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs"
+		type="com.telan.weixincenter.domain.base.WxServiceRuleDO" extends="BaseResultMap">
+		<result column="rule_content" property="ruleContent" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, rule_name, material_id, wx_merchant_id, gmt_created,gmt_modified,
+		material_type_id,reserve
+	</sql>
+	<sql id="Blob_Column_List">
+		rule_content
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from wx_service_rule
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="queryRuleBackListByMerchantId" resultMap="ResultMapWithBLOBs"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from wx_service_rule
+		where wx_merchant_id = #{wxMerchantId,jdbcType=BIGINT} order by gmt_created
+		desc
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from wx_service_rule
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert"
+		parameterType="com.telan.weixincenter.domain.base.WxServiceRuleDO">
+		insert into wx_service_rule ( rule_name, material_id,
+		wx_merchant_id, gmt_created,gmt_modified,material_type_id, reserve,
+		rule_content)
+		values  #{ruleName,jdbcType=VARCHAR},
+		#{materialId,jdbcType=BIGINT},
+		#{wxMerchantId,jdbcType=INTEGER}, now(),now(),
+		#{materialTypeId,jdbcType=INTEGER}, #{reserve,jdbcType=INTEGER},
+		#{ruleContent,jdbcType=LONGVARCHAR})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.telan.weixincenter.domain.base.WxServiceRuleDO">
+		insert into wx_service_rule
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+
+			<if test="ruleName != null">
+				rule_name,
+			</if>
+			<if test="materialId != null">
+				material_id,
+			</if>
+			<if test="wxMerchantId != null">
+				wx_merchant_id,
+			</if>
+			<if test="materialTypeId != null">
+				material_type_id,
+			</if>
+			
+				gmt_created,
+
+	
+				gmt_modified,
+
+			<if test="reserve != null">
+				reserve,
+			</if>
+			<if test="ruleContent != null">
+				rule_content,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="ruleName != null">
+				#{ruleName,jdbcType=VARCHAR},
+			</if>
+			<if test="materialId != null">
+				#{materialId,jdbcType=INTEGER},
+			</if>
+			<if test="wxMerchantId != null">
+				#{wxMerchantId,jdbcType=INTEGER},
+			</if>
+			<if test="materialTypeId != null">
+				#{materialTypeId,jdbcType=INTEGER},
+			</if>
+			now(),
+			now(),
+			<if test="reserve != null">
+				#{reserve,jdbcType=INTEGER},
+			</if>
+			<if test="ruleContent != null">
+				#{ruleContent,jdbcType=LONGVARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.telan.weixincenter.domain.base.WxServiceRuleDO">
+		update wx_service_rule
+		<set>
+			<if test="ruleName != null">
+				rule_name = #{ruleName,jdbcType=VARCHAR},
+			</if>
+			<if test="materialId != null">
+				material_id = #{materialId,jdbcType=INTEGER},
+			</if>
+			<if test="wxMerchantId != null">
+				wx_merchant_id = #{wxMerchantId,jdbcType=INTEGER},
+			</if>
+			<if test="materialTypeId != null">
+				material_type_id = #{materialTypeId,jdbcType=INTEGER},
+			</if>
+				gmt_modified = now(),
+			<if test="reserve != null">
+				reserve = #{reserve,jdbcType=INTEGER},
+			</if>
+			<if test="ruleContent != null">
+				rule_content = #{ruleContent,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs"
+		parameterType="com.telan.weixincenter.domain.base.WxServiceRuleDO">
+		update wx_service_rule
+		set rule_name = #{ruleName,jdbcType=VARCHAR},
+		material_id = #{materialId,jdbcType=BIGINT},
+		wx_merchant_id = #{wxMerchantId,jdbcType=BIGINT},
+		material_type_id = #{materialTypeId,jdbcType=INTEGER},
+		gmt_modified = now(),
+		reserve = #{reserve,jdbcType=INTEGER},
+		rule_content = #{ruleContent,jdbcType=LONGVARCHAR}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.telan.weixincenter.domain.base.WxServiceRuleDO">
+		update wx_service_rule
+		set rule_name = #{ruleName,jdbcType=VARCHAR},
+		material_id = #{materialId,jdbcType=BIGINT},
+		wx_merchant_id = #{wxMerchantId,jdbcType=INTEGER},
+		material_type_id = #{materialTypeId,jdbcType=INTEGER},
+		gmt_modified = now(),
+		reserve = #{reserve,jdbcType=INTEGER}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+</mapper>

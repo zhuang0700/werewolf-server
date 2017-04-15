@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+    <classPathEntry  location="../run/mysql-connector-java-5.1.30.jar" />
+	<context id="context1" targetRuntime="MyBatis3" >		
+		<plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
+		<!-- 
+		<plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin" />
+		 -->
+		<plugin type="org.mybatis.generator.plugins.CaseInsensitiveLikePlugin" />
+		<plugin type="org.mybatis.generator.plugins.RenameExampleClassPlugin">  
+		    <property name="searchString" value="Example$" />  
+		    <property name="replaceString" value="Conditions" />  
+		</plugin>
+		<commentGenerator>
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+						connectionURL="jdbc:mysql://115.28.153.88:3306/werewolf?characterEncoding=utf8&amp;amp;autoReconnect=true"
+						userId="root"
+						password="zhuang0700" />
+		
+		<javaModelGenerator targetPackage="com.telan.werewolf.domain"
+			targetProject="../werewolf-client/src/main/java" />
+		<sqlMapGenerator targetPackage="sqlmap"
+			targetProject="../werewolf-biz/src/main/resources"/>
+		<javaClientGenerator targetPackage="com.telan.werewolf.mapper"
+			targetProject="../werewolf-biz/src/main/java" type="XMLMAPPER" />
+
+		<table tableName="user" domainObjectName="WxUserDO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
+			   enableSelectByExample="false" selectByExampleQueryId="false">
+			<generatedKey column="id" sqlStatement="JDBC" />
+			<columnOverride column="id" javaType="long" />
+			<columnOverride column="line_id" javaType="long" />
+			<columnOverride column="start_city_id" javaType="long" />
+			<columnOverride column="dest_city_id" javaType="long" />
+			<columnOverride column="type" javaType="int" />
+			<columnOverride column="status" javaType="int" />
+			<columnOverride column="user_id" javaType="long" />
+			<columnOverride column="biz_order_id" javaType="long" />
+		</table>
+
+
+	</context>
+</generatorConfiguration>
