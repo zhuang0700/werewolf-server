@@ -53,6 +53,13 @@
 	<!-- 静态文件（css、js、images）配置不经过DispatchServelet处理 
 	<mvc:resources location="/resources/" mapping="/resources/**" />
 	-->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/werewolf/*"/>
+			<bean class="com.telan.weixincenter.interceptor.GlobalInterceptor">
+			</bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
 	<!-- 定义无Controller的path<->view直接映射
 	<mvc:interceptors>
 		

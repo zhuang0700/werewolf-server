@@ -2,6 +2,8 @@ package com.telan.werewolf.result;
 
 
 
+import com.telan.werewolf.enums.WeErrorCode;
+
 import java.io.Serializable;
 
 /**
@@ -34,10 +36,10 @@ public class WeResultSupport implements Serializable {
         this.resultMsg = resultMsg;
     }
 
-    public void setErrorCode(WeReturnCode wxReturnCode) {
+    public void setErrorCode(WeErrorCode weErrorCode) {
         this.success = false;
-        this.errorCode = wxReturnCode.getCode();
-        this.resultMsg = wxReturnCode.getDesc();
+        this.errorCode = weErrorCode.getErrorCode();
+        this.resultMsg = weErrorCode.getErrorMsg();
     }
 
     public int getErrorCode() {

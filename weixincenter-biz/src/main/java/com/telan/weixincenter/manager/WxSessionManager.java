@@ -3,6 +3,7 @@ package com.telan.weixincenter.manager;
 import com.alibaba.fastjson.JSONObject;
 import com.telan.weixincenter.core.util.AesCbcUtil;
 import com.telan.weixincenter.core.util.HttpUtils;
+import com.telan.weixincenter.domain.user.UserSessionInfo;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +33,7 @@ public class WxSessionManager {
         this.wxspSecret = wxspSecret;
     }
 
-    public Map getSessionInfo(String encryptedData, String iv, String code) {
+    public Map getSessionMap(String encryptedData, String iv, String code) {
 
         Map map = new HashMap();
         //授权（必填）
@@ -77,5 +78,46 @@ public class WxSessionManager {
         map.put("status", 0);
         map.put("msg", "解密失败");
         return map;
+    }
+
+    public UserSessionInfo getSessionInfo(String encryptedData, String iv, String code) {
+
+        //授权（必填）
+        String grant_type = "authorization_code";
+
+
+        //////////////// 1、向微信服务器 使用登录凭证 code 获取 session_key 和 openid ////////////////
+        //请求参数
+        String params = "appid=" + wxspAppid + "&secret=" + wxspSecret + "&js_code=" + code + "&grant_type=" + grant_type;
+        //发送请求
+        String sr = HttpUtils.doGet("https://api.weixin.qq.com/sns/jscode2session", params);
+        //解析相应内容（转换成json对象）
+        JSONObject json = JSONObject.parseObject(sr);
+        //获取会话密钥（session_key）
+        String session_key = json.get("session_key").toString();
+        //用户的唯一标识（openid）
+        String openid = (String) json.get("openid");
+
+        //////////////// 2、对encryptedData加密数据进行AES解密 ////////////////
+        try {
+            String result = AesCbcUtil.decrypt(encryptedData, session_key, iv, "UTF-8");
+            if (null != result && result.length() > 0) {
+                JSONObject userInfoJSON = JSONObject.parseObject(result);
+                UserSessionInfo userInfo = new UserSessionInfo();
+                userInfo.setOpenId((String) userInfoJSON.get("openId"));
+                userInfo.setUnionId((String) userInfoJSON.get("unionId"));
+                userInfo.setAvatarUrl((String) userInfoJSON.get("avatarUrl"));
+                userInfo.setCity((String) userInfoJSON.get("city"));
+                userInfo.setCountry((String) userInfoJSON.get("country"));
+                userInfo.setProvince((String) userInfoJSON.get("province"));
+                userInfo.setGender((Integer) userInfoJSON.get("gender"));
+                userInfo.setNickName((String) userInfoJSON.get("nickName"));
+                userInfo.setSessionKey(session_key);
+                return userInfo;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

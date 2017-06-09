@@ -1,10 +1,15 @@
 package com.telan.weixincenter.controller;
 
+import com.telan.weixincenter.domain.user.UserSessionInfo;
 import com.telan.weixincenter.event.EventAcceptor;
 import com.telan.weixincenter.manager.WxSessionManager;
 import com.telan.weixincenter.utils.SignUtil;
 import com.telan.weixincenter.utils.SpringHttpHolder;
 
+import com.telan.werewolf.domain.UserDO;
+import com.telan.werewolf.enums.BaseStatus;
+import com.telan.werewolf.manager.MemSessionManager;
+import com.telan.werewolf.manager.UserManager;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,12 +26,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 @Controller
 @RequestMapping("/weixin")
-public class WeiXinMainController {
+public class WeiXinMainController extends BaseController {
 	private final static Logger LOGGER = LoggerFactory.getLogger(WeiXinMainController.class);
 	@Autowired
 	private EventAcceptor eventAcceptor;
@@ -35,6 +41,10 @@ public class WeiXinMainController {
 //	private WeixinApiUrlHolder weixinApiUrlHolder;
 	@Autowired
 	private WxSessionManager wxSessionManager;
+	@Autowired
+	private MemSessionManager memSessionManager;
+	@Autowired
+	private UserManager userManager;
 	
 	@RequestMapping(value = "/main", method=RequestMethod.GET )
 	public void checkSignature(String signature,String timestamp,String nonce,String echostr,ModelMap modelMap) throws IOException
@@ -91,8 +101,8 @@ public class WeiXinMainController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/decodeUserInfo", method=RequestMethod.POST )
-	public Map decodeUserInfo() throws IOException
+	@RequestMapping(value = "/login", method=RequestMethod.POST )
+	public Map login() throws IOException
 	{
 		HttpServletRequest request = SpringHttpHolder.getRequest();
 		HttpServletResponse response = SpringHttpHolder.getResponse();
@@ -115,16 +125,36 @@ public class WeiXinMainController {
 			return map;
 		}
 		//处理请求
-		map = wxSessionManager.getSessionInfo(encryptedData, iv, code);
+		UserSessionInfo userSessionInfo = wxSessionManager.getSessionInfo(encryptedData, iv, code);
 
-		String responseContent = "test";
-		LOGGER.info("responseContent={}",responseContent);
+		if(userSessionInfo == null) {
+			LOGGER.error("wxSessionManager.getSessionInfo(encryptedData, iv, code); failed.");
+			map.put("status", 0);
+			map.put("msg", "解析用户信息失败");
+			return map;
+		}
+		String sessionKey = userSessionInfo.getSessionKey();
+		String unionId = userSessionInfo.getUnionId();
+		String openId = userSessionInfo.getOpenId();
+		UserDO userDO = new UserDO();
+		userDO.setSessionKey(sessionKey);
+		userDO.setStatus(BaseStatus.AVAILABLE.getType());
+		userDO.setGmtCreated(new Date());
+		userDO.setGmtModified(new Date());
+		userDO.setNick(userSessionInfo.getNickName());
+		userDO.setAvatar(userSessionInfo.getAvatarUrl());
+		userDO.setUnionId(unionId);
+		userDO.setOpenId(openId);
+		String werewolfSessionKey = userManager.login(sessionKey, userDO);
 //
 //		PrintWriter out = response.getWriter();
 //		//写入响应内容到response中
 //		out.print(responseContent);
 //		out.close();
+		map.put("userInfo", userSessionInfo);
+		map.put("thirdSessionKey", werewolfSessionKey);
 		map.put("msg", "success");
+		map.put("status", 1);
 		return map;
 	}
 }

@@ -1,23 +1,57 @@
 package com.telan.werewolf.enums;
 
+import java.io.Serializable;
+
 /**
- * Created by 海浩 on 2015/3/29.
+ * code 范围：[17000000, 18000000)
+ * @author weiwenliang
  *
  */
-public enum WeErrorCode {
-    USER_NOT_FOUND("用户不存在"),
-    PARAM_ERROR("参数错误"),
-    SYSTEM_ERROR("系统错误"),
-    READ_DB_ERROR("读取数据库错误"),
-    WRITE_DB_ERROR("写入数据库错误"),
-    UPDATE_USER_EXT_DATA("更新用户扩展数据出错");
-    private String desc;
+public class WeErrorCode implements Serializable{
+	private static final long serialVersionUID = 524294081722965665L;
+	public static final WeErrorCode SYSTEM_ERROR = new WeErrorCode(17000000,"系统错误");
 
-    WeErrorCode(String desc) {
-        this.desc = desc;
-    }
 
-    public String getDesc() {
-        return desc;
-    }
+	public static final WeErrorCode DB_ERROR = new WeErrorCode(17000001,"数据库错误");
+	public static final WeErrorCode READ_DB_ERROR = new WeErrorCode(17000002,"读数据库错误");
+	public static final WeErrorCode WRITE_DB_ERROR = new WeErrorCode(17000003,"写数据库错误");
+	public static final WeErrorCode PARAM_ERROR=new WeErrorCode(17000004,"参数异常");
+	public static final WeErrorCode TAIR_ERROR = new WeErrorCode(17000005,"tair操作异常");
+
+
+	public static final WeErrorCode UNSUPPORT_ACTION = new WeErrorCode(18000001,"不支持的操作");
+	public static final WeErrorCode DUPLICATE_ACTION = new WeErrorCode(18000002,"已执行过该行动");
+	public static final WeErrorCode DEAD_ACTION = new WeErrorCode(18000003,"死亡玩家无法行动");
+	public static final WeErrorCode WRONG_STAGE_ACTION = new WeErrorCode(18000004,"回合未开始或已经结束");
+	public static final WeErrorCode WRONG_GAME = new WeErrorCode(18000005,"游戏已结束");
+	public static final WeErrorCode NO_ACTIVE_GAME = new WeErrorCode(18000006,"没有正在进行中的游戏");
+	public static final WeErrorCode HAS_ACTIVE_GAME = new WeErrorCode(18000007,"其他游戏进行中");
+
+
+	private int errorCode;
+	
+	private String errorMsg;
+	
+	public WeErrorCode(int errorCode, String errorMsg){
+		this.errorCode = errorCode;
+		this.errorMsg  = errorMsg;
+	}
+
+	public int getErrorCode() {
+		return errorCode;
+	}
+
+	public void setErrorCode(int errorCode) {
+		this.errorCode = errorCode;
+	}
+
+	public String getErrorMsg() {
+		return errorMsg;
+	}
+
+	public void setErrorMsg(String errorMsg) {
+		this.errorMsg = errorMsg;
+	}
+
+
 }

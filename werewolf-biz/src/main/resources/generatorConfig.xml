@@ -22,24 +22,41 @@
 		
 		<javaModelGenerator targetPackage="com.telan.werewolf.domain"
 			targetProject="../werewolf-client/src/main/java" />
-		<sqlMapGenerator targetPackage="sqlmap"
+		<sqlMapGenerator targetPackage="com.telan.werewolf.mapper"
 			targetProject="../werewolf-biz/src/main/resources"/>
 		<javaClientGenerator targetPackage="com.telan.werewolf.mapper"
 			targetProject="../werewolf-biz/src/main/java" type="XMLMAPPER" />
 
-		<table tableName="user" domainObjectName="WxUserDO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
+		<!--<table tableName="user" domainObjectName="UserDO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"-->
+			   <!--enableSelectByExample="false" selectByExampleQueryId="false">-->
+			<!--<generatedKey column="id" sqlStatement="JDBC" />-->
+			<!--<columnOverride column="id" javaType="long" />-->
+			<!--<columnOverride column="status" javaType="int" />-->
+		<!--</table>-->
+
+		<table tableName="player" domainObjectName="PlayerDO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
 			   enableSelectByExample="false" selectByExampleQueryId="false">
 			<generatedKey column="id" sqlStatement="JDBC" />
 			<columnOverride column="id" javaType="long" />
-			<columnOverride column="line_id" javaType="long" />
-			<columnOverride column="start_city_id" javaType="long" />
-			<columnOverride column="dest_city_id" javaType="long" />
+			<columnOverride column="user_id" javaType="long" />
+			<columnOverride column="game_id" javaType="long" />
+			<columnOverride column="options" javaType="long" />
+			<columnOverride column="status" javaType="int" />
 			<columnOverride column="type" javaType="int" />
 			<columnOverride column="status" javaType="int" />
-			<columnOverride column="user_id" javaType="long" />
-			<columnOverride column="biz_order_id" javaType="long" />
+			<columnOverride column="role" javaType="int" />
 		</table>
 
+		<table tableName="game" domainObjectName="GameDO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false"
+			   enableSelectByExample="false" selectByExampleQueryId="false">
+			<generatedKey column="id" sqlStatement="JDBC" />
+			<columnOverride column="id" javaType="long" />
+			<columnOverride column="creator_id" javaType="long" />
+			<columnOverride column="has_judge" javaType="int" />
+			<columnOverride column="status" javaType="int" />
+			<columnOverride column="type" javaType="int" />
+			<columnOverride column="player_num" javaType="int" />
+		</table>
 
 	</context>
 </generatorConfiguration>

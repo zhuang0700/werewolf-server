@@ -53,7 +53,14 @@
 		<filter-name>originFilter</filter-name>
 		<url-pattern>/jssdk/getconfig/*</url-pattern>
 	</filter-mapping>
-
+	<!--<filter>-->
+		<!--<filter-name>loginFilter</filter-name>-->
+		<!--<filter-class>com.telan.weixincenter.filter.LoginFilter</filter-class>-->
+	<!--</filter>-->
+	<!--<filter-mapping>-->
+		<!--<filter-name>loginFilter</filter-name>-->
+		<!--<url-pattern>/werewolf/*</url-pattern>-->
+	<!--</filter-mapping>-->
 	<servlet>
 		<servlet-name>springmvc</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>

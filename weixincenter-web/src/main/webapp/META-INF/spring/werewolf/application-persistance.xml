@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
+	<!-- 配置数据源信息 -->
+	<bean id="wolfDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		  destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+		<property name="url" value="${werewolf.db.url}"/>
+		<property name="username" value="${db.username}"/>
+		<property name="password" value="${db.password}"/>
+	</bean>
+	
+	<!-- 配置ibatis映射信息 -->
+	<bean id="wolfSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="wolfDataSource"/>
+		<property name="mapperLocations" value="classpath:com/telan/werewolf/mapper/*.xml"/>
+		<property name="typeAliasesPackage" value="com.telan.werewolf.domain"/>
+	</bean>
+
+	<!-- 扫描mapper类 -->
+	<bean id="wolfMapperScannerConfigurer" class="com.telan.werewolf.utils.MapperScannerConfigurer">
+		<property name="basePackage" value="com.telan.werewolf.mapper"/>
+		<property name="sqlSessionTemplateBeanName" value="wolfSqlSession"/>
+	</bean>
+
+
+	<bean id="wolfSqlSession" class="org.mybatis.spring.SqlSessionTemplate" scope="prototype">
+		<constructor-arg index="0" ref="wolfSqlSessionFactory"/>
+	</bean>
+
+	<!--<bean id="wolfTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">-->
+		<!--<property name="dataSource" ref="wolfDataSource"/>-->
+	<!--</bean>-->
+
+	<!--<bean id="wolfTransactionTemplate"  class="org.springframework.transaction.support.TransactionTemplate">-->
+		<!--<property name="transactionManager" ref="wolfTransactionManager" />-->
+	<!--</bean>-->
+
+
+	<!-- ==================   tair END    ==================== -->
+
+</beans>

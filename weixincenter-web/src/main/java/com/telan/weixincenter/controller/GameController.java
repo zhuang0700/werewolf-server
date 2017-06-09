@@ -1,17 +1,27 @@
 package com.telan.weixincenter.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.telan.weixincenter.annotation.LoginRequired;
+import com.telan.weixincenter.core.util.HttpUtils;
 import com.telan.weixincenter.event.EventAcceptor;
 import com.telan.weixincenter.manager.WxSessionManager;
-import com.telan.weixincenter.model.request.werewolf.CreateGameParam;
+import com.telan.weixincenter.utils.ResponseMapUtils;
 import com.telan.weixincenter.utils.SignUtil;
 import com.telan.weixincenter.utils.SpringHttpHolder;
+import com.telan.werewolf.domain.UserDO;
+import com.telan.werewolf.game.param.CreateGameParam;
+import com.telan.werewolf.game.param.JoinGameParam;
+import com.telan.werewolf.game.process.GameInfo;
+import com.telan.werewolf.game.process.GameProcessor;
+import com.telan.werewolf.result.WeBaseResult;
+import com.telan.werewolf.utils.SessionHelper;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,58 +37,18 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/werewolf")
+@LoginRequired
 public class GameController {
 	private final static Logger LOGGER = LoggerFactory.getLogger(GameController.class);
 	@Autowired
 	private EventAcceptor eventAcceptor;
+	@Autowired
+	private GameProcessor gameProcessor;
 	
 //	@Autowired
 //	private WeixinApiUrlHolder weixinApiUrlHolder;
 	@Autowired
 	private WxSessionManager wxSessionManager;
-	
-	@RequestMapping(value = "/main", method=RequestMethod.GET )
-	public void checkSignature(String signature,String timestamp,String nonce,String echostr,ModelMap modelMap) throws IOException
-	{
-		HttpServletResponse response = SpringHttpHolder.getResponse();
-		PrintWriter out = response.getWriter();
-		
-		// 通过检验signature对请求进行校验，若校验成功则原样返回echostr，表示接入成功，否则接入失败
-		if (SignUtil.checkSignature(signature, timestamp, nonce)) {
-			LOGGER.info("接口检测校验成功！");
-			out.print(echostr);
-		}
-		out.close();
-		out = null;
-	}
-
-	@RequestMapping(value = "/main", method=RequestMethod.POST )
-	public void processRequest() throws Exception
-	{    
-//		System.out.println(weixinApiUrlHolder.getAccessTokenUrl());
-		HttpServletRequest request = SpringHttpHolder.getRequest();
-		HttpServletResponse response = SpringHttpHolder.getResponse();
-		// 将请求、响应的编码均设置为UTF-8（防止中文乱码）
-		request.setCharacterEncoding("UTF-8");
-		response.setCharacterEncoding("UTF-8");
-		
-		InputStream input = request.getInputStream();
-		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		IOUtils.copy(input, output);
-		
-		//获取请求的内容
-		String requestContent = new String(output.toByteArray(),"UTF-8");
-		
-		LOGGER.debug("requestContent={}",requestContent);
-		//处理请求
-		String responseContent = eventAcceptor.doAccept(requestContent);
-		LOGGER.info("responseContent={}",responseContent);
-		
-		PrintWriter out = response.getWriter();
-		//写入响应内容到response中
-		out.print(responseContent);
-		out.close();
-	}
 
 	@RequestMapping(value = "/test", method=RequestMethod.GET )
 	public void hello() throws IOException
@@ -86,18 +56,32 @@ public class GameController {
 		HttpServletResponse response = SpringHttpHolder.getResponse();
 		PrintWriter out = response.getWriter();
 
-			out.print("hello");
+		out.print("hello");
 		out.close();
 		out = null;
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "/createGame", method=RequestMethod.POST )
-	public Map createGame(CreateGameParam param, ModelMap modelMap) throws IOException
+	@LoginRequired
+	public Map createGame(@RequestBody CreateGameParam param, ModelMap modelMap) throws IOException
 	{
 		Map map = new HashMap();
-		LOGGER.info("create game test, param="+JSON.toJSONString(param)+", modelmap="+JSON.toJSONString(modelMap));
-		map.put("msg", "success");
-		return map;
+		UserDO userDO = SessionHelper.getUser();
+		param.setCreator(userDO);
+		WeBaseResult<GameInfo> baseResult = gameProcessor.createGame(param);
+		LOGGER.info("create game test, param=" + JSON.toJSONString(param) + ", modelmap=" + JSON.toJSONString(modelMap));
+		return ResponseMapUtils.convertWeBaseResultToMap(baseResult);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/joinGame", method=RequestMethod.POST )
+	@LoginRequired
+	public Map joinGame(JoinGameParam param, ModelMap modelMap) throws IOException
+	{
+		Map map = new HashMap();
+		WeBaseResult<GameInfo> baseResult = gameProcessor.joinGame(param);
+		LOGGER.info("join game test, param=" + JSON.toJSONString(param) + ", modelmap=" + JSON.toJSONString(modelMap));
+		return ResponseMapUtils.convertWeBaseResultToMap(baseResult);
 	}
 }

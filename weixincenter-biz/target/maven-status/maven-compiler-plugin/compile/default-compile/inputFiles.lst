@@ -24,6 +24,7 @@
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-biz/src/main/java/com/telan/weixincenter/event/processer/ProcessorMatcher.java
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-biz/src/main/java/com/telan/weixincenter/model/request/WolfReqMsg.java
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-biz/src/main/java/com/telan/weixincenter/model/request/LocationMessageRequest.java
+/Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-biz/src/main/java/com/telan/weixincenter/utils/SqlSessionTemplates.java
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-biz/src/main/java/com/telan/weixincenter/model/response/ImageMessageResponse.java
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-biz/src/main/java/com/telan/weixincenter/model/request/TextMessageRequest.java
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-biz/src/main/java/com/telan/weixincenter/core/util/DateUtil.java
@@ -44,8 +45,8 @@
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-biz/src/main/java/com/telan/weixincenter/mapper/templates/WxTemplatesMapper.java
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-biz/src/main/java/com/telan/weixincenter/service/MessageReplyService.java
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-biz/src/main/java/com/telan/weixincenter/model/response/ImageTextMessageResponse.java
-/Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-biz/src/main/java/com/telan/weixincenter/mapper/base/WxServiceRuleMapper.java
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-biz/src/main/java/com/telan/weixincenter/mapper/base/WxMerchantMapper.java
+/Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-biz/src/main/java/com/telan/weixincenter/mapper/base/WxServiceRuleMapper.java
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-biz/src/main/java/com/telan/weixincenter/model/ServiceBackType.java
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-biz/src/main/java/com/telan/weixincenter/model/request/ScanEventRequest.java
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-biz/src/main/java/com/telan/weixincenter/model/request/BaseReqMsg.java
@@ -55,10 +56,10 @@
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-biz/src/main/java/com/telan/weixincenter/event/processer/SimpleNameProcessorMatcher.java
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-biz/src/main/java/com/telan/weixincenter/model/request/ImageMessageRequest.java
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-biz/src/main/java/com/telan/weixincenter/model/request/SubscribeEventRequest.java
-/Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-biz/src/main/java/com/telan/weixincenter/model/request/werewolf/CreateGameParam.java
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-biz/src/main/java/com/telan/weixincenter/event/processer/WapWeixinProcessor.java
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-biz/src/main/java/com/telan/weixincenter/mapper/templates/WxTemplatesItemMapper.java
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-biz/src/main/java/com/telan/weixincenter/model/response/ImageTextItem.java
+/Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-biz/src/main/java/com/telan/weixincenter/utils/MapperScannerConfigurer.java
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-biz/src/main/java/com/telan/weixincenter/core/util/QqFaceUtil.java
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-biz/src/main/java/com/telan/weixincenter/entity/WxUserInfo.java
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-biz/src/main/java/com/telan/weixincenter/event/parser/Parser.java

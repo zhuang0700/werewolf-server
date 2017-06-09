@@ -20,6 +20,7 @@ com/telan/weixincenter/domain/resp/TextMessageDO.class
 com/telan/weixincenter/domain/base/WxMaterialArticleDO.class
 com/telan/weixincenter/result/WXResultSupport.class
 com/telan/weixincenter/plugins/WeatherDate.class
+com/telan/weixincenter/domain/user/UserSessionInfo.class
 com/telan/weixincenter/domain/base/WxMerchantDO.class
 com/telan/weixincenter/domain/resp/GroupDO.class
 com/telan/weixincenter/service/channel/WxChannelService.class
@@ -54,6 +55,7 @@ com/telan/weixincenter/domain/fans/WxFansTagDO.class
 com/telan/weixincenter/service/base/WxServiceKeywordService.class
 com/telan/weixincenter/topic/WeixinTopic.class
 com/telan/weixincenter/domain/api/JsapiTicketInfo.class
+com/telan/weixincenter/annotation/LoginRequired.class
 com/telan/weixincenter/service/base/WxServiceRuleService.class
 com/telan/weixincenter/domain/channel/SubScribeStatisDO.class
 com/telan/weixincenter/service/base/WxServiceBackService.class

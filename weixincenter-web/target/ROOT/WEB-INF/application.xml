@@ -13,23 +13,28 @@
 
 	<context:property-placeholder ignore-unresolvable="true" location="WEB-INF/config.properties" />
 	
-	<import resource="../META-INF/spring/application-common.xml"/>
+	<import resource="../META-INF/spring/weixin/application-common.xml"/>
 	
-	<import resource="../META-INF/spring/application-consumer.xml"/>
+	<import resource="../META-INF/spring/weixin/application-consumer.xml"/>
 	
-	<import resource="../META-INF/spring/application-export-client.xml"/>
+	<import resource="../META-INF/spring/weixin/application-export-client.xml"/>
 	
-	<import resource="../META-INF/spring/application-dao.xml"/>
+	<import resource="../META-INF/spring/weixin/application-dao.xml"/>
 	
-	<import resource="../META-INF/spring/application-repo.xml"/>
+	<import resource="../META-INF/spring/weixin/application-repo.xml"/>
 	
-	<import resource="../META-INF/spring/application-manager.xml"/>
+	<import resource="../META-INF/spring/weixin/application-manager.xml"/>
 	
-	<import resource="../META-INF/spring/application-persistance.xml"/>
+	<import resource="../META-INF/spring/weixin/application-persistance.xml"/>
 	
-	<import resource="../META-INF/spring/application-service.xml"/>
+	<import resource="../META-INF/spring/weixin/application-service.xml"/>
 
-	<import resource="../META-INF/spring/application-processor.xml"/>
+	<import resource="../META-INF/spring/weixin/application-processor.xml"/>
+
+	<import resource="../META-INF/spring/werewolf/application-persistance.xml"/>
+
+	<import resource="../META-INF/spring/werewolf/application-manager.xml"/>
+
 
 	<!--<import resource="../META-INF/spring/tfs.xml"/>-->
 </beans>

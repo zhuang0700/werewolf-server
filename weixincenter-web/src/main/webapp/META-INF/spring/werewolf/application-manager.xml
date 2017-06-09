@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+           http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+           http://www.springframework.org/schema/aop     http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+	<!--<context:annotation-config />-->
+
+    <bean id="memSessionManager" class="com.telan.werewolf.manager.MemSessionManager">
+        <constructor-arg index="0" name="initSize" value="64"/>
+    </bean>
+    <bean id="userManager" class="com.telan.werewolf.manager.UserManager"/>
+    <bean id="gameManager" class="com.telan.werewolf.manager.GameManager"/>
+    <bean id="playerManager" class="com.telan.werewolf.manager.PlayerManager"/>
+    <bean id="gameProcessor" class="com.telan.werewolf.game.process.GameProcessor"/>
+    <bean id="memGameManager" class="com.telan.werewolf.manager.MemGameManager">
+        <constructor-arg index="0" name="initSize" value="16"></constructor-arg>
+    </bean>
+    <bean id="actionManager" class="com.telan.werewolf.manager.ActionManager"/>
+    <bean id="roleManager" class="com.telan.werewolf.game.manager.RoleManager"/>
+
+</beans>

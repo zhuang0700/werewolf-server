@@ -8,6 +8,7 @@ import com.telan.weixincenter.model.response.*;
 import com.telan.weixincenter.service.MessageReplyService;
 import com.telan.weixincenter.utils.AnswerUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
 

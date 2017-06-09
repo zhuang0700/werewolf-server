@@ -43,10 +43,12 @@
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-client/src/main/java/com/telan/weixincenter/domain/resp/GroupDO.java
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-client/src/main/java/com/telan/weixincenter/domain/base/WxUserInfoDO.java
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-client/src/main/java/com/telan/weixincenter/domain/resp/ArticleDO.java
+/Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-client/src/main/java/com/telan/weixincenter/annotation/LoginRequired.java
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-client/src/main/java/com/telan/weixincenter/domain/templates/WxTemplatesItemDO.java
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-client/src/main/java/com/telan/weixincenter/enums/ErrorCode.java
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-client/src/main/java/com/telan/weixincenter/domain/channel/SubScribeRecordGroupDO.java
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-client/src/main/java/com/telan/weixincenter/topic/WeixinTopic.java
+/Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-client/src/main/java/com/telan/weixincenter/domain/user/UserSessionInfo.java
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-client/src/main/java/com/telan/weixincenter/service/base/WxSubscribeService.java
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-client/src/main/java/com/telan/weixincenter/domain/api/AccessTokenInfo.java
 /Users/weiwenliang/Work/myprojects/werewolf-server/weixincenter-client/src/main/java/com/telan/weixincenter/domain/base/WxMaterialDTO.java
