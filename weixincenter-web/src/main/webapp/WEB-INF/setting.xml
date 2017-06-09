@@ -1,0 +1,27 @@
+<profile>
+    <id>telan</id>
+    <repositories>
+        <repository>
+            <id>telan</id>
+            <name>central</name>
+            <url>http://115.28.153.88:8081/nexus/content/groups/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <!-- ======================================================================== -->
+    <!--  Repositories for maven plugins          -->
+    <!-- ======================================================================== -->
+    <pluginRepositories>
+        <pluginRepository>
+            <id>telan</id>
+            <name>telan Plugin Repos Group</name>
+            <url>http://115.28.153.88:8081/nexus/content/groups/public/</url>
+        </pluginRepository>
+    </pluginRepositories>
+</profile>
