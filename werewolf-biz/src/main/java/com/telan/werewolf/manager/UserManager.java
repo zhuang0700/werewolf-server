@@ -5,6 +5,7 @@ import com.telan.werewolf.domain.UserDO;
 import com.telan.werewolf.enums.WeErrorCode;
 import com.telan.werewolf.mapper.UserDOMapper;
 import com.telan.werewolf.result.WeBaseResult;
+import com.telan.werewolf.result.WePageResult;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

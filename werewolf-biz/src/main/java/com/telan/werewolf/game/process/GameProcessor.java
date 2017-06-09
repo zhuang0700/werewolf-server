@@ -1,6 +1,7 @@
 package com.telan.werewolf.game.process;
 
 import com.alibaba.fastjson.JSON;
+import com.telan.weixincenter.result.WXBaseResult;
 import com.telan.werewolf.domain.GameDO;
 import com.telan.werewolf.domain.PlayerDO;
 import com.telan.werewolf.enums.WeErrorCode;
@@ -16,6 +17,7 @@ import com.telan.werewolf.game.manager.ActionManager;
 import com.telan.werewolf.manager.GameManager;
 import com.telan.werewolf.manager.MemGameManager;
 import com.telan.werewolf.manager.PlayerManager;
+import com.telan.werewolf.manager.UserManager;
 import com.telan.werewolf.query.PlayerPageQuery;
 import com.telan.werewolf.result.WeBaseResult;
 import com.telan.werewolf.utils.conventor.GameConvertor;
@@ -44,6 +46,8 @@ public class GameProcessor {
 	private RoleManager roleManager;
 	@Autowired
 	private RoundManager roundManager;
+	@Autowired
+	private UserManager userManager;
 
 	private final static Logger log	= LoggerFactory.getLogger(GameProcessor.class);
 
@@ -150,6 +154,12 @@ public class GameProcessor {
 		GameDO gameDO = gameDOBaseResult.getValue();
 		GameInfo gameInfo = new GameInfo(gameDO);
 		initGameInfo(gameInfo);
+
+		PlayerPageQuery playerPageQuery = new PlayerPageQuery();
+		playerPageQuery.setGameId(gameId);
+		playerPageQuery.setNeedPageQuery(false);
+		List<PlayerDO> playerDOList = playerManager.pageQuery(playerPageQuery);
+		userManager.getUserById()
 		//TODO: not finished
 		return baseResult;
 	}
@@ -157,7 +167,9 @@ public class GameProcessor {
 	private long findCurrentGameIdFromDB(long userId) {
 		PlayerPageQuery playerPageQuery = new PlayerPageQuery();
 		playerPageQuery.setUserId(userId);
-		playerPageQuery.setStatusList(new ArrayList<Integer>(){{
+		playerPageQuery.setStatusList(new ArrayList<Integer>(){
+			private static final long serialVersionUID = -8804793808495319423L;
+			{
 			add(PlayerStatus.CREATE.getType());
 			add(PlayerStatus.LIVE.getType());
 			add(PlayerStatus.DEAD.getType());
