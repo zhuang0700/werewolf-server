@@ -148,6 +148,8 @@ public class GameProcessor {
 			return baseResult;
 		}
 		GameDO gameDO = gameDOBaseResult.getValue();
+		GameInfo gameInfo = new GameInfo(gameDO);
+		initGameInfo(gameInfo);
 		//TODO: not finished
 		return baseResult;
 	}
