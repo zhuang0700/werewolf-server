@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.telan.werewolf.mapper.PlayerDOMapper" >
+  <resultMap id="BaseResultMap" type="com.telan.werewolf.domain.PlayerDO" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="game_id" property="gameId" jdbcType="BIGINT" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="options" property="options" jdbcType="BIGINT" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="gmt_created" property="gmtCreated" jdbcType="TIMESTAMP" />
+    <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+    <result column="nick" property="nick" jdbcType="VARCHAR" />
+    <result column="avatar" property="avatar" jdbcType="VARCHAR" />
+    <result column="role" property="role" jdbcType="INTEGER" />
+    <result column="player_no" property="playerNo" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, game_id, type, options, status, gmt_created, gmt_modified, nick, avatar, 
+    role, player_no
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="long" >
+    select 
+    <include refid="Base_Column_List" />
+    from player
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="long" >
+    delete from player
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.telan.werewolf.domain.PlayerDO" useGeneratedKeys="true" keyProperty="id" >
+    insert into player (user_id, game_id, type, 
+      options, status, gmt_created, 
+      gmt_modified, nick, avatar, 
+      role, player_no)
+    values (#{userId,jdbcType=BIGINT}, #{gameId,jdbcType=BIGINT}, #{type,jdbcType=INTEGER}, 
+      #{options,jdbcType=BIGINT}, #{status,jdbcType=INTEGER}, now(),
+      now(), #{nick,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR},
+      #{role,jdbcType=INTEGER}, #{playerNo,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.telan.werewolf.domain.PlayerDO" >
+    update player
+    <set >
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="options != null" >
+        options = #{options,jdbcType=BIGINT},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="nick != null" >
+        nick = #{nick,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null" >
+        avatar = #{avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="role != null" >
+        role = #{role,jdbcType=INTEGER},
+      </if>
+      <if test="playerNo != null" >
+        player_no = #{playerNo,jdbcType=INTEGER},
+      </if>
+      gmt_modified = now()
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="pageQuery" parameterType="com.telan.werewolf.query.PlayerPageQuery" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM player
+    <include refid="querySqlString" />
+    <if test="needPageQuery" >
+    limit #{startRow},#{pageSize}
+    </if>
+  </select>
+  <select id="queryCount" parameterType="com.telan.werewolf.query.PlayerPageQuery" resultType="int">
+    SELECT
+    COUNT(*)
+    FROM player
+    <include refid="querySqlString" />
+  </select>
+  <sql id="querySqlString">
+    <where>
+      <if test="nick != null">
+        and nick like CONCAT('%', #{nick}, '%')
+      </if>
+      <if test="statusList != null and statusList.size() > 0">
+        and status in
+        <foreach close=")" collection="statusList" index="index" item="status" open="(" separator=",">
+          #{status}
+        </foreach>
+      </if>
+      <if test="type != null">
+        and
+        type = #{type}
+      </if>
+      <if test="ids != null and ids.size() > 0">
+        and id in
+        <foreach close=")" collection="ids" index="index" item="item" open="(" separator=",">
+          #{item}
+        </foreach>
+      </if>
+      <if test="userId != null">
+        and
+        user_id = #{userId}
+      </if>
+      <if test="gameId != null">
+        and
+        game_id = #{gameId}
+      </if>
+      <if test="role != null">
+        and
+        role = #{role}
+      </if>
+    </where>
+  </sql>
+</mapper>
