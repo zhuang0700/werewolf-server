@@ -56,4 +56,8 @@ public class Player {
     public long getGameId() {
         return playerDO.getGameId();
     }
+
+    public long getPlayerNo() {
+        return playerDO.getPlayerNo();
+    }
 }

@@ -1,4 +1,4 @@
-package com.telan.werewolf.manager;
+package com.telan.werewolf.game.manager;
 
 import com.telan.werewolf.game.domain.Player;
 import com.telan.werewolf.game.domain.PlayerAction;

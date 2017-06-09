@@ -31,5 +31,15 @@ public class BaseRole {
     public void setRole(int role) {
         this.role = role;
     }
-}
 
+    @Override
+    public boolean equals(Object obj) {
+        if(BaseRole.class.isInstance(obj)) {
+            BaseRole newRole = (BaseRole)obj;
+            if(this.role == newRole.role) {
+                return true;
+            }
+        }
+        return false;
+    }
+}

@@ -1,4 +1,4 @@
-package com.telan.werewolf.game.factory;
+package com.telan.werewolf.factory;
 
 import com.telan.werewolf.game.domain.role.*;
 import com.telan.werewolf.game.enums.RoleType;

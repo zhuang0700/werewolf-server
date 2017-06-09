@@ -4,7 +4,7 @@ import com.telan.werewolf.domain.PlayerDO;
 import com.telan.werewolf.domain.UserDO;
 import com.telan.werewolf.game.domain.Player;
 import com.telan.werewolf.game.enums.PlayerStatus;
-import com.telan.werewolf.game.factory.RoleFactory;
+import com.telan.werewolf.factory.RoleFactory;
 
 /**
  * Created by weiwenliang on 17/5/31.

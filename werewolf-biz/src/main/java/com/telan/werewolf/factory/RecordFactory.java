@@ -1,4 +1,4 @@
-package com.telan.werewolf.game.factory;
+package com.telan.werewolf.factory;
 
 import com.telan.werewolf.game.domain.Player;
 import com.telan.werewolf.game.domain.PlayerAction;
@@ -9,7 +9,6 @@ import com.telan.werewolf.game.domain.record.VoteRecord;
 import com.telan.werewolf.game.domain.role.*;
 import com.telan.werewolf.game.enums.GameMsgSubType;
 import com.telan.werewolf.game.enums.RecordType;
-import com.telan.werewolf.game.enums.RoleType;
 import org.springframework.util.CollectionUtils;
 
 import java.text.MessageFormat;
@@ -81,26 +80,43 @@ public class RecordFactory {
         voteRecord.setRecordType(RecordType.DEATH.getType());
         voteRecord.setMsgSubType(msgSubType);
         Map<Long, Long> voteMap = new HashMap<>();
-        Map<Long, List<Integer>> votedMap = new HashMap<>();
+        Map<Long, List<Long>> votedMap = new HashMap<>();
+        StringBuilder voteContent = new StringBuilder();
+        StringBuilder deathContent = new StringBuilder();
         for(PlayerAction vote : voteList) {
             voteMap.put(vote.fromPlayerId, vote.toPlayerId);
             Player fromPlayer = playerMap.get(vote.fromPlayerId);
-            List<Integer> voteNoList = votedMap.get(vote.toPlayerId);
-            if(voteNoList == null) {
-                voteNoList = new ArrayList<>();
+            List<Long> voterList = votedMap.get(vote.toPlayerId);
+            if(voterList == null) {
+                voterList = new ArrayList<>();
             }
-            voteNoList.add(fromPlayer.getPlayerDO().getPlayerNo());
-            votedMap.put(vote.toPlayerId, voteNoList);
+            voterList.add(fromPlayer.getId());
+            votedMap.put(vote.toPlayerId, voterList);
         }
         voteRecord.setVoteMap(voteMap);
         List<Object> contents = new ArrayList<>();
-        String content = "";
-        if(CollectionUtils.isEmpty(voteMap)) {
-            content = "无投票结果";
+        if(CollectionUtils.isEmpty(votedMap)) {
+            voteContent = new StringBuilder("无投票结果");
         } else {
-
+            int maxVoteNum = 0;
+            long maxVotedId = 0;
+            for(Long votedId : votedMap.keySet()) {
+                if(votedMap.get(votedId).size() > maxVoteNum) {
+                    maxVoteNum = votedMap.get(votedId).size();
+                    maxVotedId = votedId;
+                }
+                for(Long voteId : votedMap.get(votedId)) {
+                    voteContent.append(" ").append(playerMap.get(voteId).getPlayerNo()).append("号");
+                }
+                voteContent.append("投给").append(playerMap.get(votedId).getPlayerNo()).append("号\r\n");
+            }
+            if(maxVotedId <= 0) {
+                deathContent.append("无人");
+            } else {
+                deathContent.append(playerMap.get(maxVotedId).getPlayerNo()).append("号");
+            }
         }
-        contents.add(content);
+        contents.add(voteContent.toString());
         GameMsgSubType gameMsgSubType = GameMsgSubType.getBySubType(msgSubType);
         if(gameMsgSubType != null) {
             String msg = MessageFormat.format(gameMsgSubType.getDesc(), contents);

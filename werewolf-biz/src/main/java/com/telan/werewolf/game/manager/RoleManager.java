@@ -4,7 +4,7 @@ import com.telan.werewolf.game.domain.Player;
 import com.telan.werewolf.game.domain.role.BaseRole;
 import com.telan.werewolf.game.domain.role.VillagerRole;
 import com.telan.werewolf.game.enums.RoleType;
-import com.telan.werewolf.game.factory.RoleFactory;
+import com.telan.werewolf.factory.RoleFactory;
 import com.telan.werewolf.utils.RandomUtil;
 
 import java.util.ArrayList;

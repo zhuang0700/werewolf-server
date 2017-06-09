@@ -11,6 +11,7 @@ public class VoteRecord extends BaseRecord {
     private int msgSubType;
     private List<String> msgList;
     private Map<Long, Long> voteMap;
+    private Map<Long, List<Long>> votedMap;
 
     public List<String> getRecordMsgs(){
         return msgList;

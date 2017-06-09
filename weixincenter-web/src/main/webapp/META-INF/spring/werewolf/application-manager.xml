@@ -18,7 +18,7 @@
     <bean id="memGameManager" class="com.telan.werewolf.manager.MemGameManager">
         <constructor-arg index="0" name="initSize" value="16"></constructor-arg>
     </bean>
-    <bean id="actionManager" class="com.telan.werewolf.manager.ActionManager"/>
+    <bean id="actionManager" class="com.telan.werewolf.game.manager.ActionManager"/>
     <bean id="roleManager" class="com.telan.werewolf.game.manager.RoleManager"/>
-
+    <bean id="roundManager" class="com.telan.werewolf.game.manager.RoundManager"/>
 </beans>

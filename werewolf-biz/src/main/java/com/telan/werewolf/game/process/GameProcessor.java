@@ -1,17 +1,18 @@
 package com.telan.werewolf.game.process;
 
-import com.alibaba.dubbo.common.utils.CollectionUtils;
 import com.alibaba.fastjson.JSON;
 import com.telan.werewolf.domain.GameDO;
 import com.telan.werewolf.domain.PlayerDO;
 import com.telan.werewolf.enums.WeErrorCode;
+import com.telan.werewolf.factory.RoundFactory;
 import com.telan.werewolf.game.domain.role.BaseRole;
 import com.telan.werewolf.game.domain.Player;
 import com.telan.werewolf.game.enums.PlayerStatus;
 import com.telan.werewolf.game.manager.RoleManager;
+import com.telan.werewolf.game.manager.RoundManager;
 import com.telan.werewolf.game.param.CreateGameParam;
 import com.telan.werewolf.game.param.JoinGameParam;
-import com.telan.werewolf.manager.ActionManager;
+import com.telan.werewolf.game.manager.ActionManager;
 import com.telan.werewolf.manager.GameManager;
 import com.telan.werewolf.manager.MemGameManager;
 import com.telan.werewolf.manager.PlayerManager;
@@ -22,6 +23,7 @@ import com.telan.werewolf.utils.conventor.PlayerConvertor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
@@ -40,7 +42,8 @@ public class GameProcessor {
 	private PlayerManager playerManager;
 	@Autowired
 	private RoleManager roleManager;
-
+	@Autowired
+	private RoundManager roundManager;
 
 	private final static Logger log	= LoggerFactory.getLogger(GameProcessor.class);
 
@@ -109,6 +112,11 @@ public class GameProcessor {
 		//分配角色
 		roleManager.allocateRole(gameInfo.getRoleList(), gameInfo.getPlayerMap());
 		//初始化回合
+		Round firstRound = RoundFactory.createRound(1, gameInfo.getRoleList());
+		gameInfo.changeCurrentRound(firstRound);
+		roundManager.startRound(gameInfo);
+		result.setValue(gameInfo);
+		return result;
 	}
 
 	public WeBaseResult<GameInfo> getGameInfo(long userId, long gameId) {
