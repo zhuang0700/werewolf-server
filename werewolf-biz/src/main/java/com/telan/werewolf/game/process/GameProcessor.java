@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.telan.weixincenter.result.WXBaseResult;
 import com.telan.werewolf.domain.GameDO;
 import com.telan.werewolf.domain.PlayerDO;
+import com.telan.werewolf.domain.UserDO;
 import com.telan.werewolf.enums.WeErrorCode;
 import com.telan.werewolf.factory.RoundFactory;
 import com.telan.werewolf.game.domain.role.BaseRole;
@@ -159,8 +160,11 @@ public class GameProcessor {
 		playerPageQuery.setGameId(gameId);
 		playerPageQuery.setNeedPageQuery(false);
 		List<PlayerDO> playerDOList = playerManager.pageQuery(playerPageQuery);
-		userManager.getUserById()
+		Map<Long, UserDO> userDOMap = userManager.getUserByIds(PlayerConvertor.convertUserIdList(playerDOList));
+		gameInfo.setPlayerMap(PlayerConvertor.convertPlayerMap(playerDOList, userDOMap));
 		//TODO: not finished
+
+		baseResult.setValue(gameInfo);
 		return baseResult;
 	}
 

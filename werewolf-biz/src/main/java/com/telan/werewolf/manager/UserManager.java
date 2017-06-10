@@ -10,6 +10,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by weiwenliang on 17/5/10.
@@ -41,6 +47,33 @@ public class UserManager {
             logger.error("userDOMapper.selectByPrimaryKey error,userId={}",userId);
         }
         return result;
+    }
+
+    /**
+     * 根据userids获取用户信息
+     * @param userIds
+     * @return
+     */
+    public Map<Long, UserDO> getUserByIds(List<Long> userIds){
+        List<UserDO> result = new ArrayList<>();
+        if(CollectionUtils.isEmpty(userIds)){
+            return new HashMap<>();
+        }
+        try{
+            List<UserDO> userDOList = userDOMapper.batchSelectByIds(userIds);
+            if(CollectionUtils.isEmpty(userDOList)) {
+                return new HashMap<>();
+            }
+            Map<Long, UserDO> userDOMap = new HashMap<>();
+
+            for(UserDO userDO : userDOList) {
+                userDOMap.put(userDO.getId(), userDO);
+            }
+            return userDOMap;
+        }catch(Exception e){
+            logger.error("userDOMapper.batchSelectByIds(userIds); error,userIds={}",userIds);
+            return null;
+        }
     }
 
     /**

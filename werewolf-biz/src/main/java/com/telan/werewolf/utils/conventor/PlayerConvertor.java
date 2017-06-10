@@ -5,10 +5,10 @@ import com.telan.werewolf.domain.UserDO;
 import com.telan.werewolf.game.domain.Player;
 import com.telan.werewolf.game.enums.PlayerStatus;
 import com.telan.werewolf.factory.RoleFactory;
+import org.omg.CORBA.CODESET_INCOMPATIBLE;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by weiwenliang on 17/5/31.
@@ -44,5 +44,28 @@ public class PlayerConvertor {
             userIdList.add(userId);
         }
         return userIdList;
+    }
+
+    public static List<Player> convertPlayerList(List<PlayerDO> playerDOList, Map<Long, UserDO> userDOMap) {
+        if(CollectionUtils.isEmpty(playerDOList) || CollectionUtils.isEmpty(userDOMap)) {
+            return new ArrayList<>();
+        }
+        List<Player> players = new ArrayList<>();
+        for(PlayerDO playerDO : playerDOList) {
+            players.add(convertPlayer(playerDO, userDOMap.get(playerDO.getUserId())));
+        }
+        return players;
+    }
+
+
+    public static Map<Long, Player> convertPlayerMap(List<PlayerDO> playerDOList, Map<Long, UserDO> userDOMap) {
+        if(CollectionUtils.isEmpty(playerDOList) || CollectionUtils.isEmpty(userDOMap)) {
+            return new HashMap();
+        }
+        Map<Long, Player> playerMap = new HashMap<>();
+        for(PlayerDO playerDO : playerDOList) {
+            playerMap.put(playerDO.getId(), convertPlayer(playerDO, userDOMap.get(playerDO.getUserId())));
+        }
+        return playerMap;
     }
 }

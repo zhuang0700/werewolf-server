@@ -20,6 +20,18 @@
     from user
     where id = #{id,jdbcType=BIGINT}
   </select>
+
+  <select id="batchSelectByIds" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM user
+    WHERE
+    id in
+    <foreach close=")" collection="ids" index="index" item="item" open="(" separator=",">
+      #{item}
+    </foreach>
+  </select>
+
   <select id="selectByUnionId" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
