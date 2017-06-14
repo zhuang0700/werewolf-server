@@ -139,4 +139,13 @@ public class UserManager {
         String wolfSessionKey = memSessionManager.addUser(sessionKey, dbUser);
         return wolfSessionKey;
     }
+
+    public List<UserDO> mockUserList(int num) {
+        List<Long> ids = new ArrayList<>();
+        for(long i=0;i<num;i++) {
+            ids.add(i+3);
+        }
+        List<UserDO> userDOList = userDOMapper.batchSelectByIds(ids);
+        return userDOList;
+    }
 }

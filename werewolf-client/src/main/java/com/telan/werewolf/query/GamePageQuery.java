@@ -11,7 +11,7 @@ public class GamePageQuery extends PageQuery {
     private static final long serialVersionUID = -3142728607169207697L;
     private List<Long> ids;
 
-    private Integer status; //状态
+    private List<Integer> statusList;
 
     private Long creatorId;
 
@@ -25,12 +25,12 @@ public class GamePageQuery extends PageQuery {
         this.ids = ids;
     }
 
-    public Integer getStatus() {
-        return status;
+    public List<Integer> getStatusList() {
+        return statusList;
     }
 
-    public void setStatus(Integer status) {
-        this.status = status;
+    public void setStatusList(List<Integer> statusList) {
+        this.statusList = statusList;
     }
 
     public Long getCreatorId() {

@@ -73,6 +73,7 @@
     <include refid="Base_Column_List" />
     FROM player
     <include refid="querySqlString" />
+    ORDER BY gmt_modified desc
     <if test="needPageQuery" >
     limit #{startRow},#{pageSize}
     </if>

@@ -1,5 +1,8 @@
 package com.telan.werewolf.game.enums;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  */
 public enum GameStatus {
@@ -63,5 +66,16 @@ public enum GameStatus {
             }
         }
         return CREATE;
+    }
+
+    public static List<Integer> getLiveStatus() {
+        return new ArrayList<Integer>(){
+            private static final long serialVersionUID = -6603082668907868062L;
+            {
+                add(CREATE.getType());
+                add(INIT.getType());
+                add(PROCESS.getType());
+            }
+        };
     }
 }

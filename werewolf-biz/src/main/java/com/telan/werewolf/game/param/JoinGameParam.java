@@ -8,6 +8,8 @@ import com.telan.werewolf.domain.UserDO;
 public class JoinGameParam {
     private UserDO creator;
 
+    private int mockPlayerNum;
+
     private long gameId;
 
     public UserDO getCreator() {
@@ -24,5 +26,13 @@ public class JoinGameParam {
 
     public void setGameId(long gameId) {
         this.gameId = gameId;
+    }
+
+    public int getMockPlayerNum() {
+        return mockPlayerNum;
+    }
+
+    public void setMockPlayerNum(int mockPlayerNum) {
+        this.mockPlayerNum = mockPlayerNum;
     }
 }

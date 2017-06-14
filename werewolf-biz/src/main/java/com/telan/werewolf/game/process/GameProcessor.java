@@ -80,12 +80,23 @@ public class GameProcessor {
 		WeBaseResult<GameInfo> baseResult = new WeBaseResult<>();
 		GameInfo currentGame = findCurrentGame(param.getCreator().getId());
 		if(currentGame != null) {
+			if(param.getGameId() == currentGame.getGameId()) {
+				baseResult.setValue(currentGame);
+				return baseResult;
+			}
 			baseResult.setErrorCode(WeErrorCode.HAS_ACTIVE_GAME);
 			baseResult.setValue(currentGame);
 			return baseResult;
 		}
 		//查找游戏
 		GameInfo gameInfo = memGameManager.getGame(param.getGameId());
+		if(gameInfo == null) {
+			baseResult = getGameInfoFromDB(param.getGameId());
+			if(!baseResult.isSuccess() || baseResult.getValue() == null) {
+				return baseResult;
+			}
+			gameInfo = baseResult.getValue();
+		}
 		//创建玩家
 		synchronized (gameInfo.getPlayerMap()) {
 			if(gameInfo.getPlayerMap().size() < gameInfo.getPlayerNum()) {
@@ -139,13 +150,13 @@ public class GameProcessor {
 		}
 		GameInfo gameInfo = memGameManager.getGame(currentGameId);
 		if(gameInfo == null) {
-			return getGameInfoFromDB(userId, gameId);
+			return getGameInfoFromDB(gameId);
 		}
 		baseResult.setValue(gameInfo);
 		return baseResult;
 	}
 
-	public WeBaseResult<GameInfo> getGameInfoFromDB(long userId, long gameId) {
+	public WeBaseResult<GameInfo> getGameInfoFromDB(long gameId) {
 		WeBaseResult<GameInfo> baseResult = new WeBaseResult<>();
 		WeBaseResult<GameDO> gameDOBaseResult = gameManager.getGameById(gameId);
 		if(!gameDOBaseResult.isSuccess() || gameDOBaseResult.getValue() == null) {
@@ -163,7 +174,7 @@ public class GameProcessor {
 		Map<Long, UserDO> userDOMap = userManager.getUserByIds(PlayerConvertor.convertUserIdList(playerDOList));
 		gameInfo.setPlayerMap(PlayerConvertor.convertPlayerMap(playerDOList, userDOMap));
 		//TODO: not finished
-
+		memGameManager.addGame(gameInfo);
 		baseResult.setValue(gameInfo);
 		return baseResult;
 	}

@@ -4,6 +4,7 @@ import com.telan.werewolf.game.domain.Player;
 import com.telan.werewolf.game.process.GameInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
 import java.util.HashMap;
@@ -12,6 +13,9 @@ import java.util.Map;
 
 public class MemGameManager {
 	private static final Logger logger = LoggerFactory.getLogger("SessionManager");
+
+	@Autowired
+	public GameManager gameManager;
 
 	public Map<Long, GameInfo> gameMap;
 
@@ -23,6 +27,7 @@ public class MemGameManager {
 		gameMap = new HashMap<>(initSize);
 		playerMap = new HashMap<>();
 		userPlayerMap = new HashMap<>();
+
 	}
 
 	public GameInfo getGame(Long gameId) {
