@@ -109,6 +109,12 @@
         and
         user_id = #{userId}
       </if>
+      <if test="gameIdList != null and gameIdList.size() > 0">
+        and gameId in
+        <foreach close=")" collection="gameIdList" index="index" item="gamdId" open="(" separator=",">
+          #{gamdId}
+        </foreach>
+      </if>
       <if test="gameId != null">
         and
         game_id = #{gameId}

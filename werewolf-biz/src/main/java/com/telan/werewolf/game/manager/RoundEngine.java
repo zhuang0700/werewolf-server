@@ -4,17 +4,16 @@ import com.telan.werewolf.factory.RecordFactory;
 import com.telan.werewolf.factory.RoundFactory;
 import com.telan.werewolf.game.enums.GameMsgSubType;
 import com.telan.werewolf.game.enums.RoundStatus;
-import com.telan.werewolf.game.process.GameInfo;
-import com.telan.werewolf.game.process.Round;
+import com.telan.werewolf.game.domain.GameInfo;
+import com.telan.werewolf.game.domain.Round;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by weiwenliang on 17/6/6.
  */
-public class RoundManager {
+public class RoundEngine {
     public void startRound(GameInfo currentGame){
         moveToNextStatus(currentGame.getCurrentRound());
     }

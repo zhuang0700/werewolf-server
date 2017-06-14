@@ -3,7 +3,7 @@ package com.telan.werewolf.factory;
 import com.telan.werewolf.game.domain.record.BaseRecord;
 import com.telan.werewolf.game.domain.role.BaseRole;
 import com.telan.werewolf.game.enums.RoundStatus;
-import com.telan.werewolf.game.process.Round;
+import com.telan.werewolf.game.domain.Round;
 
 import java.util.ArrayList;
 import java.util.List;

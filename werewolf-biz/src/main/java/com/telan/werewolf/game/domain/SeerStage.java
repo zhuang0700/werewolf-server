@@ -1,8 +1,6 @@
-package com.telan.werewolf.game.process;
+package com.telan.werewolf.game.domain;
 
 import com.telan.werewolf.enums.WeErrorCode;
-import com.telan.werewolf.game.domain.Player;
-import com.telan.werewolf.game.domain.PlayerAction;
 import com.telan.werewolf.game.enums.ActionType;
 import com.telan.werewolf.game.enums.PlayerStatus;
 import com.telan.werewolf.game.enums.StageStatus;

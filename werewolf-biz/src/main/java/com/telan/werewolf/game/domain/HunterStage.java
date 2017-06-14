@@ -1,8 +1,6 @@
-package com.telan.werewolf.game.process;
+package com.telan.werewolf.game.domain;
 
 import com.telan.werewolf.enums.WeErrorCode;
-import com.telan.werewolf.game.domain.Player;
-import com.telan.werewolf.game.domain.PlayerAction;
 import com.telan.werewolf.game.enums.ActionType;
 import com.telan.werewolf.game.enums.PlayerStatus;
 import com.telan.werewolf.game.enums.StageStatus;
@@ -18,7 +16,7 @@ import java.util.Map;
 /**
  * Created by weiwenliang on 17/5/15.
  */
-public class SheriffStage extends Stage {
+public class HunterStage extends Stage {
 
     Map<Long, List<PlayerAction>> voteMap;
 

@@ -7,7 +7,7 @@ import com.telan.werewolf.result.WeBaseResult;
 /**
  * Created by weiwenliang on 17/5/23.
  */
-public class ActionManager {
+public class ActionEngine {
     public WeBaseResult<String> checkAction(Player player, PlayerAction playerAction) {
         return null;
     }

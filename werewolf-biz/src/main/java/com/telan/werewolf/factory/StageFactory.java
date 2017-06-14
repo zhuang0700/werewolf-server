@@ -1,8 +1,8 @@
 package com.telan.werewolf.factory;
 
+import com.telan.werewolf.game.domain.*;
 import com.telan.werewolf.game.domain.role.*;
 import com.telan.werewolf.game.enums.RoleType;
-import com.telan.werewolf.game.process.*;
 
 import java.util.ArrayList;
 import java.util.List;

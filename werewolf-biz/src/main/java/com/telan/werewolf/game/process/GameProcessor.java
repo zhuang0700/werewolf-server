@@ -1,20 +1,23 @@
 package com.telan.werewolf.game.process;
 
 import com.alibaba.fastjson.JSON;
-import com.telan.weixincenter.result.WXBaseResult;
 import com.telan.werewolf.domain.GameDO;
 import com.telan.werewolf.domain.PlayerDO;
 import com.telan.werewolf.domain.UserDO;
 import com.telan.werewolf.enums.WeErrorCode;
 import com.telan.werewolf.factory.RoundFactory;
+import com.telan.werewolf.game.domain.GameInfo;
+import com.telan.werewolf.game.domain.Round;
 import com.telan.werewolf.game.domain.role.BaseRole;
 import com.telan.werewolf.game.domain.Player;
+import com.telan.werewolf.game.enums.GameStatus;
 import com.telan.werewolf.game.enums.PlayerStatus;
-import com.telan.werewolf.game.manager.RoleManager;
-import com.telan.werewolf.game.manager.RoundManager;
+import com.telan.werewolf.game.manager.PlayerEngine;
+import com.telan.werewolf.game.manager.RoleEngine;
+import com.telan.werewolf.game.manager.RoundEngine;
 import com.telan.werewolf.game.param.CreateGameParam;
 import com.telan.werewolf.game.param.JoinGameParam;
-import com.telan.werewolf.game.manager.ActionManager;
+import com.telan.werewolf.game.manager.ActionEngine;
 import com.telan.werewolf.manager.GameManager;
 import com.telan.werewolf.manager.MemGameManager;
 import com.telan.werewolf.manager.PlayerManager;
@@ -40,13 +43,15 @@ public class GameProcessor {
 	@Autowired
 	private GameManager gameManager;
 	@Autowired
-	private ActionManager actionManager;
+	private ActionEngine actionEngine;
 	@Autowired
 	private PlayerManager playerManager;
 	@Autowired
-	private RoleManager roleManager;
+	private RoleEngine roleEngine;
 	@Autowired
-	private RoundManager roundManager;
+	private RoundEngine roundEngine;
+	@Autowired
+	private PlayerEngine playerEngine;
 	@Autowired
 	private UserManager userManager;
 
@@ -107,7 +112,7 @@ public class GameProcessor {
 				baseResult.setValue(gameInfo);
 				return baseResult;
 			} else {
-				baseResult.setErrorCode(WeErrorCode.UNSUPPORT_ACTION);
+				baseResult.setErrorCode(WeErrorCode.MAX_PLAYER_ACHIVED);
 				return baseResult;
 			}
 		}
@@ -124,13 +129,18 @@ public class GameProcessor {
 			result.setErrorCode(WeErrorCode.HAS_ACTIVE_GAME);
 			return result;
 		}
-		gameInfo.setRoleList(roleManager.initRoleList(gameInfo.getPlayerNum()));
+		if(gameInfo.getGameStatus() == GameStatus.CREATE.getType()) {
+			gameInfo.setGameStatus(GameStatus.INIT.getType());
+		}
+		gameInfo.setRoleList(roleEngine.initRoleList(gameInfo.getPlayerNum()));
 		//分配角色
-		roleManager.allocateRole(gameInfo.getRoleList(), gameInfo.getPlayerMap());
+		roleEngine.allocateRole(gameInfo.getRoleList(), gameInfo.getPlayerMap());
 		//初始化回合
 		Round firstRound = RoundFactory.createRound(1, gameInfo.getRoleList());
 		gameInfo.changeCurrentRound(firstRound);
-		roundManager.startRound(gameInfo);
+		roundEngine.startRound(gameInfo);
+		playerEngine.setGameStart(gameInfo.getPlayerMap());
+		gameInfo.setGameStatus(GameStatus.PROCESS.getType());
 		result.setValue(gameInfo);
 		return result;
 	}

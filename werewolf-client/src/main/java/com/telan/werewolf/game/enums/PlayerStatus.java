@@ -6,6 +6,7 @@ public enum PlayerStatus {
     CREATE("初始化",0),
     LIVE("存活",1),
     DEAD("死亡",2),
+    QUIT("退出游戏",3),
     GAME_OVER("游戏结束",1000);
     private String desc;
     private int type;

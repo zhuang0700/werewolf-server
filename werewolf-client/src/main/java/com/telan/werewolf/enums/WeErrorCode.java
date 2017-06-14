@@ -26,6 +26,7 @@ public class WeErrorCode implements Serializable{
 	public static final WeErrorCode WRONG_GAME = new WeErrorCode(18000005,"游戏已结束");
 	public static final WeErrorCode NO_ACTIVE_GAME = new WeErrorCode(18000006,"没有正在进行中的游戏");
 	public static final WeErrorCode HAS_ACTIVE_GAME = new WeErrorCode(18000007,"其他游戏进行中");
+	public static final WeErrorCode MAX_PLAYER_ACHIVED = new WeErrorCode(18000008,"游戏人数已满");
 
 
 	private int errorCode;

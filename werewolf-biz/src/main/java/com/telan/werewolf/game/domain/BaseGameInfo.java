@@ -1,4 +1,4 @@
-package com.telan.werewolf.game.process;
+package com.telan.werewolf.game.domain;
 
 import com.telan.werewolf.domain.GameDO;
 
@@ -38,6 +38,14 @@ public class BaseGameInfo implements Serializable {
 
     public int getPlayerNum() {
         return gameDO.getPlayerNum();
+    }
+
+    public int getGameStatus() {
+        return gameDO.getStatus();
+    }
+
+    public void setGameStatus(int status) {
+        this.gameDO.setStatus(status);
     }
 
 }

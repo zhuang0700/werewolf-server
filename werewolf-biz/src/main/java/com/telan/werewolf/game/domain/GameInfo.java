@@ -1,8 +1,7 @@
-package com.telan.werewolf.game.process;
+package com.telan.werewolf.game.domain;
 
 import com.telan.werewolf.domain.GameDO;
 import com.telan.werewolf.game.domain.role.BaseRole;
-import com.telan.werewolf.game.domain.Player;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Created by weiwenliang on 17/6/6.
  */
-public class RoleManager {
+public class RoleEngine {
     public List<BaseRole> initRoleList(int playerNum) {
         List<BaseRole> roleList = new ArrayList<>();
         if(playerNum < 5) {
