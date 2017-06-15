@@ -20,6 +20,7 @@ public enum GameMsgSubType {
     CURE_ACTION("{1}号玩家（女巫）选择对{2}号使用解药",5,5002),
     POSITION_ACTION("{1}号玩家（女巫）选择对{2}号使用毒药",5,5003),
 
+    QUIT_GAME("{1}号玩家退出了游戏",6,6001),
     ;
     private String desc;
     private int type;

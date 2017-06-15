@@ -22,4 +22,5 @@
     <bean id="roleEngine" class="com.telan.werewolf.game.manager.RoleEngine"/>
     <bean id="roundEngine" class="com.telan.werewolf.game.manager.RoundEngine"/>
     <bean id="playerEngine" class="com.telan.werewolf.game.manager.PlayerEngine"/>
+    <bean id="recordEngine" class="com.telan.werewolf.game.manager.RecordEngine"/>
 </beans>

@@ -5,19 +5,19 @@ import com.telan.werewolf.domain.UserDO;
 /**
  * Created by weiwenliang on 17/5/29.
  */
-public class JoinGameParam {
-    private UserDO creator;
+public class OperateGameParam {
+    private UserDO user;
 
     private int mockPlayerNum;
 
     private long gameId;
 
-    public UserDO getCreator() {
-        return creator;
+    public UserDO getUser() {
+        return user;
     }
 
-    public void setCreator(UserDO creator) {
-        this.creator = creator;
+    public void setUser(UserDO user) {
+        this.user = user;
     }
 
     public long getGameId() {

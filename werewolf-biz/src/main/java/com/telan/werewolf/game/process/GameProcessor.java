@@ -5,19 +5,16 @@ import com.telan.werewolf.domain.GameDO;
 import com.telan.werewolf.domain.PlayerDO;
 import com.telan.werewolf.domain.UserDO;
 import com.telan.werewolf.enums.WeErrorCode;
+import com.telan.werewolf.factory.GameMsgFactory;
 import com.telan.werewolf.factory.RoundFactory;
-import com.telan.werewolf.game.domain.GameInfo;
-import com.telan.werewolf.game.domain.Round;
+import com.telan.werewolf.game.domain.*;
 import com.telan.werewolf.game.domain.role.BaseRole;
-import com.telan.werewolf.game.domain.Player;
+import com.telan.werewolf.game.enums.GameMsgSubType;
 import com.telan.werewolf.game.enums.GameStatus;
 import com.telan.werewolf.game.enums.PlayerStatus;
-import com.telan.werewolf.game.manager.PlayerEngine;
-import com.telan.werewolf.game.manager.RoleEngine;
-import com.telan.werewolf.game.manager.RoundEngine;
+import com.telan.werewolf.game.manager.*;
 import com.telan.werewolf.game.param.CreateGameParam;
-import com.telan.werewolf.game.param.JoinGameParam;
-import com.telan.werewolf.game.manager.ActionEngine;
+import com.telan.werewolf.game.param.OperateGameParam;
 import com.telan.werewolf.manager.GameManager;
 import com.telan.werewolf.manager.MemGameManager;
 import com.telan.werewolf.manager.PlayerManager;
@@ -54,6 +51,8 @@ public class GameProcessor {
 	private PlayerEngine playerEngine;
 	@Autowired
 	private UserManager userManager;
+	@Autowired
+	private RecordEngine recordEngine;
 
 	private final static Logger log	= LoggerFactory.getLogger(GameProcessor.class);
 
@@ -81,9 +80,9 @@ public class GameProcessor {
 		return baseResult;
 	}
 
-	public WeBaseResult<GameInfo> joinGame(JoinGameParam param) {
+	public WeBaseResult<GameInfo> joinGame(OperateGameParam param) {
 		WeBaseResult<GameInfo> baseResult = new WeBaseResult<>();
-		GameInfo currentGame = findCurrentGame(param.getCreator().getId());
+		GameInfo currentGame = findCurrentGame(param.getUser().getId());
 		if(currentGame != null) {
 			if(param.getGameId() == currentGame.getGameId()) {
 				baseResult.setValue(currentGame);
@@ -105,9 +104,9 @@ public class GameProcessor {
 		//创建玩家
 		synchronized (gameInfo.getPlayerMap()) {
 			if(gameInfo.getPlayerMap().size() < gameInfo.getPlayerNum()) {
-				PlayerDO playerDO = PlayerConvertor.convertFromUser(param.getCreator(), param.getGameId());
+				PlayerDO playerDO = PlayerConvertor.convertFromUser(param.getUser(), param.getGameId());
 				playerDO = playerManager.insertPlayer(playerDO);
-				Player player = PlayerConvertor.convertPlayer(playerDO, param.getCreator());
+				Player player = PlayerConvertor.convertPlayer(playerDO, param.getUser());
 				gameInfo.addPlayer(player);
 				baseResult.setValue(gameInfo);
 				return baseResult;
@@ -142,6 +141,36 @@ public class GameProcessor {
 		playerEngine.setGameStart(gameInfo.getPlayerMap());
 		gameInfo.setGameStatus(GameStatus.PROCESS.getType());
 		result.setValue(gameInfo);
+		return result;
+	}
+
+	public WeBaseResult<GameInfo> quitGame(OperateGameParam param) {
+		WeBaseResult<GameInfo> result = new WeBaseResult<>();
+		GameInfo gameInfo = memGameManager.getGame(param.getGameId());
+		if(gameInfo == null) {
+			result.setErrorCode(WeErrorCode.WRONG_GAME);
+			return result;
+		}
+		Player player = memGameManager.getPlayerByUserId(param.getUser().getId());
+		if(player == null) {
+			result.setErrorCode(WeErrorCode.WRONG_GAME);
+			return result;
+		}
+		GameStatus gameStatus = GameStatus.getByTypeWithDefault(gameInfo.getGameStatus());
+		switch (gameStatus) {
+			case CREATE:
+				result = quitGameBeforeStart(gameInfo, player.getId());
+				break;
+			case INIT:
+				result.setErrorCode(WeErrorCode.GAME_INIT);
+				return result;
+			case PROCESS:
+				result = quitGameAfterStart(gameInfo, player.getId());
+				break;
+			case FINISH:
+				result.setValue(gameInfo);
+				return result;
+		}
 		return result;
 	}
 
@@ -234,5 +263,28 @@ public class GameProcessor {
 		gameInfo.setRoleList(new ArrayList<BaseRole>());
 		gameInfo.setRoundHistory(new ArrayList<Round>());
 		gameInfo.setRoleList(new ArrayList<BaseRole>());
+	}
+
+	private WeBaseResult<GameInfo> quitGameBeforeStart(GameInfo gameInfo, long playerId) {
+		WeBaseResult<GameInfo> result = new WeBaseResult<>();
+		Player player = memGameManager.getPlayer(playerId);
+		boolean deleteResult = playerManager.deletePlayerById(player.getPlayerDO());
+		if(!deleteResult) {
+			result.setErrorCode(WeErrorCode.SYSTEM_ERROR);
+			return result;
+		}
+		gameInfo.getPlayerMap().remove(playerId);
+		result.setValue(gameInfo);
+		return result;
+	}
+
+	private WeBaseResult<GameInfo> quitGameAfterStart(GameInfo gameInfo, long playerId) {
+		WeBaseResult<GameInfo> result = new WeBaseResult<>();
+		final Player player = memGameManager.getPlayer(playerId);
+		playerEngine.quitGameAfterStart(player);
+		GameMsg gameMsg = GameMsgFactory.createGameMsg(GameMsgSubType.QUIT_GAME, Visiablity.ALL, new ArrayList<Object>(){{add(player.getPlayerNo());}});
+		recordEngine.sendNormalMsg(gameInfo, gameMsg);
+		result.setValue(gameInfo);
+		return result;
 	}
 }

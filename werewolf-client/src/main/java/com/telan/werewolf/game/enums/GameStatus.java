@@ -53,19 +53,19 @@ public enum GameStatus {
                 return userType;
             }
         }
-        return CREATE;
+        return FINISH;
     }
 
     public static GameStatus getByNameWithDefault(String name) {
         if (name == null) {
-            return CREATE;
+            return FINISH;
         }
         for (GameStatus userType : values()) {
             if (userType.name().equals(name)) {
                 return userType;
             }
         }
-        return CREATE;
+        return FINISH;
     }
 
     public static List<Integer> getLiveStatus() {

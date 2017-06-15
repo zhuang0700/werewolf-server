@@ -61,11 +61,7 @@ public class PlayerManager {
 		try {
 			PlayerPageQuery playerPageQuery = new PlayerPageQuery();
 			playerPageQuery.setUserId(userId);
-			playerPageQuery.setStatusList(new ArrayList<Integer>(){{
-				add(PlayerStatus.CREATE.getType());
-				add(PlayerStatus.LIVE.getType());
-				add(PlayerStatus.DEAD.getType());
-			}});
+			playerPageQuery.setStatusList(PlayerStatus.getInGameStatus());
 			List<PlayerDO> playerDOs = playerDOMapper.pageQuery(playerPageQuery);
 			result.setValue(playerDOs.get(0));
 		} catch (Exception e) {
@@ -75,13 +71,13 @@ public class PlayerManager {
 		return result;
 	}
 
-	public Boolean updatePlayerById(PlayerDO playerDO) throws Exception {
+	public Boolean updatePlayerById(PlayerDO playerDO){
 		try {
 			int c = playerDOMapper.updateByPrimaryKeySelective(playerDO);
 			return c == 1;
 		} catch (Exception e) {
 			log.error("int c = playerDOMapper.updateByPrimaryKey(playerDO); exception,playerDO:" + playerDO, e);
-			throw e;
+			return false;
 		}
 	}
 

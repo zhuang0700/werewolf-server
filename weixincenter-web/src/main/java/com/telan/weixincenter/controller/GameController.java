@@ -9,7 +9,7 @@ import com.telan.weixincenter.utils.SpringHttpHolder;
 import com.telan.werewolf.domain.UserDO;
 import com.telan.werewolf.enums.WeErrorCode;
 import com.telan.werewolf.game.param.CreateGameParam;
-import com.telan.werewolf.game.param.JoinGameParam;
+import com.telan.werewolf.game.param.OperateGameParam;
 import com.telan.werewolf.game.domain.GameInfo;
 import com.telan.werewolf.game.process.GameProcessor;
 import com.telan.werewolf.manager.UserManager;
@@ -73,18 +73,18 @@ public class GameController {
 	@ResponseBody
 	@RequestMapping(value = "/joinGame", method=RequestMethod.POST )
 	@LoginRequired
-	public Map joinGame(@RequestBody JoinGameParam param, ModelMap modelMap) throws IOException
+	public Map joinGame(@RequestBody OperateGameParam param, ModelMap modelMap) throws IOException
 	{
 		Map map = new HashMap();
 		UserDO userDO = SessionHelper.getUser();
-		param.setCreator(userDO);
+		param.setUser(userDO);
 		WeBaseResult<GameInfo> baseResult = gameProcessor.joinGame(param);
 		LOGGER.info("join game test, param=" + JSON.toJSONString(param) + ", modelmap=" + JSON.toJSONString(modelMap));
 
 		if(param.getMockPlayerNum() > 0) {
 			List<UserDO> userDOList = userManager.mockUserList(param.getMockPlayerNum());
 			for(UserDO mockUser : userDOList) {
-				param.setCreator(userDO);
+				param.setUser(userDO);
 				WeBaseResult<GameInfo> baseMockResult = gameProcessor.joinGame(param);
 				LOGGER.info("join game mock user, userDO=" + JSON.toJSONString(mockUser) + ", modelmap=" + JSON.toJSONString(modelMap));
 			}

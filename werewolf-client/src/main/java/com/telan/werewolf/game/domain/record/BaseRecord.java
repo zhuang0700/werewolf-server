@@ -1,8 +1,5 @@
 package com.telan.werewolf.game.domain.record;
 
-import com.telan.werewolf.domain.PlayerDO;
-import com.telan.werewolf.domain.UserDO;
-import com.telan.werewolf.game.domain.role.BaseRole;
 
 import java.util.List;
 

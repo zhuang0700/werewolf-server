@@ -15,4 +15,8 @@ public class PlayerEngine {
             player.setStatus(PlayerStatus.LIVE.getType());
         }
     }
+
+    public void quitGameAfterStart(Player player) {
+        player.setStatus((PlayerStatus.QUIT.getType()));
+    }
 }

@@ -2,7 +2,11 @@ package com.telan.werewolf.game.domain;
 
 import com.telan.werewolf.domain.PlayerDO;
 import com.telan.werewolf.domain.UserDO;
+import com.telan.werewolf.game.domain.record.BaseRecord;
 import com.telan.werewolf.game.domain.role.BaseRole;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by weiwenliang on 17/5/15.
@@ -12,6 +16,7 @@ public class Player {
     private UserDO userDO;
     private PlayerDO playerDO;
     private BaseRole role;
+    private List<BaseRecord> recordList;
 
     public int getStatus() {
         return status;
@@ -59,5 +64,20 @@ public class Player {
 
     public long getPlayerNo() {
         return playerDO.getPlayerNo();
+    }
+
+    public List<BaseRecord> getRecordList() {
+        return recordList;
+    }
+
+    public void setRecordList(List<BaseRecord> recordList) {
+        this.recordList = recordList;
+    }
+
+    public void addRecord(BaseRecord record) {
+        if(recordList == null) {
+            recordList = new ArrayList<>();
+        }
+        recordList.add(record);
     }
 }
