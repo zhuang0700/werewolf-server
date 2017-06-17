@@ -12,18 +12,25 @@ import java.util.List;
  * Created by weiwenliang on 17/5/15.
  */
 public class Player {
-    private int status;
     private UserDO userDO;
     private PlayerDO playerDO;
     private BaseRole role;
     private List<BaseRecord> recordList;
 
     public int getStatus() {
-        return status;
+        return playerDO.getStatus();
     }
 
     public void setStatus(int status) {
-        this.status = status;
+        this.playerDO.setStatus(status);
+    }
+
+    public int getGameStatus() {
+        return playerDO.getGameStatus();
+    }
+
+    public void setGameStatus(int status) {
+        this.playerDO.setGameStatus(status);
     }
 
     public UserDO getUserDO() {

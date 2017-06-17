@@ -8,6 +8,7 @@
     <result column="type" property="type" jdbcType="INTEGER" />
     <result column="options" property="options" jdbcType="BIGINT" />
     <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="game_status" property="gameStatus" jdbcType="INTEGER" />
     <result column="gmt_created" property="gmtCreated" jdbcType="TIMESTAMP" />
     <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
     <result column="nick" property="nick" jdbcType="VARCHAR" />
@@ -16,7 +17,7 @@
     <result column="player_no" property="playerNo" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, user_id, game_id, type, options, status, gmt_created, gmt_modified, nick, avatar, 
+    id, user_id, game_id, type, options, status, game_status, gmt_created, gmt_modified, nick, avatar,
     role, player_no
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="long" >
@@ -31,11 +32,11 @@
   </delete>
   <insert id="insert" parameterType="com.telan.werewolf.domain.PlayerDO" useGeneratedKeys="true" keyProperty="id" >
     insert into player (user_id, game_id, type, 
-      options, status, gmt_created, 
+      options, status, game_status, gmt_created,
       gmt_modified, nick, avatar, 
       role, player_no)
     values (#{userId,jdbcType=BIGINT}, #{gameId,jdbcType=BIGINT}, #{type,jdbcType=INTEGER}, 
-      #{options,jdbcType=BIGINT}, #{status,jdbcType=INTEGER}, now(),
+      #{options,jdbcType=BIGINT}, #{status,jdbcType=INTEGER}, #{gameStatus,jdbcType=INTEGER}, now(),
       now(), #{nick,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR},
       #{role,jdbcType=INTEGER}, #{playerNo,jdbcType=INTEGER})
   </insert>
@@ -50,6 +51,9 @@
       </if>
       <if test="status != null" >
         status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="gameStatus != null" >
+        game_status = #{gameStatus,jdbcType=INTEGER},
       </if>
       <if test="nick != null" >
         nick = #{nick,jdbcType=VARCHAR},
@@ -104,6 +108,10 @@
         <foreach close=")" collection="ids" index="index" item="item" open="(" separator=",">
           #{item}
         </foreach>
+      </if>
+      <if test="gameStatus != null">
+        and
+        game_status = #{gameStatus}
       </if>
       <if test="userId != null">
         and

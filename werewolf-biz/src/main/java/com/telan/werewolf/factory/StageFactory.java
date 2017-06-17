@@ -24,12 +24,12 @@ public class StageFactory {
                 case SEER:
                     return new SeerStage();
                 case VILLAGER:
-                    return null;
+                    return new EmptyStage();
                 default:
-                    return null;
+                    return new EmptyStage();
             }
         }
-        return null;
+        return new EmptyStage();
     }
 
     public static Stage createVoteStage() {
@@ -43,25 +43,29 @@ public class StageFactory {
 
     public static List<Stage> createDefaultNightStages(List<BaseRole> roleList) {
         List<Stage> stageList = new ArrayList<>();
-        if(roleList.contains(new WolfRole())){
-            stageList.add(createRoleStage(RoleType.WOLF.getType()));
-        }
+        Stage wolfStage = createRoleStage(RoleType.WOLF.getType());
         if(roleList.contains(new WitchRole())){
-            stageList.add(createRoleStage(RoleType.WITCH.getType()));
+            Stage witchStage = createRoleStage(RoleType.WITCH.getType());
+            wolfStage.linkNext(witchStage);
         }
         if(roleList.contains(new SeerRole())){
-            stageList.add(createRoleStage(RoleType.SEER.getType()));
+            Stage seerStage = createRoleStage(RoleType.SEER.getType());
+            wolfStage.linkNext(seerStage);
         }
+        stageList.add(wolfStage);
         return stageList;
     }
 
 
     public static List<Stage> createDefaultDayStages(boolean needSheriff) {
         List<Stage> stageList = new ArrayList<>();
+        Stage voteStage = createVoteStage();
         if(needSheriff) {
             stageList.add(createSheriffStage());
+            stageList.get(0).linkNext(voteStage);
+        } else {
+            stageList.add(voteStage);
         }
-        stageList.add(createVoteStage());
         return stageList;
     }
 }

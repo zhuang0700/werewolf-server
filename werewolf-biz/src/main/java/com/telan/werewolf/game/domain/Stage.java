@@ -1,17 +1,32 @@
 package com.telan.werewolf.game.domain;
 
 import com.telan.werewolf.game.enums.StageStatus;
+import com.telan.werewolf.game.enums.StageType;
+import com.telan.werewolf.game.manager.ActionEngine;
+import com.telan.werewolf.manager.MemGameManager;
 import com.telan.werewolf.result.WeResultSupport;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 
 import javax.management.relation.Role;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by weiwenliang on 17/5/16.
  */
 public abstract class Stage {
+    @Autowired
+    public ActionEngine actionEngine;
+
+    @Autowired
+    public MemGameManager memGameManager;
 
     public int status = StageStatus.NOT_BEGIN.getType();
+
+    public long markedPlayerId;
+
+    public StageType stageType;
 
     public List<Stage> next;
 
@@ -21,13 +36,35 @@ public abstract class Stage {
 
     protected List<PlayerAction> actionList;
 
+    public void linkNext(Stage nextStage) {
+        if(next == null) {
+            next = new ArrayList<>();
+        }
+        next.add(nextStage);
+        if(nextStage.before == null) {
+            nextStage.before = new ArrayList<>();
+        }
+        nextStage.before.add(this);
+    }
+
     public void update(Stage prevStage){
         if(checkStageUpdate(prevStage)){
             start();
         }
     }
 
-    public abstract boolean checkStageUpdate(Stage prevStage);
+    public boolean checkStageUpdate(Stage prevStage){
+        if(CollectionUtils.isEmpty(before)) {
+            return true;
+        }
+        for(Stage st : before) {
+            if(!st.isFinish()){
+                return false;
+            }
+        }
+        //all finished
+        return true;
+    }
 
     public void start(){
         this.status = StageStatus.BEGIN.getType();
@@ -62,7 +99,12 @@ public abstract class Stage {
     }
 
     public WeResultSupport userAction(Player player, PlayerAction action){
-        return new WeResultSupport();
+        WeResultSupport resultSupport = actionEngine.checkAction(player, action);
+        if(!resultSupport.isSuccess()) {
+            return resultSupport;
+        }
+        return roleUserAction(player, action);
     }
 
+    public abstract WeResultSupport roleUserAction(Player player, PlayerAction action);
 }

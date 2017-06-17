@@ -14,6 +14,8 @@ public class PlayerPageQuery extends PageQuery {
     
     private List<Integer> statusList;
 
+    private Integer gameStatus;
+
     private Long userId;
 
     private Long gameId;
@@ -25,6 +27,14 @@ public class PlayerPageQuery extends PageQuery {
     private String nick;
     
     private Integer type;
+
+    public Integer getGameStatus() {
+        return gameStatus;
+    }
+
+    public void setGameStatus(Integer gameStatus) {
+        this.gameStatus = gameStatus;
+    }
 
     public List<Long> getIds() {
         return ids;

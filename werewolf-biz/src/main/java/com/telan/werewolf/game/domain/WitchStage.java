@@ -1,5 +1,7 @@
 package com.telan.werewolf.game.domain;
 
+import com.telan.werewolf.game.enums.StageType;
+import com.telan.werewolf.result.WeResultSupport;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -14,8 +16,13 @@ public class WitchStage extends Stage {
 
     Map<Long, List<PlayerAction>> voteMap;
 
-    @Override
-    public boolean checkStageUpdate(Stage prevStage) {
+    public boolean checkStageUpdate(Stage prevStage){
+        if(prevStage != null) {
+            this.markedPlayerId = prevStage.markedPlayerId;
+        }
+        if(CollectionUtils.isEmpty(before)) {
+            return true;
+        }
         for(Stage st : before) {
             if(!st.isFinish()){
                 return false;
@@ -23,6 +30,10 @@ public class WitchStage extends Stage {
         }
         //all finished
         return true;
+    }
+
+    public WitchStage(){
+        this.stageType = StageType.WITCH;
     }
 
     @Override
@@ -53,6 +64,12 @@ public class WitchStage extends Stage {
     @Override
     public void roleFinish() {
 
+    }
+
+    @Override
+    public WeResultSupport roleUserAction(Player player, PlayerAction action){
+        //TODO: to be done
+        return null;
     }
 
     private List<Long> findMaxVote(){

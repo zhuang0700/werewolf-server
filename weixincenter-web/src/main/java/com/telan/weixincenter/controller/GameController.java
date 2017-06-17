@@ -67,7 +67,7 @@ public class GameController {
 		param.setCreator(userDO);
 		WeBaseResult<GameInfo> baseResult = gameProcessor.createGame(param);
 		LOGGER.info("create game test, param=" + JSON.toJSONString(param) + ", modelmap=" + JSON.toJSONString(modelMap));
-		return ResponseMapUtils.convertWeBaseResultToMap(baseResult);
+		return ResponseMapUtils.convertGameInfo(baseResult, userDO);
 	}
 
 	@ResponseBody
@@ -89,17 +89,17 @@ public class GameController {
 				LOGGER.info("join game mock user, userDO=" + JSON.toJSONString(mockUser) + ", modelmap=" + JSON.toJSONString(modelMap));
 			}
 		}
-		return ResponseMapUtils.convertWeBaseResultToMap(baseResult);
+		return ResponseMapUtils.convertGameInfo(baseResult, userDO);
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "/gameInfo", method=RequestMethod.POST )
 	@LoginRequired
-	public Map startGame(long gameId, ModelMap modelMap) throws IOException
+	public Map getGameInfo(ModelMap modelMap) throws IOException
 	{
 		Map map = new HashMap();
 		UserDO userDO = SessionHelper.getUser();
-		WeBaseResult<GameInfo> baseResult = gameProcessor.getGameInfo(userDO.getId(), gameId);
+		WeBaseResult<GameInfo> baseResult = gameProcessor.getCurrentGameInfo(userDO.getId());
 		LOGGER.info("get game info, result=" + JSON.toJSONString(baseResult));
 		if(!baseResult.isSuccess() && baseResult.getErrorCode() == WeErrorCode.NO_ACTIVE_GAME.getErrorCode()) {
 			map.put("status", 1);
@@ -107,6 +107,24 @@ public class GameController {
 			map.put("result", null);
 			return map;
 		}
-		return ResponseMapUtils.convertWeBaseResultToMap(baseResult);
+		return ResponseMapUtils.convertGameInfo(baseResult, userDO);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/startGame", method=RequestMethod.POST )
+	@LoginRequired
+	public Map startGame(long gameId, ModelMap modelMap) throws IOException
+	{
+		Map map = new HashMap();
+		UserDO userDO = SessionHelper.getUser();
+		WeBaseResult<GameInfo> baseResult = gameProcessor.startGame(userDO.getId(), gameId);
+		LOGGER.info("startGame, result=" + JSON.toJSONString(baseResult));
+		if(!baseResult.isSuccess() && baseResult.getErrorCode() == WeErrorCode.NO_ACTIVE_GAME.getErrorCode()) {
+			map.put("status", 1);
+			map.put("msg", baseResult.getResultMsg());
+			map.put("result", null);
+			return map;
+		}
+		return ResponseMapUtils.convertGameInfo(baseResult, userDO);
 	}
 }

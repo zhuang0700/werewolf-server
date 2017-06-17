@@ -1,15 +1,13 @@
 package com.telan.weixincenter.utils;
 
+import com.telan.werewolf.domain.UserDO;
+import com.telan.werewolf.game.domain.*;
 import com.telan.werewolf.result.WeBaseResult;
-import org.apache.poi.ss.formula.functions.T;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
+import com.telan.werewolf.utils.conventor.ResultConvertor;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
+
 
 public class ResponseMapUtils {
 	public static Map convertWeBaseResultToMap(WeBaseResult result) {
@@ -18,6 +16,17 @@ public class ResponseMapUtils {
 		map.put("msg", result.getResultMsg());
 		map.put("code", result.getErrorCode());
 		map.put("result", result.getValue());
+		return map;
+	}
+
+	public static Map convertGameInfo(WeBaseResult<GameInfo> result, UserDO userDO) {
+		Map map = new HashMap();
+		map.put("status", result.isSuccess()?1:0);
+		map.put("msg", result.getResultMsg());
+		map.put("code", result.getErrorCode());
+		GameInfo gameInfo = result.getValue();
+		GameData gameData = ResultConvertor.convertToData(gameInfo, userDO);
+		map.put("result", gameData);
 		return map;
 	}
 

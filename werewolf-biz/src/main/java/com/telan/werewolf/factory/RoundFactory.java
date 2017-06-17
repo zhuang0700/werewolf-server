@@ -15,7 +15,7 @@ public class RoundFactory {
     public static Round createRound(int roundNo, List<BaseRole> roleList) {
         Round round = new Round();
         round.setRoundNo(roundNo);
-        round.setRoundStatus(RoundStatus.NOT_STAT.getType());
+        round.setRoundStatus(RoundStatus.NOT_START.getType());
         round.setDayStageList(StageFactory.createDefaultDayStages(roundNo==1));
         round.setNightStageList(StageFactory.createDefaultNightStages(roleList));
         round.setRecordList(new ArrayList<BaseRecord>());

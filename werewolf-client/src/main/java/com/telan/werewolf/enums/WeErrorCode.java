@@ -28,6 +28,7 @@ public class WeErrorCode implements Serializable{
 	public static final WeErrorCode HAS_ACTIVE_GAME = new WeErrorCode(18000007,"其他游戏进行中");
 	public static final WeErrorCode MAX_PLAYER_ACHIVED = new WeErrorCode(18000008,"游戏人数已满");
 	public static final WeErrorCode GAME_INIT = new WeErrorCode(18000009,"游戏已开局");
+	public static final WeErrorCode WRONG_ACTION_TARGET = new WeErrorCode(18000010,"错误的操作对象");
 
 	private int errorCode;
 	

@@ -21,6 +21,9 @@ public class BaseGameInfo implements Serializable {
         return gameDO.getId();
     }
 
+    public GameDO getGameDO() {
+        return gameDO;
+    }
 
     public long getCreatorId() {
         return gameDO.getCreatorId();

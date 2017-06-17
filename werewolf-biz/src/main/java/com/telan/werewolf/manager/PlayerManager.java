@@ -61,7 +61,7 @@ public class PlayerManager {
 		try {
 			PlayerPageQuery playerPageQuery = new PlayerPageQuery();
 			playerPageQuery.setUserId(userId);
-			playerPageQuery.setStatusList(PlayerStatus.getInGameStatus());
+			playerPageQuery.setGameStatus(BaseStatus.AVAILABLE.getType());
 			List<PlayerDO> playerDOs = playerDOMapper.pageQuery(playerPageQuery);
 			result.setValue(playerDOs.get(0));
 		} catch (Exception e) {
@@ -96,6 +96,7 @@ public class PlayerManager {
 
 	public PlayerDO insertPlayer(PlayerDO playerDO) {
 		playerDO.setStatus(PlayerStatus.CREATE.getType());
+		playerDO.setGameStatus(BaseStatus.AVAILABLE.getType());
 		Date now = new Date();
 		playerDO.setGmtCreated(now);
 		playerDO.setGmtModified(now);

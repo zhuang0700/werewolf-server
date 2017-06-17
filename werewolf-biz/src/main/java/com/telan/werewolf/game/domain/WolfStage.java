@@ -4,6 +4,7 @@ import com.telan.werewolf.enums.WeErrorCode;
 import com.telan.werewolf.game.enums.ActionType;
 import com.telan.werewolf.game.enums.PlayerStatus;
 import com.telan.werewolf.game.enums.StageStatus;
+import com.telan.werewolf.game.enums.StageType;
 import com.telan.werewolf.result.WeResultSupport;
 import com.telan.werewolf.utils.ActionUtil;
 import org.springframework.util.CollectionUtils;
@@ -20,15 +21,9 @@ public class WolfStage extends Stage {
 
     Map<Long, List<PlayerAction>> voteMap;
 
-    @Override
-    public boolean checkStageUpdate(Stage prevStage) {
-        for(Stage st : before) {
-            if(!st.isFinish()){
-                return false;
-            }
-        }
-        //all finished
-        return true;
+
+    public WolfStage(){
+        this.stageType = StageType.WOLF;
     }
 
     @Override
@@ -62,20 +57,22 @@ public class WolfStage extends Stage {
     }
 
     @Override
-    public WeResultSupport userAction(Player player, PlayerAction action){
+    public WeResultSupport roleUserAction(Player player, PlayerAction action){
         WeResultSupport resultSupport = new WeResultSupport();
         if(action.actionType == ActionType.KILL.getType()) {
-            if(ActionUtil.findActionByFromId(actionList, action.fromPlayerId) != null) {
-                resultSupport.setErrorCode(WeErrorCode.DUPLICATE_ACTION);
-                return resultSupport;
-            }
-            if(player.getStatus() == PlayerStatus.DEAD.getType()) {
-                resultSupport.setErrorCode(WeErrorCode.DEAD_ACTION);
-                return resultSupport;
-            }
             if(this.status != StageStatus.WAITING_ACTION.getType()) {
                 resultSupport.setErrorCode(WeErrorCode.WRONG_STAGE_ACTION);
                 return resultSupport;
+            }
+            Player toPlayer = memGameManager.getPlayer(action.toPlayerId);
+            if(toPlayer == null || toPlayer.getStatus() != PlayerStatus.LIVE.getType()) {
+                resultSupport.setErrorCode(WeErrorCode.WRONG_ACTION_TARGET);
+                return resultSupport;
+            }
+            //狼人可以多次选择目标，以最后一次为准
+            PlayerAction oldAction = ActionUtil.findActionByFromId(actionList, action.fromPlayerId);
+            if(oldAction != null) {
+                actionList.remove(oldAction);
             }
             actionList.add(action);
         }

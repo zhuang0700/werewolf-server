@@ -2,16 +2,18 @@ package com.telan.werewolf.game.enums;
 
 /**
  */
-public enum RoundStatus {
-    NOT_START("未开始", 0),
-    DARK("黑夜",1),
-    DAY("白天",2),
-    FINISH("已结束",3),
-;
+public enum StageType {
+    WOLF("狼人",1),
+    WITCH("女巫",2),
+    VOTE("投票",4),
+    SHERIFF("投警长",5),
+    HUNTER("狙人",6),
+    SEER("预言家",7),
+    ;
     private String desc;
     private int type;
 
-    RoundStatus(String desc, int type) {
+    StageType(String desc, int type) {
         this.desc = desc;
         this.type = type;
     }
@@ -24,8 +26,8 @@ public enum RoundStatus {
         return type;
     }
 
-    public static RoundStatus getByType(int type) {
-        for (RoundStatus userType : values()) {
+    public static StageType getByType(int type) {
+        for (StageType userType : values()) {
             if (userType.getType() == type) {
                 return userType;
             }
@@ -33,11 +35,11 @@ public enum RoundStatus {
         return null;
     }
 
-    public static RoundStatus getByName(String name) {
+    public static StageType getByName(String name) {
         if (name == null) {
             return null;
         }
-        for (RoundStatus userType : values()) {
+        for (StageType userType : values()) {
             if (userType.name().equals(name)) {
                 return userType;
             }

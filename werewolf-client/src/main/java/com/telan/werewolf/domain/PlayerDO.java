@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class PlayerDO implements Serializable {
+    private static final long serialVersionUID = 3308067332869726817L;
     private long id;
 
     private long userId;
@@ -16,6 +17,9 @@ public class PlayerDO implements Serializable {
 
     private int status;
 
+    //是否在游戏中
+    private int gameStatus;
+
     private Date gmtCreated;
 
     private Date gmtModified;
@@ -27,8 +31,6 @@ public class PlayerDO implements Serializable {
     private int role;
 
     private int playerNo;
-
-    private static final long serialVersionUID = 1L;
 
     public long getId() {
         return id;
@@ -124,5 +126,13 @@ public class PlayerDO implements Serializable {
 
     public void setPlayerNo(int playerNo) {
         this.playerNo = playerNo;
+    }
+
+    public int getGameStatus() {
+        return gameStatus;
+    }
+
+    public void setGameStatus(int gameStatus) {
+        this.gameStatus = gameStatus;
     }
 }

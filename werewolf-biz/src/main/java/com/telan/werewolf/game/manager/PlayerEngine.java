@@ -1,5 +1,6 @@
 package com.telan.werewolf.game.manager;
 
+import com.telan.werewolf.enums.BaseStatus;
 import com.telan.werewolf.game.domain.Player;
 import com.telan.werewolf.game.enums.PlayerStatus;
 
@@ -17,6 +18,6 @@ public class PlayerEngine {
     }
 
     public void quitGameAfterStart(Player player) {
-        player.setStatus((PlayerStatus.QUIT.getType()));
+        player.setGameStatus(BaseStatus.DELETED.getType());
     }
 }

@@ -174,6 +174,16 @@ public class GameProcessor {
 		return result;
 	}
 
+	public WeBaseResult<GameInfo> getCurrentGameInfo(long userId) {
+		WeBaseResult<GameInfo> baseResult = new WeBaseResult<>();
+		long currentGameId = findCurrentGameId(userId);
+		if(currentGameId <=0) {
+			baseResult.setErrorCode(WeErrorCode.NO_ACTIVE_GAME);
+			return baseResult;
+		}
+		return getGameInfo(userId, currentGameId);
+	}
+
 	public WeBaseResult<GameInfo> getGameInfo(long userId, long gameId) {
 		WeBaseResult<GameInfo> baseResult = new WeBaseResult<>();
 		long currentGameId = findCurrentGameId(userId);

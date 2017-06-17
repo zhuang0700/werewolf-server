@@ -4,6 +4,7 @@ import com.telan.werewolf.enums.WeErrorCode;
 import com.telan.werewolf.game.enums.ActionType;
 import com.telan.werewolf.game.enums.PlayerStatus;
 import com.telan.werewolf.game.enums.StageStatus;
+import com.telan.werewolf.game.enums.StageType;
 import com.telan.werewolf.result.WeResultSupport;
 import com.telan.werewolf.utils.ActionUtil;
 import org.springframework.util.CollectionUtils;
@@ -20,15 +21,9 @@ public class SheriffStage extends Stage {
 
     Map<Long, List<PlayerAction>> voteMap;
 
-    @Override
-    public boolean checkStageUpdate(Stage prevStage) {
-        for(Stage st : before) {
-            if(!st.isFinish()){
-                return false;
-            }
-        }
-        //all finished
-        return true;
+
+    public SheriffStage(){
+        this.stageType = StageType.SHERIFF;
     }
 
     @Override
@@ -62,7 +57,7 @@ public class SheriffStage extends Stage {
     }
 
     @Override
-    public WeResultSupport userAction(Player player, PlayerAction action){
+    public WeResultSupport roleUserAction(Player player, PlayerAction action){
         WeResultSupport resultSupport = new WeResultSupport();
         if(action.actionType == ActionType.KILL.getType()) {
             if(ActionUtil.findActionByFromId(actionList, action.fromPlayerId) != null) {
