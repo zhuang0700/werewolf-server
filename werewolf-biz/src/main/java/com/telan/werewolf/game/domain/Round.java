@@ -1,6 +1,8 @@
 package com.telan.werewolf.game.domain;
 
 import com.telan.werewolf.game.domain.record.BaseRecord;
+import com.telan.werewolf.game.enums.StageType;
+import org.springframework.util.CollectionUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -63,5 +65,17 @@ public class Round implements Serializable{
             recordList = new ArrayList<>();
         }
         recordList.add(record);
+    }
+
+    public Stage getStageByType(StageType stageType) {
+        if(CollectionUtils.isEmpty(nightStageList)) {
+            return null;
+        }
+        for(Stage stage : nightStageList) {
+            if(stage.stageType == stageType) {
+                return stage;
+            }
+        }
+        return null;
     }
 }

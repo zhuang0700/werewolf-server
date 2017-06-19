@@ -1,5 +1,7 @@
 package com.telan.werewolf.game.domain;
 
+import com.telan.werewolf.enums.WeErrorCode;
+import com.telan.werewolf.game.enums.ActionType;
 import com.telan.werewolf.game.enums.StageType;
 import com.telan.werewolf.result.WeResultSupport;
 import org.springframework.util.CollectionUtils;
@@ -13,8 +15,6 @@ import java.util.Map;
  * Created by weiwenliang on 17/5/15.
  */
 public class WitchStage extends Stage {
-
-    Map<Long, List<PlayerAction>> voteMap;
 
     public boolean checkStageUpdate(Stage prevStage){
         if(prevStage != null) {
@@ -33,6 +33,7 @@ public class WitchStage extends Stage {
     }
 
     public WitchStage(){
+        super();
         this.stageType = StageType.WITCH;
     }
 
@@ -68,27 +69,19 @@ public class WitchStage extends Stage {
 
     @Override
     public WeResultSupport roleUserAction(Player player, PlayerAction action){
-        //TODO: to be done
-        return null;
+        WeResultSupport resultSupport = new WeResultSupport();
+        if(action.actionType == ActionType.SAVE.getType()) {
+            useMedicine = true;
+        } else if(action.actionType == ActionType.POISON.getType()) {
+            usePoisionId = action.toPlayerId;
+        }else {
+            resultSupport.setErrorCode(WeErrorCode.UNSUPPORT_ACTION);
+        }
+        return resultSupport;
     }
 
-    private List<Long> findMaxVote(){
-        if(!CollectionUtils.isEmpty(voteMap)) {
-            int max = 0;
-            List<Long> ids = new ArrayList<>();
-            for(Long playerId : voteMap.keySet()) {
-                int votes = voteMap.get(playerId).size();
-                if(max > votes) {
-                    continue;
-                } else if(max < votes) {
-                    ids.clear();
-                    max = votes;
-                } else{
-                    ids.add(playerId);
-                }
-            }
-            return ids;
-        }
-        return null;
+    public WeResultSupport finishUserAction() {
+        analyse();
+        return new WeResultSupport();
     }
 }

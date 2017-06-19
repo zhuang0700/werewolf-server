@@ -17,8 +17,9 @@ import java.util.Map;
 public class RoleEngine {
     public List<BaseRole> initRoleList(int playerNum) {
         List<BaseRole> roleList = new ArrayList<>();
-        if(playerNum < 5) {
-            return null;
+        if(playerNum < 3) {
+            RoleType[] roleTypes_2 = {RoleType.WOLF,RoleType.WITCH};
+            return formRoleList(roleTypes_2);
         }
         switch (playerNum) {
             case 6:

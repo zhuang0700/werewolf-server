@@ -9,6 +9,7 @@ import com.telan.weixincenter.utils.SpringHttpHolder;
 import com.telan.werewolf.domain.UserDO;
 import com.telan.werewolf.enums.WeErrorCode;
 import com.telan.werewolf.game.domain.Player;
+import com.telan.werewolf.game.domain.PlayerAction;
 import com.telan.werewolf.game.param.CreateGameParam;
 import com.telan.werewolf.game.param.OperateGameParam;
 import com.telan.werewolf.game.domain.GameInfo;
@@ -152,6 +153,30 @@ public class GameController {
 			map.put("msg", baseResult.getResultMsg());
 			map.put("result", null);
 			return map;
+		}
+		return ResponseMapUtils.convertGameInfo(baseResult, userDO);
+	}
+
+
+	@ResponseBody
+	@RequestMapping(value = "/playerAction", method=RequestMethod.POST )
+	@LoginRequired
+	public Map playerAction(@RequestBody PlayerAction action, ModelMap modelMap) throws IOException
+	{
+		WeBaseResult<GameInfo> baseResult = new WeBaseResult<>();
+		Map map = new HashMap();
+		UserDO userDO = SessionHelper.getUser();
+		if(action.fromPlayerId != userDO.getId()) {
+			baseResult.setErrorCode(WeErrorCode.UNSUPPORT_ACTION);
+		} else {
+			baseResult = gameProcessor.playerAction(action);
+			LOGGER.info("playerAction, result=" + JSON.toJSONString(baseResult));
+			if(!baseResult.isSuccess() && baseResult.getErrorCode() == WeErrorCode.NO_ACTIVE_GAME.getErrorCode()) {
+				map.put("status", 1);
+				map.put("msg", baseResult.getResultMsg());
+				map.put("result", null);
+				return map;
+			}
 		}
 		return ResponseMapUtils.convertGameInfo(baseResult, userDO);
 	}

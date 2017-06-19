@@ -19,10 +19,8 @@ import java.util.Map;
  */
 public class SeerStage extends Stage {
 
-    Map<Long, List<PlayerAction>> voteMap;
-
-
     public SeerStage(){
+        super();
         this.stageType = StageType.SEER;
     }
 

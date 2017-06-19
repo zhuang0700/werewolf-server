@@ -10,7 +10,9 @@ import org.springframework.util.CollectionUtils;
 
 import javax.management.relation.Role;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by weiwenliang on 17/5/16.
@@ -22,9 +24,17 @@ public abstract class Stage {
     @Autowired
     public MemGameManager memGameManager;
 
+    public Map<Long, List<PlayerAction>> voteMap;
+
     public int status = StageStatus.NOT_BEGIN.getType();
 
+    //狼人选中目标id,0表示不刀
     public long markedPlayerId;
+
+    public boolean useMedicine;
+
+    //大于0表示用毒，目标id
+    public long usePoisionId;
 
     public StageType stageType;
 
@@ -68,6 +78,7 @@ public abstract class Stage {
 
     public void start(){
         this.status = StageStatus.BEGIN.getType();
+        this.voteMap = new HashMap<>();
         roleStart();
     }
 
@@ -87,9 +98,14 @@ public abstract class Stage {
 
     public abstract void roleAnalyse();
 
-    public void end(){
+    public void finish(){
         this.status = StageStatus.FINISH.getType();
         roleFinish();
+        if(!CollectionUtils.isEmpty(next)) {
+            for(Stage stage : next) {
+                stage.update(this);
+            }
+        }
     }
 
     public abstract void roleFinish();

@@ -37,13 +37,13 @@ function ConfirmDeleA(keywordId,ruleId)
 <body>
 <!--公共头部 start-->
 <%@include file="/WEB-INF/views/body/top.jsp" %>
-<!--公共头部 end-->
+<!--公finish end-->
 
 <!--公共头部导航 start-->
 <div class="WeChat_nav">
     <div class="address">您所在的位置&nbsp;:&nbsp;账号信息&gt;回复管理&gt;<span>关键词管理<font color="red">(所属规则：${wxServiceRule.ruleName })</font></span></div>
 </div>
-<!--公共头部导航 end-->
+<!--公共头finish end-->
 
 <!--中心内容 start-->
 <div class="WeChat_Content">
@@ -101,9 +101,9 @@ function ConfirmDeleA(keywordId,ruleId)
   </div>
   <div class="clear"></div>
 </div>
-<!--中心内容 end-->
+<!--中finish end-->
 
 <!--公共底部 start-->
-<!--公共底部 end-->
+<!--公finish end-->
 </body>
 </html>

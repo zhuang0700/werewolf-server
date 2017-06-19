@@ -21,8 +21,8 @@ public class WolfStage extends Stage {
 
     Map<Long, List<PlayerAction>> voteMap;
 
-
     public WolfStage(){
+        super();
         this.stageType = StageType.WOLF;
     }
 
@@ -41,14 +41,22 @@ public class WolfStage extends Stage {
 
     @Override
     public void roleAnalyse() {
-        Map<Long, Integer> killMap = new HashMap<>();
         for(PlayerAction action : actionList) {
-            if(killMap.get(action.toPlayerId) == null) {
-                killMap.put(action.toPlayerId, 1);
+            if(voteMap.get(action.toPlayerId) == null) {
+                List<PlayerAction> actions = new ArrayList<>();
+                actions.add(action);
+                voteMap.put(action.toPlayerId, actions);
             } else{
-                killMap.put(action.toPlayerId, killMap.get(action.toPlayerId) +1);
+                voteMap.get(action.toPlayerId).add(action);
             }
         }
+        List<Long> killUsers = ActionUtil.findMaxVote(voteMap);
+        if(CollectionUtils.isEmpty(killUsers) || killUsers.size() > 1) {
+
+        } else {
+            markedPlayerId = killUsers.get(0);
+        }
+        finish();
     }
 
     @Override
@@ -80,23 +88,9 @@ public class WolfStage extends Stage {
         return resultSupport;
     }
 
-    private List<Long> findMaxVote(){
-        if(!CollectionUtils.isEmpty(voteMap)) {
-            int max = 0;
-            List<Long> ids = new ArrayList<>();
-            for(Long playerId : voteMap.keySet()) {
-                int votes = voteMap.get(playerId).size();
-                if(max > votes) {
-                    continue;
-                } else if(max < votes) {
-                    ids.clear();
-                    max = votes;
-                } else{
-                    ids.add(playerId);
-                }
-            }
-            return ids;
-        }
-        return null;
+    public WeResultSupport finishUserAction(){
+        analyse();
+        return new WeResultSupport();
     }
+
 }

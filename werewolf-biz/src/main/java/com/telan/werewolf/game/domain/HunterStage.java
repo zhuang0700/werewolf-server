@@ -4,6 +4,7 @@ import com.telan.werewolf.enums.WeErrorCode;
 import com.telan.werewolf.game.enums.ActionType;
 import com.telan.werewolf.game.enums.PlayerStatus;
 import com.telan.werewolf.game.enums.StageStatus;
+import com.telan.werewolf.game.enums.StageType;
 import com.telan.werewolf.result.WeResultSupport;
 import com.telan.werewolf.utils.ActionUtil;
 import org.springframework.util.CollectionUtils;
@@ -18,7 +19,10 @@ import java.util.Map;
  */
 public class HunterStage extends Stage {
 
-    Map<Long, List<PlayerAction>> voteMap;
+    public HunterStage() {
+        super();
+        this.stageType = StageType.HUNTER;
+    }
 
     @Override
     public boolean checkStageUpdate(Stage prevStage) {

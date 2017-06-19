@@ -22,6 +22,7 @@ import com.telan.werewolf.manager.PlayerManager;
 import com.telan.werewolf.manager.UserManager;
 import com.telan.werewolf.query.PlayerPageQuery;
 import com.telan.werewolf.result.WeBaseResult;
+import com.telan.werewolf.result.WeResultSupport;
 import com.telan.werewolf.utils.conventor.GameConvertor;
 import com.telan.werewolf.utils.conventor.PlayerConvertor;
 import org.slf4j.Logger;
@@ -174,6 +175,32 @@ public class GameProcessor {
 		}
 		return result;
 	}
+
+	public WeBaseResult<GameInfo> playerAction(PlayerAction action) {
+		WeBaseResult<GameInfo> result = new WeBaseResult<>();
+		GameInfo gameInfo = memGameManager.getGame(action.gameId);
+		if(gameInfo == null) {
+			result.setErrorCode(WeErrorCode.WRONG_GAME);
+			return result;
+		}
+		Player player = memGameManager.getPlayer(action.fromPlayerId);
+		if(player == null) {
+			result.setErrorCode(WeErrorCode.WRONG_GAME);
+			return result;
+		}
+		GameStatus gameStatus = GameStatus.getByTypeWithDefault(gameInfo.getGameStatus());
+		if(gameInfo.getGameStatus() != GameStatus.PROCESS.getType()) {
+			result.setErrorCode(WeErrorCode.WRONG_GAME);
+		}
+		WeResultSupport weResultSupport = actionEngine.performAction(gameInfo, action);
+		if(!weResultSupport.isSuccess()) {
+			result.setErrorCode(weResultSupport.getErrorCode());
+			return result;
+		}
+		result.setValue(gameInfo);
+		return result;
+	}
+
 
 	public WeBaseResult<GameInfo> getCurrentGameInfo(long userId) {
 		WeBaseResult<GameInfo> baseResult = new WeBaseResult<>();

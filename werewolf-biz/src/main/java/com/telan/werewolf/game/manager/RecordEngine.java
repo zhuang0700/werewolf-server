@@ -1,11 +1,9 @@
 package com.telan.werewolf.game.manager;
 
+import com.telan.werewolf.factory.GameMsgFactory;
 import com.telan.werewolf.factory.RecordFactory;
 import com.telan.werewolf.factory.RoundFactory;
-import com.telan.werewolf.game.domain.GameInfo;
-import com.telan.werewolf.game.domain.GameMsg;
-import com.telan.werewolf.game.domain.Player;
-import com.telan.werewolf.game.domain.Round;
+import com.telan.werewolf.game.domain.*;
 import com.telan.werewolf.game.domain.record.BaseRecord;
 import com.telan.werewolf.game.domain.role.BaseRole;
 import com.telan.werewolf.game.enums.GameMsgSubType;
@@ -31,5 +29,18 @@ public class RecordEngine {
                 player.addRecord(record);
             }
         }
+    }
+
+    public void sendKillMsg(GameInfo gameInfo, PlayerAction action) {
+        Round currentRound = gameInfo.getCurrentRound();
+        Visiablity visiablity = new Visiablity();
+        visiablity.setVisableRoleType(new ArrayList<Integer>(){{add(RoleType.WOLF.getType());}});
+        List<Object> objects = new ArrayList<>();
+        Player fromPlayer = gameInfo.getPlayer(action.fromPlayerId);
+        Player toPlayer = gameInfo.getPlayer(action.toPlayerId);
+        objects.add(fromPlayer.getPlayerNo());
+        objects.add(toPlayer.getPlayerNo());
+        GameMsg msg = GameMsgFactory.createGameMsg(GameMsgSubType.KILL_ACTION, visiablity, objects);
+        sendNormalMsg(gameInfo, msg);
     }
 }

@@ -11,6 +11,8 @@ public class PlayerAction {
 
     public long toPlayerId;
 
+    public long gameId;
+
     public List<Long> extraPlayerList;
 
     public Date actionTime;
