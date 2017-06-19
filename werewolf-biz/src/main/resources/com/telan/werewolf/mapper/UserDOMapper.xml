@@ -21,13 +21,13 @@
     where id = #{id,jdbcType=BIGINT}
   </select>
 
-  <select id="batchSelectByIds" resultMap="BaseResultMap">
+  <select id="batchSelectByIds" resultMap="BaseResultMap" parameterType="java.util.List">
     SELECT
     <include refid="Base_Column_List" />
     FROM user
     WHERE
     id in
-    <foreach close=")" collection="ids" index="index" item="item" open="(" separator=",">
+    <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">
       #{item}
     </foreach>
   </select>

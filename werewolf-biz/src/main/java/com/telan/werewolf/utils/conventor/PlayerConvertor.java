@@ -17,6 +17,9 @@ public class PlayerConvertor {
 
     public static Player convertPlayer(PlayerDO playerDO, UserDO userDO) {
         Player player = new Player();
+        if(userDO == null || playerDO == null) {
+            return null;
+        }
         player.setPlayerDO(playerDO);
         player.setUserDO(userDO);
         player.setRole(RoleFactory.createRoleById(playerDO.getRole()));

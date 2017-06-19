@@ -8,6 +8,7 @@ import com.telan.weixincenter.utils.ResponseMapUtils;
 import com.telan.weixincenter.utils.SpringHttpHolder;
 import com.telan.werewolf.domain.UserDO;
 import com.telan.werewolf.enums.WeErrorCode;
+import com.telan.werewolf.game.domain.Player;
 import com.telan.werewolf.game.param.CreateGameParam;
 import com.telan.werewolf.game.param.OperateGameParam;
 import com.telan.werewolf.game.domain.GameInfo;
@@ -84,7 +85,7 @@ public class GameController {
 		if(param.getMockPlayerNum() > 0) {
 			List<UserDO> userDOList = userManager.mockUserList(param.getMockPlayerNum());
 			for(UserDO mockUser : userDOList) {
-				param.setUser(userDO);
+				param.setUser(mockUser);
 				WeBaseResult<GameInfo> baseMockResult = gameProcessor.joinGame(param);
 				LOGGER.info("join game mock user, userDO=" + JSON.toJSONString(mockUser) + ", modelmap=" + JSON.toJSONString(modelMap));
 			}
@@ -118,6 +119,33 @@ public class GameController {
 		Map map = new HashMap();
 		UserDO userDO = SessionHelper.getUser();
 		WeBaseResult<GameInfo> baseResult = gameProcessor.startGame(userDO.getId(), gameId);
+		LOGGER.info("startGame, result=" + JSON.toJSONString(baseResult));
+		if(!baseResult.isSuccess() && baseResult.getErrorCode() == WeErrorCode.NO_ACTIVE_GAME.getErrorCode()) {
+			map.put("status", 1);
+			map.put("msg", baseResult.getResultMsg());
+			map.put("result", null);
+			return map;
+		}
+		return ResponseMapUtils.convertGameInfo(baseResult, userDO);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/quitGame", method=RequestMethod.POST )
+	@LoginRequired
+	public Map quitGame(@RequestBody OperateGameParam param, ModelMap modelMap) throws IOException
+	{
+		Map map = new HashMap();
+		UserDO userDO = SessionHelper.getUser();
+		param.setUser(userDO);
+		WeBaseResult<GameInfo> baseResult = gameProcessor.quitGame(param);
+		//TODO: 测试逻辑
+		GameInfo gameInfo = baseResult.getValue();
+		for(Player player : gameInfo.getPlayerMap().values()) {
+			if(player.getUserId() != userDO.getId()) {
+				param.setUser(player.getUserDO());
+				gameProcessor.quitGame(param);
+			}
+		}
 		LOGGER.info("startGame, result=" + JSON.toJSONString(baseResult));
 		if(!baseResult.isSuccess() && baseResult.getErrorCode() == WeErrorCode.NO_ACTIVE_GAME.getErrorCode()) {
 			map.put("status", 1);

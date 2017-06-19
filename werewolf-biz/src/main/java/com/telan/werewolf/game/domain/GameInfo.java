@@ -34,6 +34,13 @@ public class GameInfo extends BaseGameInfo {
         return playerMap;
     }
 
+    public Player getPlayer(long playerId) {
+        if(playerMap != null) {
+            return playerMap.get(playerId);
+        }
+        return null;
+    }
+
     public void setPlayerMap(Map<Long, Player> playerMap) {
         this.playerMap = playerMap;
     }
@@ -65,5 +72,9 @@ public class GameInfo extends BaseGameInfo {
 
     public void addPlayer(Player player) {
         this.playerMap.put(player.getId(), player);
+    }
+
+    public void removePlayer(long playerId) {
+        playerMap.remove(playerId);
     }
 }

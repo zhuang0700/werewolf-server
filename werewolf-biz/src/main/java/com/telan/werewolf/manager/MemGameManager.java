@@ -3,6 +3,7 @@ package com.telan.werewolf.manager;
 import com.telan.werewolf.domain.GameDO;
 import com.telan.werewolf.domain.PlayerDO;
 import com.telan.werewolf.domain.UserDO;
+import com.telan.werewolf.enums.BaseStatus;
 import com.telan.werewolf.game.domain.Player;
 import com.telan.werewolf.game.domain.GameInfo;
 import com.telan.werewolf.game.enums.GameStatus;
@@ -10,6 +11,7 @@ import com.telan.werewolf.mapper.UserDOMapper;
 import com.telan.werewolf.query.GamePageQuery;
 import com.telan.werewolf.query.GameQueryOption;
 import com.telan.werewolf.query.PlayerPageQuery;
+import com.telan.werewolf.result.WeBaseResult;
 import com.telan.werewolf.result.WePageResult;
 import com.telan.werewolf.utils.conventor.GameConvertor;
 import com.telan.werewolf.utils.conventor.PlayerConvertor;
@@ -43,10 +45,6 @@ public class MemGameManager {
 
 	public Map<Long, Player> userPlayerMap;
 
-	public MemGameManager(int initSize) {
-		loadAllLiveGame();
-	}
-
 	public GameInfo getGame(Long gameId) {
 		return gameMap.get(gameId);
 	}
@@ -65,12 +63,66 @@ public class MemGameManager {
 	}
 
 	public void addPlayer(Player player) {
-		playerMap.put(player.getId(), player);
-		userPlayerMap.put(player.getUserId(), player);
+		if(playerMap.get(player.getId()) == null) {
+			playerMap.put(player.getId(), player);
+		}
+		if(userPlayerMap.get(player.getId()) == null) {
+			userPlayerMap.put(player.getUserId(), player);
+		}
+		GameInfo gameInfo = gameMap.get(player.getId());
+		if(gameInfo != null && gameInfo.getPlayer(player.getId()) == null) {
+			gameInfo.addPlayer(player);
+		}
 	}
 
-	public Player getPlayerByUserId(Long userId) {
-		return userPlayerMap.get(userId);
+	public void removePlayer(Player player) {
+		if(player == null) {
+			return;
+		}
+		playerMap.remove(player.getId());
+		userPlayerMap.remove(player.getUserId());
+		GameInfo gameInfo = gameMap.get(player.getId());
+		if(gameInfo != null) {
+			gameInfo.removePlayer(player.getId());
+		}
+	}
+
+	public void removePlayerInGame(Player player) {
+		if(player == null) {
+			return;
+		}
+		userPlayerMap.remove(player.getUserId());
+	}
+
+	public Player getPlayerByUserId(long userId, long gameId) {
+		Player player = userPlayerMap.get(userId);
+		if(player == null) {
+			player = loadPlayer(userId, gameId);
+			if(player == null) {
+				return null;
+			}
+			addPlayer(player);
+		}
+		return player;
+	}
+
+	public Player loadPlayer(long userId, long gameId) {
+		WeBaseResult<UserDO> userDOWeBaseResult = userManager.getUserById(userId);
+		UserDO userDO = userDOWeBaseResult.getValue();
+		PlayerPageQuery playerPageQuery = new PlayerPageQuery();
+		playerPageQuery.setUserId(userId);
+		if(gameId > 0) {
+			playerPageQuery.setGameId(gameId);
+		} else {
+			playerPageQuery.setGameStatus(BaseStatus.AVAILABLE.getType());
+		}
+		List<PlayerDO> playerDOList = playerManager.pageQuery(playerPageQuery);
+		PlayerDO playerDO = null;
+		if(!CollectionUtils.isEmpty(playerDOList)) {
+			playerDO = playerDOList.get(0);
+		}
+		Player player = PlayerConvertor.convertPlayer(playerDO, userDO);
+		return player;
 	}
 
 	public void loadAllLiveGame() {
@@ -89,19 +141,34 @@ public class MemGameManager {
 
 		Map<Long, Player> playerMap = new HashMap<>();
 		Map<Long, Player> userPlayerMap = new HashMap<>();
-		for(PlayerDO playerDO : playerDOList) {
-			Player player = PlayerConvertor.convertPlayer(playerDO, userDOMap.get(playerDO.getUserId()));
-			playerMap.put(player.getId(), player);
-			userPlayerMap.put(player.getUserId(), player);
-			GameInfo gameInfo = gameInfoMap.get(player.getGameId());
-			if(gameInfo == null) {
-				logger.error("loadAllLiveGame error. gameInfo lost. player={}", player);
-				continue;
+		if(!CollectionUtils.isEmpty(userDOMap) && !CollectionUtils.isEmpty(playerDOList)) {
+			for(PlayerDO playerDO : playerDOList) {
+				Player player = PlayerConvertor.convertPlayer(playerDO, userDOMap.get(playerDO.getUserId()));
+				if(player == null) {
+					logger.error("player info lost error. playerDO={}", playerDO);
+					continue;
+				}
+				playerMap.put(player.getId(), player);
+				userPlayerMap.put(player.getUserId(), player);
+				GameInfo gameInfo = gameInfoMap.get(player.getGameId());
+				if (gameInfo == null) {
+					logger.error("loadAllLiveGame error. gameInfo lost. player={}", player);
+					continue;
+				}
+				gameInfo.addPlayer(player);
 			}
-			gameInfo.addPlayer(player);
 		}
 		this.gameMap = gameInfoMap;
 		this.playerMap = playerMap;
 		this.userPlayerMap = userPlayerMap;
+	}
+
+	public void destroy() {
+		this.gameMap.clear();
+		this.gameMap = null;
+		this.playerMap.clear();
+		this.playerMap = null;
+		this.userPlayerMap.clear();
+		this.userPlayerMap = null;
 	}
 }

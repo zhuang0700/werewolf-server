@@ -17,6 +17,9 @@ public class ResultConvertor {
 
     public static GameData convertToData(GameInfo gameInfo, UserDO userDO) {
         GameData gameData = new GameData();
+        if(gameInfo == null || userDO == null) {
+            return null;
+        }
         gameData.gameDO = gameInfo.getGameDO();
         gameData.playerDOList = new ArrayList<>();
         for(Player player : gameInfo.getPlayerMap().values()) {

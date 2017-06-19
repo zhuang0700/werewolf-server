@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.telan.werewolf.domain.GameDO;
 import com.telan.werewolf.domain.PlayerDO;
 import com.telan.werewolf.domain.UserDO;
+import com.telan.werewolf.enums.BaseStatus;
 import com.telan.werewolf.enums.WeErrorCode;
 import com.telan.werewolf.factory.GameMsgFactory;
 import com.telan.werewolf.factory.RoundFactory;
@@ -151,7 +152,7 @@ public class GameProcessor {
 			result.setErrorCode(WeErrorCode.WRONG_GAME);
 			return result;
 		}
-		Player player = memGameManager.getPlayerByUserId(param.getUser().getId());
+		Player player = memGameManager.getPlayerByUserId(param.getUser().getId(), param.getGameId());
 		if(player == null) {
 			result.setErrorCode(WeErrorCode.WRONG_GAME);
 			return result;
@@ -231,13 +232,7 @@ public class GameProcessor {
 	private long findCurrentGameIdFromDB(long userId) {
 		PlayerPageQuery playerPageQuery = new PlayerPageQuery();
 		playerPageQuery.setUserId(userId);
-		playerPageQuery.setStatusList(new ArrayList<Integer>(){
-			private static final long serialVersionUID = -8804793808495319423L;
-			{
-			add(PlayerStatus.CREATE.getType());
-			add(PlayerStatus.LIVE.getType());
-			add(PlayerStatus.DEAD.getType());
-		}});
+		playerPageQuery.setGameStatus(BaseStatus.AVAILABLE.getType());
 		List<PlayerDO> playerDOs = playerManager.pageQuery(playerPageQuery);
 		if(CollectionUtils.isEmpty(playerDOs)) {
 			return 0;
@@ -249,16 +244,15 @@ public class GameProcessor {
 	}
 
 	private long findCurrentGameId(long userId) {
-		Player player = memGameManager.getPlayerByUserId(userId);
+		Player player = memGameManager.getPlayerByUserId(userId, 0);
 		if(player == null) {
 			return findCurrentGameIdFromDB(userId);
 		}
 		return player.getGameId();
 	}
 
-
 	private GameInfo findCurrentGame(long userId) {
-		Player player = memGameManager.getPlayerByUserId(userId);
+		Player player = memGameManager.getPlayerByUserId(userId, 0);
 		long gameId = 0;
 		if(player == null) {
 			gameId = findCurrentGameIdFromDB(userId);
@@ -283,7 +277,7 @@ public class GameProcessor {
 			result.setErrorCode(WeErrorCode.SYSTEM_ERROR);
 			return result;
 		}
-		gameInfo.getPlayerMap().remove(playerId);
+		memGameManager.removePlayer(player);
 		result.setValue(gameInfo);
 		return result;
 	}
@@ -292,8 +286,10 @@ public class GameProcessor {
 		WeBaseResult<GameInfo> result = new WeBaseResult<>();
 		final Player player = memGameManager.getPlayer(playerId);
 		playerEngine.quitGameAfterStart(player);
+		playerManager.updatePlayerById(player.getPlayerDO());
 		GameMsg gameMsg = GameMsgFactory.createGameMsg(GameMsgSubType.QUIT_GAME, Visiablity.ALL, new ArrayList<Object>(){{add(player.getPlayerNo());}});
 		recordEngine.sendNormalMsg(gameInfo, gameMsg);
+		memGameManager.removePlayer(player);
 		result.setValue(gameInfo);
 		return result;
 	}

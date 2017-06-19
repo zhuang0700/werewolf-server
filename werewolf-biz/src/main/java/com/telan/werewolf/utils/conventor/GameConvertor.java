@@ -37,6 +37,7 @@ public class GameConvertor{
         Map<Long,GameInfo> gameDOMap = new HashMap<>();
         for(GameDO gameDO : gameDOList) {
             GameInfo gameInfo = new GameInfo(gameDO);
+            gameInfo.init();
             gameDOMap.put(gameDO.getId(), gameInfo);
         }
         return gameDOMap;
@@ -49,10 +50,13 @@ public class GameConvertor{
     public static DefaultConvertor defaultConvertor;
 
     public static DefaultConvertor getDefaultConvertor() {
+        if(defaultConvertor == null) {
+            defaultConvertor = new DefaultConvertor();
+        }
         return defaultConvertor;
     }
 
-    public class DefaultConvertor implements Converter<GameDO, Long> {
+    public static class DefaultConvertor implements Converter<GameDO, Long> {
         @Override
         public Long convert(GameDO gameDO) {
             return convertGameDO(gameDO);

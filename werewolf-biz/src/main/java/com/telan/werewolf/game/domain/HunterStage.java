@@ -62,7 +62,7 @@ public class HunterStage extends Stage {
     }
 
     @Override
-    public WeResultSupport userAction(Player player, PlayerAction action){
+    public WeResultSupport roleUserAction(Player player, PlayerAction action){
         WeResultSupport resultSupport = new WeResultSupport();
         if(action.actionType == ActionType.KILL.getType()) {
             if(ActionUtil.findActionByFromId(actionList, action.fromPlayerId) != null) {

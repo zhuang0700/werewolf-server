@@ -9,7 +9,7 @@ public interface UserDOMapper {
 
     UserDO selectByPrimaryKey(long id);
 
-    List<UserDO> batchSelectByIds(List<Long> ids);
+    List<UserDO> batchSelectByIds(List<Long> list);
 
     UserDO selectByUnionId(String unionId);
 

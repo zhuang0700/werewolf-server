@@ -57,7 +57,7 @@
     <include refid="Base_Column_List" />
     FROM game
     <include refid="querySqlString" />
-    <if test="isNeedPageQuery" >
+    <if test="needPageQuery" >
       limit #{startRow},#{pageSize}
     </if>
     order by gmt_modified desc
@@ -70,9 +70,11 @@
   </select>
   <sql id="querySqlString">
     <where>
-      <if test="status != null">
-        and
-        status = #{status}
+      <if test="statusList != null and statusList.size() > 0">
+        and status in
+        <foreach close=")" collection="statusList" index="index" item="status" open="(" separator=",">
+          #{status}
+        </foreach>
       </if>
       <if test="type != null">
         and

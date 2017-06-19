@@ -15,8 +15,7 @@
     <bean id="gameManager" class="com.telan.werewolf.manager.GameManager"/>
     <bean id="playerManager" class="com.telan.werewolf.manager.PlayerManager"/>
     <bean id="gameProcessor" class="com.telan.werewolf.game.process.GameProcessor"/>
-    <bean id="memGameManager" class="com.telan.werewolf.manager.MemGameManager">
-        <constructor-arg index="0" name="initSize" value="16"></constructor-arg>
+    <bean id="memGameManager" class="com.telan.werewolf.manager.MemGameManager" init-method="loadAllLiveGame" destroy-method="destroy">
     </bean>
     <bean id="actionEngine" class="com.telan.werewolf.game.manager.ActionEngine"/>
     <bean id="roleEngine" class="com.telan.werewolf.game.manager.RoleEngine"/>

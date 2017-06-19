@@ -3,7 +3,6 @@ package com.telan.werewolf.game.domain;
 import com.telan.werewolf.domain.GameDO;
 import com.telan.werewolf.domain.PlayerDO;
 import com.telan.werewolf.game.domain.record.BaseRecord;
-import javafx.stage.Stage;
 
 import java.io.Serializable;
 import java.util.List;
