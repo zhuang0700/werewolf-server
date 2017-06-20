@@ -242,7 +242,6 @@
 			<artifactId>commons-beanutils</artifactId>
 			<version>${commons-beanutils.version}</version>
 		</dependency>
-		<finish end common -->
 		<!-- Test libs -->
 		<dependency>
 			<groupId>junit</groupId>

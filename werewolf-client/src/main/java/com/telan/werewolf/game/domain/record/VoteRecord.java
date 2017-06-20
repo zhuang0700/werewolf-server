@@ -8,6 +8,8 @@ import java.util.Map;
  * Created by weiwenliang on 17/5/15.
  */
 public class VoteRecord extends BaseRecord {
+    private static final long serialVersionUID = 8191115429231595725L;
+
     private int msgSubType;
     private List<String> msgList;
     private Map<Long, Long> voteMap;

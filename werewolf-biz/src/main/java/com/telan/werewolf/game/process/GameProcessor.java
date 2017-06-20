@@ -12,7 +12,6 @@ import com.telan.werewolf.game.domain.*;
 import com.telan.werewolf.game.domain.role.BaseRole;
 import com.telan.werewolf.game.enums.GameMsgSubType;
 import com.telan.werewolf.game.enums.GameStatus;
-import com.telan.werewolf.game.enums.PlayerStatus;
 import com.telan.werewolf.game.manager.*;
 import com.telan.werewolf.game.param.CreateGameParam;
 import com.telan.werewolf.game.param.OperateGameParam;
@@ -42,19 +41,9 @@ public class GameProcessor {
 	@Autowired
 	private GameManager gameManager;
 	@Autowired
-	private ActionEngine actionEngine;
-	@Autowired
 	private PlayerManager playerManager;
 	@Autowired
-	private RoleEngine roleEngine;
-	@Autowired
-	private RoundEngine roundEngine;
-	@Autowired
-	private PlayerEngine playerEngine;
-	@Autowired
 	private UserManager userManager;
-	@Autowired
-	private RecordEngine recordEngine;
 
 	private final static Logger log	= LoggerFactory.getLogger(GameProcessor.class);
 
@@ -133,14 +122,14 @@ public class GameProcessor {
 		if(gameInfo.getGameStatus() == GameStatus.CREATE.getType()) {
 			gameInfo.setGameStatus(GameStatus.INIT.getType());
 		}
-		gameInfo.setRoleList(roleEngine.initRoleList(gameInfo.getPlayerNum()));
+		gameInfo.setRoleList(RoleEngine.initRoleList(gameInfo.getPlayerNum()));
 		//分配角色
-		roleEngine.allocateRole(gameInfo.getRoleList(), gameInfo.getPlayerMap());
+		RoleEngine.allocateRole(gameInfo.getRoleList(), gameInfo.getPlayerMap());
 		//初始化回合
-		Round firstRound = RoundFactory.createRound(1, gameInfo.getRoleList());
+		Round firstRound = RoundFactory.createRound(1, gameInfo);
 		gameInfo.changeCurrentRound(firstRound);
-		roundEngine.startRound(gameInfo);
-		playerEngine.setGameStart(gameInfo.getPlayerMap());
+		RoundEngine.startRound(gameInfo);
+		PlayerEngine.setGameStart(gameInfo.getPlayerMap());
 		gameInfo.setGameStatus(GameStatus.PROCESS.getType());
 		result.setValue(gameInfo);
 		return result;
@@ -188,11 +177,10 @@ public class GameProcessor {
 			result.setErrorCode(WeErrorCode.WRONG_GAME);
 			return result;
 		}
-		GameStatus gameStatus = GameStatus.getByTypeWithDefault(gameInfo.getGameStatus());
 		if(gameInfo.getGameStatus() != GameStatus.PROCESS.getType()) {
 			result.setErrorCode(WeErrorCode.WRONG_GAME);
 		}
-		WeResultSupport weResultSupport = actionEngine.performAction(gameInfo, action);
+		WeResultSupport weResultSupport = ActionEngine.performAction(gameInfo, action);
 		if(!weResultSupport.isSuccess()) {
 			result.setErrorCode(weResultSupport.getErrorCode());
 			return result;
@@ -312,10 +300,10 @@ public class GameProcessor {
 	private WeBaseResult<GameInfo> quitGameAfterStart(GameInfo gameInfo, long playerId) {
 		WeBaseResult<GameInfo> result = new WeBaseResult<>();
 		final Player player = memGameManager.getPlayer(playerId);
-		playerEngine.quitGameAfterStart(player);
+		PlayerEngine.quitGameAfterStart(player);
 		playerManager.updatePlayerById(player.getPlayerDO());
-		GameMsg gameMsg = GameMsgFactory.createGameMsg(GameMsgSubType.QUIT_GAME, Visiablity.ALL, new ArrayList<Object>(){{add(player.getPlayerNo());}});
-		recordEngine.sendNormalMsg(gameInfo, gameMsg);
+		GameMsg gameMsg = GameMsgFactory.createGameMsg(GameMsgSubType.QUIT_GAME, Visibility.ALL, new ArrayList<Object>(){{add(player.getPlayerNo());}});
+		RecordEngine.sendNormalMsg(gameInfo, gameMsg);
 		memGameManager.removePlayer(player);
 		result.setValue(gameInfo);
 		return result;

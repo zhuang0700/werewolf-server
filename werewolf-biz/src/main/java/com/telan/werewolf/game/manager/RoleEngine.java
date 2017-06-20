@@ -1,5 +1,7 @@
 package com.telan.werewolf.game.manager;
 
+import com.telan.werewolf.game.domain.GameConfig;
+import com.telan.werewolf.game.domain.GameInfo;
 import com.telan.werewolf.game.domain.Player;
 import com.telan.werewolf.game.domain.role.BaseRole;
 import com.telan.werewolf.game.domain.role.VillagerRole;
@@ -15,7 +17,8 @@ import java.util.Map;
  * Created by weiwenliang on 17/6/6.
  */
 public class RoleEngine {
-    public List<BaseRole> initRoleList(int playerNum) {
+
+    public static List<BaseRole> initRoleList(int playerNum) {
         List<BaseRole> roleList = new ArrayList<>();
         if(playerNum < 3) {
             RoleType[] roleTypes_2 = {RoleType.WOLF,RoleType.WITCH};
@@ -31,7 +34,7 @@ public class RoleEngine {
         }
     }
 
-    public void allocateRole(List<BaseRole> roleList, Map<Long, Player> playerMap) {
+    public static void allocateRole(List<BaseRole> roleList, Map<Long, Player> playerMap) {
         int playerNums = playerMap.size();
         int roles = roleList.size();
         List<Integer> randomSeq = RandomUtil.generateSeq(0, roles - 1, playerNums);
@@ -46,7 +49,7 @@ public class RoleEngine {
         }
     }
 
-    private List<BaseRole> formRoleList(RoleType[] roleTypes) {
+    private static List<BaseRole> formRoleList(RoleType[] roleTypes) {
         List<BaseRole> baseRoleList = new ArrayList<>();
         for(RoleType roleType : roleTypes) {
             baseRoleList.add(RoleFactory.createRoleById(roleType.getType()));

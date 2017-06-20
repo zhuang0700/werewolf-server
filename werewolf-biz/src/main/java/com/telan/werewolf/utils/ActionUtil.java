@@ -58,4 +58,18 @@ public class ActionUtil {
         }
         return null;
     }
+
+    public static Map<Long, List<PlayerAction>> convertListToMap(List<PlayerAction> actionList) {
+        Map<Long, List<PlayerAction>> voteMap = new HashMap<>();
+        for(PlayerAction action : actionList) {
+            if(voteMap.get(action.toPlayerId) == null) {
+                List<PlayerAction> actions = new ArrayList<>();
+                actions.add(action);
+                voteMap.put(action.toPlayerId, actions);
+            } else{
+                voteMap.get(action.toPlayerId).add(action);
+            }
+        }
+        return voteMap;
+    }
 }

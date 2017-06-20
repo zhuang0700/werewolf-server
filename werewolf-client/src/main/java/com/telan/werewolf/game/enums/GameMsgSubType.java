@@ -14,11 +14,16 @@ public enum GameMsgSubType {
 
     DEAD_RESULT("昨夜死亡的玩家是:{1}",3, 3001),
 
-    VOTE_RESULT("投票结果:\r\n{1}\r\n{2}玩家被处决",4, 4001),
+    VOTE_RESULT("投票结果:\r\n{1}",4, 4001),
+    VOTE_DEATH_RESULT("{2}玩家被处决",4, 4002),
+    VOTE_SHERIFF_RESULT("{2}玩家当选",4, 4003),
+    VOTE_AGAIN("请再次投票",4, 4004),
 
     KILL_ACTION("{1}号玩家（狼人）选择了{2}号作为目标",5,5001),
     CURE_ACTION("{1}号玩家（女巫）选择对{2}号使用解药",5,5002),
     POSITION_ACTION("{1}号玩家（女巫）选择对{2}号使用毒药",5,5003),
+    SHOOT_ACTION("{1}号玩家（猎人）选择开枪带走{2}号",5,5004),
+    SEER_ACTION("{1}号玩家（预言家）查验了{2}号（{3}）的身份",5,5005),
 
     QUIT_GAME("{1}号玩家退出了游戏",6,6001),
     ;

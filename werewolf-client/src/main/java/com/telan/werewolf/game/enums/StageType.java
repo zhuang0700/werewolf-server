@@ -9,6 +9,8 @@ public enum StageType {
     SHERIFF("投警长",5),
     HUNTER("狙人",6),
     SEER("预言家",7),
+    NIGHT_END("黑夜结束",8),
+    DAY_END("白天结束",9),
     ;
     private String desc;
     private int type;
@@ -43,6 +45,28 @@ public enum StageType {
             if (userType.name().equals(name)) {
                 return userType;
             }
+        }
+        return null;
+    }
+
+    public static StageType getByActionType(ActionType actionType) {
+        if(actionType == null) {
+            return null;
+        }
+        switch (actionType) {
+            case KILL:
+                return WOLF;
+            case SAVE:
+            case POISON:
+                return WITCH;
+            case SEE:
+                return SEER;
+            case SHOOT:
+                return HUNTER;
+            case VOTE:
+                return VOTE;
+            case RUN_SHERIFF:
+                return SHERIFF;
         }
         return null;
     }

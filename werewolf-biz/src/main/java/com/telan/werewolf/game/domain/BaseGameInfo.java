@@ -11,6 +11,7 @@ import java.util.Date;
 public class BaseGameInfo implements Serializable {
     private static final long serialVersionUID = 6871822939225847741L;
     private GameDO gameDO;
+    private GameConfig gameConfig;
     private Date endTime;
 
     public BaseGameInfo(GameDO gameDO) {
@@ -51,4 +52,11 @@ public class BaseGameInfo implements Serializable {
         this.gameDO.setStatus(status);
     }
 
+    public GameConfig getGameConfig() {
+        return gameConfig;
+    }
+
+    public void setGameConfig(GameConfig gameConfig) {
+        this.gameConfig = gameConfig;
+    }
 }

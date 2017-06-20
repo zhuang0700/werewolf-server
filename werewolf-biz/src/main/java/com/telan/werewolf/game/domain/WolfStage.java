@@ -72,7 +72,7 @@ public class WolfStage extends Stage {
                 resultSupport.setErrorCode(WeErrorCode.WRONG_STAGE_ACTION);
                 return resultSupport;
             }
-            Player toPlayer = memGameManager.getPlayer(action.toPlayerId);
+            Player toPlayer = getPlayerMap().get(action.toPlayerId);
             if(toPlayer == null || toPlayer.getStatus() != PlayerStatus.LIVE.getType()) {
                 resultSupport.setErrorCode(WeErrorCode.WRONG_ACTION_TARGET);
                 return resultSupport;

@@ -1,7 +1,5 @@
 package com.telan.werewolf.game.domain;
 
-import com.telan.werewolf.game.enums.RoleType;
-
 import java.util.Date;
 import java.util.List;
 
@@ -13,7 +11,7 @@ public class GameMsg {
 
     private int subType;
 
-    private Visiablity visiablity;
+    private Visibility visibility;
 
     private Date actionTime;
 
@@ -27,12 +25,12 @@ public class GameMsg {
         this.type = type;
     }
 
-    public Visiablity getVisiablity() {
-        return visiablity;
+    public Visibility getVisibility() {
+        return visibility;
     }
 
-    public void setVisiablity(Visiablity visiablity) {
-        this.visiablity = visiablity;
+    public void setVisibility(Visibility visibility) {
+        this.visibility = visibility;
     }
 
     public Date getActionTime() {

@@ -21,11 +21,10 @@ import java.util.Map;
  */
 public class VoteStage extends Stage {
 
-
-    Map<Long, List<PlayerAction>> voteMap;
-
+    private int repeatNum = 1;
 
     public VoteStage(){
+        super();
         this.stageType = StageType.VOTE;
     }
 
@@ -44,14 +43,8 @@ public class VoteStage extends Stage {
 
     @Override
     public void roleAnalyse() {
-        Map<Long, Integer> killMap = new HashMap<>();
-        for(PlayerAction action : actionList) {
-            if(killMap.get(action.toPlayerId) == null) {
-                killMap.put(action.toPlayerId, 1);
-            } else{
-                killMap.put(action.toPlayerId, killMap.get(action.toPlayerId) +1);
-            }
-        }
+        voteMap = ActionUtil.convertListToMap(actionList);
+        List<Long> maxVoteId = ActionUtil.findMaxVote(voteMap);
     }
 
     @Override
@@ -71,7 +64,7 @@ public class VoteStage extends Stage {
                 resultSupport.setErrorCode(WeErrorCode.WRONG_STAGE_ACTION);
                 return resultSupport;
             }
-            Player toPlayer = memGameManager.getPlayer(action.toPlayerId);
+            Player toPlayer = getPlayerMap().get(action.toPlayerId);
             if(toPlayer == null || toPlayer.getStatus() != PlayerStatus.LIVE.getType()) {
                 resultSupport.setErrorCode(WeErrorCode.WRONG_ACTION_TARGET);
                 return resultSupport;
@@ -81,25 +74,5 @@ public class VoteStage extends Stage {
             resultSupport.setErrorCode(WeErrorCode.UNSUPPORT_ACTION);
         }
         return resultSupport;
-    }
-
-    private List<Long> findMaxVote(){
-        if(!CollectionUtils.isEmpty(voteMap)) {
-            int max = 0;
-            List<Long> ids = new ArrayList<>();
-            for(Long playerId : voteMap.keySet()) {
-                int votes = voteMap.get(playerId).size();
-                if(max > votes) {
-                    continue;
-                } else if(max < votes) {
-                    ids.clear();
-                    max = votes;
-                } else{
-                    ids.add(playerId);
-                }
-            }
-            return ids;
-        }
-        return null;
     }
 }

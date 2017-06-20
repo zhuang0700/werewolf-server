@@ -11,13 +11,13 @@ import java.util.Map;
  */
 public class PlayerEngine {
 
-    public void setGameStart(Map<Long, Player> playerMap) {
+    public static void setGameStart(Map<Long, Player> playerMap) {
         for(Player player : playerMap.values()) {
             player.setStatus(PlayerStatus.LIVE.getType());
         }
     }
 
-    public void quitGameAfterStart(Player player) {
+    public static void quitGameAfterStart(Player player) {
         player.setGameStatus(BaseStatus.DELETED.getType());
     }
 }

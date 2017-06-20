@@ -41,15 +41,17 @@ public class StageFactory {
         return new SheriffStage();
     }
 
-    public static List<Stage> createDefaultNightStages(List<BaseRole> roleList) {
+    public static List<Stage> createDefaultNightStages(List<BaseRole> roleList, GameInfo gameInfo) {
         List<Stage> stageList = new ArrayList<>();
         Stage wolfStage = createRoleStage(RoleType.WOLF.getType());
         if(roleList.contains(new WitchRole())){
             Stage witchStage = createRoleStage(RoleType.WITCH.getType());
+            witchStage.setGameInfo(gameInfo);
             wolfStage.linkNext(witchStage);
         }
         if(roleList.contains(new SeerRole())){
             Stage seerStage = createRoleStage(RoleType.SEER.getType());
+            wolfStage.setGameInfo(gameInfo);
             wolfStage.linkNext(seerStage);
         }
         stageList.add(wolfStage);
@@ -57,12 +59,15 @@ public class StageFactory {
     }
 
 
-    public static List<Stage> createDefaultDayStages(boolean needSheriff) {
+    public static List<Stage> createDefaultDayStages(boolean needSheriff, GameInfo gameInfo) {
         List<Stage> stageList = new ArrayList<>();
         Stage voteStage = createVoteStage();
+        voteStage.setGameInfo(gameInfo);
         if(needSheriff) {
-            stageList.add(createSheriffStage());
-            stageList.get(0).linkNext(voteStage);
+            Stage sheriffStage = createSheriffStage();
+            sheriffStage.setGameInfo(gameInfo);
+            sheriffStage.linkNext(voteStage);
+            stageList.add(sheriffStage);
         } else {
             stageList.add(voteStage);
         }

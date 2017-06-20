@@ -3,6 +3,7 @@ package com.telan.werewolf.game.domain;
 import com.telan.werewolf.game.enums.StageStatus;
 import com.telan.werewolf.game.enums.StageType;
 import com.telan.werewolf.game.manager.ActionEngine;
+import com.telan.werewolf.game.manager.RoundEngine;
 import com.telan.werewolf.manager.MemGameManager;
 import com.telan.werewolf.result.WeResultSupport;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +19,8 @@ import java.util.Map;
  * Created by weiwenliang on 17/5/16.
  */
 public abstract class Stage {
-    @Autowired
-    public ActionEngine actionEngine;
 
-    @Autowired
-    public MemGameManager memGameManager;
+    protected GameInfo gameInfo;
 
     public Map<Long, List<PlayerAction>> voteMap;
 
@@ -45,6 +43,22 @@ public abstract class Stage {
     public List<Role> roleList;
 
     protected List<PlayerAction> actionList;
+
+    public void setGameInfo(GameInfo gameInfo) {
+        this.gameInfo = gameInfo;
+    }
+
+    public GameConfig getGameConfig() {
+        return gameInfo.getGameConfig();
+    }
+
+    public Round getCurrentRound() {
+        return gameInfo.getCurrentRound();
+    }
+
+    public Map<Long, Player> getPlayerMap() {
+        return gameInfo.getPlayerMap();
+    }
 
     public void linkNext(Stage nextStage) {
         if(next == null) {
@@ -115,7 +129,7 @@ public abstract class Stage {
     }
 
     public WeResultSupport userAction(Player player, PlayerAction action){
-        WeResultSupport resultSupport = actionEngine.checkAction(player, action);
+        WeResultSupport resultSupport = ActionEngine.checkAction(player, action);
         if(!resultSupport.isSuccess()) {
             return resultSupport;
         }

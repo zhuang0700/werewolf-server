@@ -16,19 +16,19 @@ import java.util.List;
  * Created by weiwenliang on 17/6/6.
  */
 public class RoundEngine {
-    public void startRound(GameInfo currentGame){
+    public static void startRound(GameInfo currentGame){
         moveToNextStatus(currentGame.getCurrentRound());
     }
 
-    public Round finishRound(GameInfo currentGame) {
+    public static Round finishRound(GameInfo currentGame) {
         moveToNextStatus(currentGame.getCurrentRound());
-        Round round = RoundFactory.createRound(currentGame.getCurrentRound().getRoundNo() + 1, currentGame.getRoleList());
+        Round round = RoundFactory.createRound(currentGame.getCurrentRound().getRoundNo() + 1, currentGame);
         currentGame.changeCurrentRound(round);
         startRound(currentGame);
         return round;
     }
 
-    private void moveToNextStatus(Round round) {
+    public static void moveToNextStatus(Round round) {
         RoundStatus roundStatus = RoundStatus.getByType(round.getRoundStatus());
         List<Object> roundNoContent = new ArrayList<>();
         if(roundStatus == null) {

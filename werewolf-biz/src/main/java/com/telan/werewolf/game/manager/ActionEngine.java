@@ -11,7 +11,7 @@ import com.telan.werewolf.utils.ActionUtil;
  * Created by weiwenliang on 17/5/23.
  */
 public class ActionEngine {
-    public WeResultSupport checkAction(Player player, PlayerAction action) {
+    public static  WeResultSupport checkAction(Player player, PlayerAction action) {
         WeResultSupport resultSupport = new WeResultSupport();
         if(player.getStatus() == PlayerStatus.DEAD.getType()) {
             resultSupport.setErrorCode(WeErrorCode.DEAD_ACTION);
@@ -20,7 +20,7 @@ public class ActionEngine {
         return resultSupport;
     }
 
-    public WeResultSupport performAction(GameInfo gameInfo, PlayerAction action) {
+    public static WeResultSupport performAction(GameInfo gameInfo, PlayerAction action) {
         WeResultSupport weResultSupport;
         Player player = gameInfo.getPlayer(action.fromPlayerId);
         weResultSupport = checkAction(player, action);
@@ -33,24 +33,38 @@ public class ActionEngine {
             return weResultSupport;
         }
         ActionType actionType = ActionType.getByType(action.actionType);
-        switch (actionType) {
-            case KILL:
-                WolfStage wolfStage = (WolfStage)currentRound.getStageByType(StageType.WOLF);
-                if(wolfStage == null || wolfStage.status != StageStatus.WAITING_ACTION.getType()) {
-                    weResultSupport.setErrorCode(WeErrorCode.WRONG_STAGE_ACTION);
-                    return weResultSupport;
-                }
-                wolfStage.userAction(player, action);
-
-                break;
-            case SAVE:
-                //TODO: not finished
-                break;
+        Stage stage = currentRound.getStageByType(StageType.getByActionType(actionType));
+        if(stage == null || stage.status != StageStatus.WAITING_ACTION.getType()) {
+            weResultSupport.setErrorCode(WeErrorCode.WRONG_STAGE_ACTION);
+            return weResultSupport;
         }
+        stage.userAction(player, action);
+        RecordEngine.sendActionMsg(gameInfo, action);
+//        switch (actionType) {
+//            case KILL:
+//                WolfStage wolfStage = (WolfStage)currentRound.getStageByType(StageType.WOLF);
+//                if(wolfStage == null || wolfStage.status != StageStatus.WAITING_ACTION.getType()) {
+//                    weResultSupport.setErrorCode(WeErrorCode.WRONG_STAGE_ACTION);
+//                    return weResultSupport;
+//                }
+//                wolfStage.userAction(player, action);
+//                RecordEngine.sendActionMsg(gameInfo, action);
+//                break;
+//            case SAVE:
+//                //TODO: not finished
+//                WitchStage witchStage = (WitchStage)currentRound.getStageByType(StageType.WITCH);
+//                if(witchStage == null || witchStage.status != StageStatus.WAITING_ACTION.getType()) {
+//                    weResultSupport.setErrorCode(WeErrorCode.WRONG_STAGE_ACTION);
+//                    return weResultSupport;
+//                }
+//                witchStage.userAction(player, action);
+//                RecordEngine.sendActionMsg(gameInfo, action);
+//                break;
+//        }
         return weResultSupport;
     }
 
-    private WeResultSupport roundCheck(Round currentRound, PlayerAction action) {
+    private static WeResultSupport roundCheck(Round currentRound, PlayerAction action) {
         WeResultSupport weResultSupport = new WeResultSupport();
         if(currentRound.getRoundStatus() == RoundStatus.NOT_START.getType() || currentRound.getRoundStatus() == RoundStatus.FINISH.getType()) {
             weResultSupport.setErrorCode(WeErrorCode.WRONG_STAGE_ACTION);
