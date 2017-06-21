@@ -2,19 +2,14 @@ package com.telan.werewolf.game.enums;
 
 /**
  */
-public enum RoleType {
-    NONE("未分配",0),
-    JUDGE("法官",1000),
-    WOLF("狼人",1),
-    WITCH("女巫",2),
-    SEER("预言家",3),
-    VILLAGER("村民",4),
-    HUNTER("猎人",5),
-;
+public enum JudgeActionType {
+    FINISH_STAGE("杀人",1),
+    ANNOUNCE_DEAD("宣布死亡",2),
+    ;
     private String desc;
     private int type;
 
-    RoleType(String desc, int type) {
+    JudgeActionType(String desc, int type) {
         this.desc = desc;
         this.type = type;
     }
@@ -27,8 +22,8 @@ public enum RoleType {
         return type;
     }
 
-    public static RoleType getByType(int type) {
-        for (RoleType userType : values()) {
+    public static JudgeActionType getByType(int type) {
+        for (JudgeActionType userType : values()) {
             if (userType.getType() == type) {
                 return userType;
             }
@@ -36,11 +31,11 @@ public enum RoleType {
         return null;
     }
 
-    public static RoleType getByName(String name) {
+    public static JudgeActionType getByName(String name) {
         if (name == null) {
             return null;
         }
-        for (RoleType userType : values()) {
+        for (JudgeActionType userType : values()) {
             if (userType.name().equals(name)) {
                 return userType;
             }

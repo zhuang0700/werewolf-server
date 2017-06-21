@@ -1,10 +1,14 @@
 package com.telan.werewolf.game.domain;
 
 import com.telan.werewolf.game.enums.StageType;
+import com.telan.werewolf.game.manager.PlayerEngine;
 import com.telan.werewolf.game.manager.RoundEngine;
 import com.telan.werewolf.result.WeResultSupport;
+import com.telan.werewolf.utils.ActionUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by weiwenliang on 17/5/15.
@@ -31,7 +35,26 @@ public class DayEndStage extends Stage {
 
     @Override
     public void roleAnalyse() {
-        //TODO: 结算
+        long killedPlayerId = 0;
+        boolean useMedicine = false;
+        long poisionedPlayerId = 0;
+        Round round = gameInfo.getCurrentRound();
+        List<Stage> stages = round.getDayStageList();
+        Stage voteStage = round.getStageByType(StageType.VOTE);
+        if(voteStage != null) {
+            voteMap = voteStage.voteMap;
+        }
+        List<Long> maxVotedId = ActionUtil.findMaxVote(voteMap);
+        
+        List<Long> deadPlayers = new ArrayList<>();
+        if(poisionedPlayerId > 0) {
+            deadPlayers.add(poisionedPlayerId);
+        }
+        if(killedPlayerId > 0 && !useMedicine && killedPlayerId != poisionedPlayerId) {
+            deadPlayers.add(killedPlayerId);
+        }
+        PlayerEngine.setPlayerDead(gameInfo, deadPlayers);
+        finish();
         finish();
     }
 

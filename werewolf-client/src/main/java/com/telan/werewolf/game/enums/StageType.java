@@ -3,12 +3,12 @@ package com.telan.werewolf.game.enums;
 /**
  */
 public enum StageType {
-    WOLF("狼人",1),
-    WITCH("女巫",2),
+    WOLF("狼人回合",1),
+    WITCH("女巫回合",2),
     VOTE("投票",4),
-    SHERIFF("投警长",5),
-    HUNTER("狙人",6),
-    SEER("预言家",7),
+    SHERIFF("选警长投票",5),
+    HUNTER("猎人回合",6),
+    SEER("预言家回合",7),
     NIGHT_END("黑夜结束",8),
     DAY_END("白天结束",9),
     ;

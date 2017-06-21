@@ -177,8 +177,13 @@ public class GameProcessor {
 			result.setErrorCode(WeErrorCode.WRONG_GAME);
 			return result;
 		}
+		if(player.getUserId() != action.getUserDO().getId()) {
+			result.setErrorCode(WeErrorCode.UNSUPPORT_ACTION);
+			return result;
+		}
 		if(gameInfo.getGameStatus() != GameStatus.PROCESS.getType()) {
 			result.setErrorCode(WeErrorCode.WRONG_GAME);
+			return result;
 		}
 		WeResultSupport weResultSupport = ActionEngine.performAction(gameInfo, action);
 		if(!weResultSupport.isSuccess()) {
@@ -189,6 +194,33 @@ public class GameProcessor {
 		return result;
 	}
 
+	public WeBaseResult<GameInfo> judgeAction(JudgeAction action) {
+		WeBaseResult<GameInfo> result = new WeBaseResult<>();
+		GameInfo gameInfo = memGameManager.getGame(action.getGameId());
+		if(gameInfo == null) {
+			result.setErrorCode(WeErrorCode.WRONG_GAME);
+			return result;
+		}
+		Player player = memGameManager.getPlayerByUserId(action.getUserDO().getId(), action.getGameId());
+		if(player == null) {
+			result.setErrorCode(WeErrorCode.WRONG_GAME);
+			return result;
+		}
+		if(gameInfo.getGameStatus() != GameStatus.PROCESS.getType()) {
+			result.setErrorCode(WeErrorCode.WRONG_GAME);
+			return result;
+		}
+		if(!PlayerEngine.isJudge(gameInfo, player)) {
+			result.setErrorCode(WeErrorCode.UNSUPPORT_ACTION);
+		}
+		WeResultSupport weResultSupport = ActionEngine.performJudgeAction(gameInfo, action);
+		if(!weResultSupport.isSuccess()) {
+			result.setErrorCode(weResultSupport.getErrorCode());
+			return result;
+		}
+		result.setValue(gameInfo);
+		return result;
+	}
 
 	public WeBaseResult<GameInfo> getCurrentGameInfo(long userId) {
 		WeBaseResult<GameInfo> baseResult = new WeBaseResult<>();

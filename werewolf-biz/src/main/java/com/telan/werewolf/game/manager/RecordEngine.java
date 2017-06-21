@@ -5,10 +5,12 @@ import com.telan.werewolf.factory.GameMsgFactory;
 import com.telan.werewolf.factory.RecordFactory;
 import com.telan.werewolf.game.domain.*;
 import com.telan.werewolf.game.domain.record.BaseRecord;
+import com.telan.werewolf.game.domain.record.DeathRecord;
 import com.telan.werewolf.game.domain.record.VoteRecord;
 import com.telan.werewolf.game.enums.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,10 +101,30 @@ public class RecordEngine {
         }
     }
 
+    public static void sendJudgeActionMsg(GameInfo gameInfo, Stage stage, JudgeAction action) {
+        JudgeActionType judgeActionType = JudgeActionType.getByType(action.getActionType());
+        if(judgeActionType == null) {
+            log.error("sendActionMsg error. unknown action = {}", JSON.toJSONString(action));
+            return;
+        }
+        List<Object> objects = new ArrayList<>();
+        objects.add(stage.stageType.getDesc());
+        GameMsg msg = null;
+        switch (judgeActionType) {
+            case FINISH_STAGE:
+                msg = GameMsgFactory.createGameMsg(GameMsgSubType.JUDGE_END_STAGE, Visibility.ALL, objects);
+                break;
+            default:
+                break;
+        }
+        if(msg != null) {
+            sendNormalMsg(gameInfo, msg);
+        }
+    }
 
     public static void sendVoteActionMsg(GameInfo gameInfo, List<PlayerAction> actionList) {
         Round currentRound = gameInfo.getCurrentRound();
-        VoteRecord record = RecordFactory.createVoteActionRecord(GameMsgSubType.VOTE_DEATH_RESULT.getSubType(), actionList, gameInfo.getPlayerMap(), true);
+        VoteRecord record = RecordFactory.createVoteActionRecord(GameMsgSubType.VOTE_DETAIL.getSubType(), actionList, gameInfo.getPlayerMap());
         currentRound.addRecord(record);
         Map<Long, Player> playerMap = gameInfo.getPlayerMap();
         for(Player player : playerMap.values()) {
@@ -110,37 +132,53 @@ public class RecordEngine {
         }
     }
 
-    public static void sendVoteResultMsg(GameInfo gameInfo, int gameMsgSubType, long maxVotedId, boolean voteAgain) {
+    public static void sendVoteResultMsg(GameInfo gameInfo, int gameMsgSubType, List<Long> maxVotedIds, boolean voteAgain) {
         Round currentRound = gameInfo.getCurrentRound();
         List<Object> contents = new ArrayList<>();
-        BaseRecord record = null;
-        if(maxVotedId > 0) {
-            contents.add(gameInfo.getPlayer(maxVotedId).getPlayerNo() +"号");
-            record = RecordFactory.createNormalRecord(gameMsgSubType, contents);
-        } else {
-            if(voteAgain) {
-                //重新投票
-                record = RecordFactory.createNormalRecord(GameMsgSubType.VOTE_AGAIN.getSubType(), contents);
-            } else {
-                //无人得票最高，进入下一阶段
-                contents.add("没有");
-                record = RecordFactory.createNormalRecord(gameMsgSubType, contents);
-            }
+        if(CollectionUtils.isEmpty(maxVotedIds)) {
+            return;
         }
+        String playersStr = "";
+        for (Long playerId : maxVotedIds) {
+            playersStr += gameInfo.getPlayer(playerId).getPlayerNo()+"号 ";
+        }
+        contents.add(playersStr);
+        BaseRecord record = RecordFactory.createNormalRecord(gameMsgSubType, contents);
         currentRound.addRecord(record);
         Map<Long, Player> playerMap = gameInfo.getPlayerMap();
         for(Player player : playerMap.values()) {
             player.addRecord(record);
         }
+
+        if(voteAgain) {
+            //重新投票
+            BaseRecord voteAgainRecord = RecordFactory.createNormalRecord(GameMsgSubType.VOTE_AGAIN.getSubType(), contents);
+            currentRound.addRecord(voteAgainRecord);
+            for(Player player : playerMap.values()) {
+                player.addRecord(voteAgainRecord);
+            }
+        }
+
     }
 
     public static void sendRunSheriffResultMsg(GameInfo gameInfo, List<PlayerAction> actionList) {
         Round currentRound = gameInfo.getCurrentRound();
-        VoteRecord record = RecordFactory.createVoteActionRecord(GameMsgSubType.VOTE_SHERIFF_RESULT.getSubType(), actionList, gameInfo.getPlayerMap(), false);
+        VoteRecord record = RecordFactory.createVoteActionRecord(GameMsgSubType.VOTE_SHERIFF_RESULT.getSubType(), actionList, gameInfo.getPlayerMap());
         currentRound.addRecord(record);
         Map<Long, Player> playerMap = gameInfo.getPlayerMap();
         for(Player player : playerMap.values()) {
             player.addRecord(record);
+        }
+    }
+
+    public static void sendDeathMsg(GameInfo gameInfo, List<Player> deadPlayers) {
+        List<Object> objectList = new ArrayList<>();
+        DeathRecord deathRecord = RecordFactory.createDeathRecord(GameMsgSubType.DEAD_RESULT.getSubType(), deadPlayers);
+        Round currentRound = gameInfo.getCurrentRound();
+        currentRound.addRecord(deathRecord);
+        Map<Long, Player> playerMap = gameInfo.getPlayerMap();
+        for(Player player : playerMap.values()) {
+            player.addRecord(deathRecord);
         }
     }
 }

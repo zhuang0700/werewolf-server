@@ -8,7 +8,7 @@ public enum GameMsgType {
     KILL_RESULT("杀人结果消息",3),
     VOTE_RESULT("投票结果消息",4),
     ACTION("行动消息",5),
-    GAME("游戏消息",6),
+    GAME("游戏房间消息",6),
     ;
     private String desc;
     private int type;

@@ -64,6 +64,22 @@ public class ActionEngine {
         return weResultSupport;
     }
 
+    public static WeResultSupport performJudgeAction(GameInfo gameInfo, JudgeAction action) {
+        WeResultSupport weResultSupport = new WeResultSupport();
+        Round currentRound = gameInfo.getCurrentRound();
+
+        JudgeActionType judgeActionType = JudgeActionType.getByType(action.getActionType());
+        Stage stage = currentRound.getStageByType(StageType.getByType(action.getStageType()));
+        if(stage == null || stage.status != StageStatus.WAITING_ACTION.getType()) {
+            weResultSupport.setErrorCode(WeErrorCode.WRONG_STAGE_ACTION);
+            return weResultSupport;
+        }
+        stage.analyse();
+        RecordEngine.sendJudgeActionMsg(gameInfo, stage, action);
+        return weResultSupport;
+    }
+
+
     private static WeResultSupport roundCheck(Round currentRound, PlayerAction action) {
         WeResultSupport weResultSupport = new WeResultSupport();
         if(currentRound.getRoundStatus() == RoundStatus.NOT_START.getType() || currentRound.getRoundStatus() == RoundStatus.FINISH.getType()) {

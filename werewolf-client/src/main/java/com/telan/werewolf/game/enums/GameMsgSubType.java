@@ -9,14 +9,15 @@ public enum GameMsgSubType {
     DAY_END("第{1}天白天结束",1, 1004),
     STAGE_BEGIN("{1}回合开始",1, 1005),
 
-    STAGE_START("{1}开始行动",2, 2001),
-    STAGE_END("{1}行动结束",2, 2002),
+    STAGE_START("{1}开始",2, 2001),
+    STAGE_END("{1}结束",2, 2002),
+    JUDGE_END_STAGE("{1}行动结束（法官操作）",2, 2003),
 
-    DEAD_RESULT("昨夜死亡的玩家是:{1}",3, 3001),
+    DEAD_RESULT("{1}玩家死亡",3, 3001),
 
-    VOTE_RESULT("投票结果:\r\n{1}",4, 4001),
-    VOTE_DEATH_RESULT("{2}玩家被处决",4, 4002),
-    VOTE_SHERIFF_RESULT("{2}玩家当选",4, 4003),
+    VOTE_DETAIL("投票结果:",4, 4001),
+    VOTE_RESULT("{1}玩家得票最高",4, 4002),
+    VOTE_SHERIFF_RESULT("{1}玩家当选",4, 4003),
     VOTE_AGAIN("请再次投票",4, 4004),
 
     KILL_ACTION("{1}号玩家（狼人）选择了{2}号作为目标",5,5001),

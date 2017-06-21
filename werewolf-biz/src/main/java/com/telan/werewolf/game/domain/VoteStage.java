@@ -5,6 +5,7 @@ import com.telan.werewolf.game.enums.ActionType;
 import com.telan.werewolf.game.enums.PlayerStatus;
 import com.telan.werewolf.game.enums.StageStatus;
 import com.telan.werewolf.game.enums.StageType;
+import com.telan.werewolf.game.manager.RecordEngine;
 import com.telan.werewolf.manager.MemGameManager;
 import com.telan.werewolf.result.WeResultSupport;
 import com.telan.werewolf.utils.ActionUtil;
@@ -45,6 +46,21 @@ public class VoteStage extends Stage {
     public void roleAnalyse() {
         voteMap = ActionUtil.convertListToMap(actionList);
         List<Long> maxVoteId = ActionUtil.findMaxVote(voteMap);
+        RecordEngine.sendVoteActionMsg(gameInfo, actionList);
+        if(CollectionUtils.isEmpty(maxVoteId)) {
+            reVote();
+            return;
+        }
+        if((CollectionUtils.isEmpty(maxVoteId) || maxVoteId.size() > 1) && repeatNum < getGameConfig().getMaxEqualVoteBeforeNight()) {
+            reVote();
+        } else {
+            finish();
+        }
+    }
+
+    private void reVote() {
+        this.repeatNum++;
+        this.start();
     }
 
     @Override

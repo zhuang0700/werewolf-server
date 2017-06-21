@@ -1,5 +1,7 @@
 package com.telan.werewolf.game.domain;
 
+import com.telan.werewolf.domain.UserDO;
+
 import java.util.Date;
 import java.util.List;
 
@@ -7,6 +9,8 @@ import java.util.List;
  * Created by weiwenliang on 17/5/15.
  */
 public class PlayerAction {
+    private UserDO userDO;
+
     public long fromPlayerId;
 
     public long toPlayerId;
@@ -20,4 +24,12 @@ public class PlayerAction {
     public int actionType;
 
     public Object msg;
+
+    public UserDO getUserDO() {
+        return userDO;
+    }
+
+    public void setUserDO(UserDO userDO) {
+        this.userDO = userDO;
+    }
 }

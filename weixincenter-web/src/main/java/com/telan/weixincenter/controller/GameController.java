@@ -8,6 +8,7 @@ import com.telan.weixincenter.utils.ResponseMapUtils;
 import com.telan.weixincenter.utils.SpringHttpHolder;
 import com.telan.werewolf.domain.UserDO;
 import com.telan.werewolf.enums.WeErrorCode;
+import com.telan.werewolf.game.domain.JudgeAction;
 import com.telan.werewolf.game.domain.Player;
 import com.telan.werewolf.game.domain.PlayerAction;
 import com.telan.werewolf.game.param.CreateGameParam;
@@ -157,27 +158,27 @@ public class GameController {
 		return ResponseMapUtils.convertGameInfo(baseResult, userDO);
 	}
 
-
 	@ResponseBody
 	@RequestMapping(value = "/playerAction", method=RequestMethod.POST )
 	@LoginRequired
 	public Map playerAction(@RequestBody PlayerAction action, ModelMap modelMap) throws IOException
 	{
-		WeBaseResult<GameInfo> baseResult = new WeBaseResult<>();
-		Map map = new HashMap();
 		UserDO userDO = SessionHelper.getUser();
-		if(action.fromPlayerId != userDO.getId()) {
-			baseResult.setErrorCode(WeErrorCode.UNSUPPORT_ACTION);
-		} else {
-			baseResult = gameProcessor.playerAction(action);
-			LOGGER.info("playerAction, result=" + JSON.toJSONString(baseResult));
-			if(!baseResult.isSuccess() && baseResult.getErrorCode() == WeErrorCode.NO_ACTIVE_GAME.getErrorCode()) {
-				map.put("status", 1);
-				map.put("msg", baseResult.getResultMsg());
-				map.put("result", null);
-				return map;
-			}
-		}
+		action.setUserDO(userDO);
+		WeBaseResult<GameInfo> baseResult = gameProcessor.playerAction(action);
+		LOGGER.info("playerAction, result={}", baseResult);
+		return ResponseMapUtils.convertGameInfo(baseResult, userDO);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/judgeAction", method=RequestMethod.POST )
+	@LoginRequired
+	public Map judgeAction(@RequestBody JudgeAction action, ModelMap modelMap) throws IOException
+	{
+		UserDO userDO = SessionHelper.getUser();
+		action.setUserDO(userDO);
+		WeBaseResult<GameInfo> baseResult = gameProcessor.judgeAction(action);
+		LOGGER.info("JudgeAction, result={}" , baseResult);
 		return ResponseMapUtils.convertGameInfo(baseResult, userDO);
 	}
 }
