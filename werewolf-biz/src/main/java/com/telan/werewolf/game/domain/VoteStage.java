@@ -47,11 +47,8 @@ public class VoteStage extends Stage {
         voteMap = ActionUtil.convertListToMap(actionList);
         List<Long> maxVoteId = ActionUtil.findMaxVote(voteMap);
         RecordEngine.sendVoteActionMsg(gameInfo, actionList);
-        if(CollectionUtils.isEmpty(maxVoteId)) {
-            reVote();
-            return;
-        }
         if((CollectionUtils.isEmpty(maxVoteId) || maxVoteId.size() > 1) && repeatNum < getGameConfig().getMaxEqualVoteBeforeNight()) {
+            RecordEngine.sendVoteResultMsg(gameInfo,);
             reVote();
         } else {
             finish();
