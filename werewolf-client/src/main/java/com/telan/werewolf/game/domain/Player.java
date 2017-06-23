@@ -16,6 +16,7 @@ public class Player {
     private PlayerDO playerDO;
     private BaseRole role;
     private List<BaseRecord> recordList;
+    private int deadReason;
 
     public int getStatus() {
         return playerDO.getStatus();
@@ -86,5 +87,13 @@ public class Player {
             recordList = new ArrayList<>();
         }
         recordList.add(record);
+    }
+
+    public int getDeadReason() {
+        return deadReason;
+    }
+
+    public void setDeadReason(int deadReason) {
+        this.deadReason = deadReason;
     }
 }

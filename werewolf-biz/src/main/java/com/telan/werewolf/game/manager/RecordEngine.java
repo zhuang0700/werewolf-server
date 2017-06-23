@@ -171,9 +171,9 @@ public class RecordEngine {
         }
     }
 
-    public static void sendDeathMsg(GameInfo gameInfo, List<Player> deadPlayers) {
+    public static void sendDeathMsg(GameInfo gameInfo, Player deadPlayer) {
         List<Object> objectList = new ArrayList<>();
-        DeathRecord deathRecord = RecordFactory.createDeathRecord(GameMsgSubType.DEAD_RESULT.getSubType(), deadPlayers);
+        DeathRecord deathRecord = RecordFactory.createDeathRecord(gameInfo, GameMsgSubType.DEAD_RESULT.getSubType(), deadPlayer);
         Round currentRound = gameInfo.getCurrentRound();
         currentRound.addRecord(deathRecord);
         Map<Long, Player> playerMap = gameInfo.getPlayerMap();

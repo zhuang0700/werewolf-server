@@ -72,8 +72,20 @@ public abstract class Stage {
     }
 
     public void update(Stage prevStage){
-        if(checkStageUpdate(prevStage)){
-            start();
+        StageStatus stageStatus = StageStatus.getByType(this.status);
+        switch (stageStatus) {
+            case NOT_BEGIN:
+                if (checkStageUpdate(prevStage)) {
+                        start();
+                }
+                break;
+            case BEGIN:
+            case WAITING_ACTION:
+            case FINISH:
+                break;
+            case ANALYSE:
+                finish();
+                break;
         }
     }
 
@@ -82,7 +94,7 @@ public abstract class Stage {
             return true;
         }
         for(Stage st : before) {
-            if(!st.isFinish()){
+            if (!st.isFinish()) {
                 return false;
             }
         }
@@ -91,7 +103,9 @@ public abstract class Stage {
     }
 
     public void start(){
-        this.status = StageStatus.BEGIN.getType();
+        synchronized(this) {
+            this.status = StageStatus.BEGIN.getType();
+        }
         this.voteMap = new HashMap<>();
         roleStart();
     }
@@ -99,21 +113,27 @@ public abstract class Stage {
     public abstract void roleStart();
 
     public void waitingAction(){
-        this.status = StageStatus.WAITING_ACTION.getType();
+        synchronized(this) {
+            this.status = StageStatus.WAITING_ACTION.getType();
+        }
         roleWaitingAction();
     }
 
     public abstract void roleWaitingAction();
 
     public void analyse(){
-        this.status = StageStatus.ANALYSE.getType();
+        synchronized(this) {
+            this.status = StageStatus.ANALYSE.getType();
+        }
         roleAnalyse();
     }
 
     public abstract void roleAnalyse();
 
     public void finish(){
-        this.status = StageStatus.FINISH.getType();
+        synchronized(this) {
+            this.status = StageStatus.FINISH.getType();
+        }
         roleFinish();
         if(!CollectionUtils.isEmpty(next)) {
             for(Stage stage : next) {
@@ -125,7 +145,9 @@ public abstract class Stage {
     public abstract void roleFinish();
 
     public boolean isFinish() {
-        return status == StageStatus.FINISH.getType();
+        synchronized(this) {
+            return status == StageStatus.FINISH.getType();
+        }
     }
 
     public WeResultSupport userAction(Player player, PlayerAction action){

@@ -12,6 +12,7 @@ public class DeathRecord extends BaseRecord {
     private int msgSubType;
     private List<String> msgList;
     private List<Player> deathList;
+    private int deathReason;
 
     public List<String> getRecordMsgs(){
         return msgList;
@@ -38,5 +39,13 @@ public class DeathRecord extends BaseRecord {
 
     public void setDeathList(List<Player> deathList) {
         this.deathList = deathList;
+    }
+
+    public int getDeathReason() {
+        return deathReason;
+    }
+
+    public void setDeathReason(int deathReason) {
+        this.deathReason = deathReason;
     }
 }

@@ -1,10 +1,8 @@
 package com.telan.werewolf.game.domain;
 
 import com.telan.werewolf.enums.WeErrorCode;
-import com.telan.werewolf.game.enums.ActionType;
-import com.telan.werewolf.game.enums.PlayerStatus;
-import com.telan.werewolf.game.enums.StageStatus;
-import com.telan.werewolf.game.enums.StageType;
+import com.telan.werewolf.game.enums.*;
+import com.telan.werewolf.game.manager.PlayerEngine;
 import com.telan.werewolf.game.manager.RecordEngine;
 import com.telan.werewolf.manager.MemGameManager;
 import com.telan.werewolf.result.WeResultSupport;
@@ -45,12 +43,21 @@ public class VoteStage extends Stage {
     @Override
     public void roleAnalyse() {
         voteMap = ActionUtil.convertListToMap(actionList);
-        List<Long> maxVoteId = ActionUtil.findMaxVote(voteMap);
+        List<Long> maxVoteIds = ActionUtil.findMaxVote(voteMap);
         RecordEngine.sendVoteActionMsg(gameInfo, actionList);
-        if((CollectionUtils.isEmpty(maxVoteId) || maxVoteId.size() > 1) && repeatNum < getGameConfig().getMaxEqualVoteBeforeNight()) {
-            RecordEngine.sendVoteResultMsg(gameInfo,);
+        if(!CollectionUtils.isEmpty(maxVoteIds) && maxVoteIds.size() > 1 && repeatNum < getGameConfig().getMaxEqualVoteBeforeNight()) {
+            RecordEngine.sendVoteResultMsg(gameInfo, GameMsgSubType.VOTE_RESULT.getSubType(), maxVoteIds, true);
             reVote();
         } else {
+            RecordEngine.sendVoteResultMsg(gameInfo, GameMsgSubType.VOTE_RESULT.getSubType(), maxVoteIds, false);
+            if(!CollectionUtils.isEmpty(maxVoteIds) && maxVoteIds.size() == 1) {
+                Map<Long, Integer> deathInfo = new HashMap<>();
+                deathInfo.put(maxVoteIds.get(0), DeadReason.VOTE.getType());
+                if(!PlayerEngine.setPlayerDead(gameInfo, deathInfo, this)) {
+                    //stop
+                    return;
+                }
+            }
             finish();
         }
     }

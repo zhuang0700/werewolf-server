@@ -40,19 +40,28 @@ public class ResultConvertor {
         if(currentRound != null) {
             if(currentRound.getRoundStatus() == RoundStatus.DAY.getType() && !CollectionUtils.isEmpty(currentRound.getDayStageList())) {
                 for(Stage stage : currentRound.getDayStageList()) {
-                    if(stage.status == StageStatus.WAITING_ACTION.getType()) {
-                        actionList.addAll(convertAction(stage, gameInfo));
-                    }
+                    actionList.addAll(convertStageActionList(stage, gameInfo));
                 }
-            } else if(currentRound.getRoundStatus() == RoundStatus.DAY.getType() && !CollectionUtils.isEmpty(currentRound.getDayStageList())) {
-                for(Stage stage : currentRound.getDayStageList()) {
-                    if(stage.status == StageStatus.WAITING_ACTION.getType()) {
-                        actionList.addAll(convertAction(stage, gameInfo));
-                    }
+            } else if(currentRound.getRoundStatus() == RoundStatus.DARK.getType() && !CollectionUtils.isEmpty(currentRound.getNightStageList())) {
+                for(Stage stage : currentRound.getNightStageList()) {
+                    actionList.addAll(convertStageActionList(stage, gameInfo));
                 }
             }
         }
         return actionList;
+    }
+
+    private static List<Action> convertStageActionList(Stage myStage, GameInfo gameInfo) {
+        if(myStage.status != StageStatus.WAITING_ACTION.getType()) {
+            return new ArrayList<>();
+        }
+        List<Action> myActionList =convertAction(myStage, gameInfo);
+        if(!CollectionUtils.isEmpty(myStage.next)) {
+            for(Stage stage : myStage.next) {
+                myActionList.addAll(convertStageActionList(stage, gameInfo));
+            }
+        }
+        return myActionList;
     }
 
     public static List<Action> convertAction(final Stage stage, GameInfo gameInfo) {

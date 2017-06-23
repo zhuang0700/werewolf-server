@@ -19,6 +19,7 @@ public class Round implements Serializable{
     private List<Stage> dayStageList;
     private List<Stage> nightStageList;
     private List<BaseRecord> recordList;
+    private Stage hunterStage;
 
     public int getRoundNo() {
         return roundNo;
@@ -77,5 +78,13 @@ public class Round implements Serializable{
             }
         }
         return null;
+    }
+
+    public Stage getHunterStage() {
+        return hunterStage;
+    }
+
+    public void setHunterStage(Stage hunterStage) {
+        this.hunterStage = hunterStage;
     }
 }

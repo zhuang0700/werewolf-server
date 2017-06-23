@@ -1,6 +1,7 @@
 package com.telan.werewolf.game.domain;
 
 import com.telan.werewolf.factory.StageFactory;
+import com.telan.werewolf.game.enums.DeadReason;
 import com.telan.werewolf.game.enums.StageType;
 import com.telan.werewolf.game.manager.PlayerEngine;
 import com.telan.werewolf.game.manager.RecordEngine;
@@ -10,6 +11,7 @@ import com.telan.werewolf.result.WeResultSupport;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by weiwenliang on 17/5/15.
@@ -51,13 +53,18 @@ public class NightEndStage extends Stage {
             poisionedPlayerId = witchStage.usePoisionId;
         }
         List<Long> deadPlayers = new ArrayList<>();
+        Map<Long, Integer> deathInfo = new HashMap<>();
         if(poisionedPlayerId > 0) {
             deadPlayers.add(poisionedPlayerId);
+            deathInfo.put(poisionedPlayerId, DeadReason.POISON.getType());
         }
         if(killedPlayerId > 0 && !useMedicine && killedPlayerId != poisionedPlayerId) {
             deadPlayers.add(killedPlayerId);
+            deathInfo.put(killedPlayerId, DeadReason.KILL.getType());
         }
-        PlayerEngine.setPlayerDead(gameInfo, deadPlayers);
+        if(!PlayerEngine.setPlayerDead(gameInfo, deathInfo, this)){
+            return;
+        }
         finish();
     }
 

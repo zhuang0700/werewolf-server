@@ -1,8 +1,12 @@
 package com.telan.werewolf.game.manager;
 
 import com.telan.werewolf.enums.BaseStatus;
+import com.telan.werewolf.factory.StageFactory;
 import com.telan.werewolf.game.domain.GameInfo;
 import com.telan.werewolf.game.domain.Player;
+import com.telan.werewolf.game.domain.Round;
+import com.telan.werewolf.game.domain.Stage;
+import com.telan.werewolf.game.domain.role.HunterRole;
 import com.telan.werewolf.game.enums.PlayerStatus;
 import com.telan.werewolf.game.enums.RoleType;
 
@@ -36,17 +40,35 @@ public class PlayerEngine {
         return false;
     }
 
-    public static void setPlayerDead(GameInfo gameInfo, List<Long> playerIds) {
+    //return true means continue, false means stop
+    public static boolean setPlayerDead(GameInfo gameInfo, Map<Long, Integer> deathInfo, Stage stage) {
         List<Player> deadPlayers = new ArrayList<>();
-        for(long id : playerIds) {
+        boolean noHunter = true;
+        for(long id : deathInfo.keySet()) {
             Player player = gameInfo.getPlayer(id);
             if(player != null) {
                 if(player.getStatus() == PlayerStatus.LIVE.getType()) {
                     player.setStatus(PlayerStatus.DEAD.getType());
                 }
+                player.setDeadReason(deathInfo.get(id));
+                RecordEngine.sendDeathMsg(gameInfo, player);
             }
             deadPlayers.add(player);
         }
-        RecordEngine.sendDeathMsg(gameInfo, deadPlayers);
+        for(Player player : deadPlayers) {
+            if(player.getRole().getRole() == RoleType.HUNTER.getType()) {
+                addHunterStage(gameInfo, stage);
+                noHunter = false;
+            }
+        }
+        return noHunter;
+    }
+
+    private static void addHunterStage(GameInfo gameInfo, Stage stage) {
+        Round currentRound = gameInfo.getCurrentRound();
+        Stage hunterStage = StageFactory.createRoleStage(RoleType.HUNTER.getType());
+        hunterStage.linkNext(stage);
+        currentRound.setHunterStage(hunterStage);
+        hunterStage.update(stage);
     }
 }

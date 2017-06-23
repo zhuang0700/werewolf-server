@@ -1,5 +1,6 @@
 package com.telan.werewolf.factory;
 
+import com.telan.werewolf.game.domain.GameInfo;
 import com.telan.werewolf.game.domain.GameMsg;
 import com.telan.werewolf.game.domain.Player;
 import com.telan.werewolf.game.domain.PlayerAction;
@@ -50,18 +51,19 @@ public class RecordFactory {
         return normalRecord;
     }
 
-    public static DeathRecord createDeathRecord(int msgSubType, List<Player> deadPlayers) {
+    public static DeathRecord createDeathRecord(GameInfo gameInfo, int msgSubType, Player deadPlayer) {
+        //TODO: death reason
         DeathRecord deathRecord = new DeathRecord();
         deathRecord.setRecordType(RecordType.DEATH.getType());
         deathRecord.setMsgSubType(msgSubType);
+        List<Player> deadPlayers = new ArrayList<>();
+        deadPlayers.add(deadPlayer);
         deathRecord.setDeathList(deadPlayers);
         List<Object> contents = new ArrayList<>();
         String content = "";
         if(CollectionUtils.isEmpty(deadPlayers)) {
             content = "没有";
         } else {
-            //乱序死亡玩家序列，防止发现死亡顺序
-            Collections.shuffle(deadPlayers);
             for(Player player : deadPlayers) {
                 content += " " + player.getPlayerNo() + "号";
             }

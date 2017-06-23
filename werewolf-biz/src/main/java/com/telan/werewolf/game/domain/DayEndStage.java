@@ -35,26 +35,14 @@ public class DayEndStage extends Stage {
 
     @Override
     public void roleAnalyse() {
-        long killedPlayerId = 0;
-        boolean useMedicine = false;
-        long poisionedPlayerId = 0;
+
         Round round = gameInfo.getCurrentRound();
-        List<Stage> stages = round.getDayStageList();
         Stage voteStage = round.getStageByType(StageType.VOTE);
         if(voteStage != null) {
             voteMap = voteStage.voteMap;
         }
-        List<Long> maxVotedId = ActionUtil.findMaxVote(voteMap);
-        
-        List<Long> deadPlayers = new ArrayList<>();
-        if(poisionedPlayerId > 0) {
-            deadPlayers.add(poisionedPlayerId);
-        }
-        if(killedPlayerId > 0 && !useMedicine && killedPlayerId != poisionedPlayerId) {
-            deadPlayers.add(killedPlayerId);
-        }
-        PlayerEngine.setPlayerDead(gameInfo, deadPlayers);
-        finish();
+        List<Long> maxVotedIds = ActionUtil.findMaxVote(voteMap);
+
         finish();
     }
 
