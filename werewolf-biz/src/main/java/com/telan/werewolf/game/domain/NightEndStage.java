@@ -70,8 +70,7 @@ public class NightEndStage extends Stage {
 
     @Override
     public void roleFinish() {
-        Round round = getCurrentRound();
-        RoundEngine.moveToNextStatus(round);
+        RoundEngine.moveToNextStatus(gameInfo);
     }
 
     @Override

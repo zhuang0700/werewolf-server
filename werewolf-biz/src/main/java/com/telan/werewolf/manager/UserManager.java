@@ -10,8 +10,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.ModelMap;
 import org.springframework.util.CollectionUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -147,5 +149,35 @@ public class UserManager {
         }
         List<UserDO> userDOList = userDOMapper.batchSelectByIds(ids);
         return userDOList;
+    }
+
+
+    public UserDO mockUser(long id) {
+        List<Long> ids = new ArrayList<>();
+        UserDO userDO = userDOMapper.selectByPrimaryKey(id);
+        if(userDO == null) {
+            userDO = new UserDO();
+            userDO.setId(id);
+        }
+        return userDO;
+    }
+
+
+    public UserDO mockUser(HttpServletRequest request) {
+        long userId = 0;
+        try {
+            userId = Long.valueOf(request.getParameter("userId"));
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        if(userId <= 0) {
+            userId = 3;
+        }
+        UserDO userDO = userDOMapper.selectByPrimaryKey(userId);
+        if(userDO == null) {
+            userDO = new UserDO();
+            userDO.setId(userId);
+        }
+        return userDO;
     }
 }

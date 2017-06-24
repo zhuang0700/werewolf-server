@@ -11,7 +11,7 @@ import java.util.List;
  * Created by weiwenliang on 17/5/31.
  */
 public class GameMsgFactory {
-    public static GameMsg createGameMsg(GameMsgSubType gameMsgSubType, Visibility visibility, List<Object> objects) {
+    public static GameMsg createGameMsg(GameMsgSubType gameMsgSubType, Visibility visibility, Object[] objects) {
         GameMsg gameMsg = new GameMsg();
         gameMsg.setSubType(gameMsgSubType.getSubType());
         gameMsg.setType(gameMsgSubType.getType());

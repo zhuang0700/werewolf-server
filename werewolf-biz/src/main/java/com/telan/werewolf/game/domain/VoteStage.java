@@ -1,6 +1,8 @@
 package com.telan.werewolf.game.domain;
 
 import com.telan.werewolf.enums.WeErrorCode;
+import com.telan.werewolf.game.domain.record.BaseRecord;
+import com.telan.werewolf.game.domain.role.BaseRole;
 import com.telan.werewolf.game.enums.*;
 import com.telan.werewolf.game.manager.PlayerEngine;
 import com.telan.werewolf.game.manager.RecordEngine;

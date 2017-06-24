@@ -16,10 +16,13 @@ public class Round implements Serializable{
 
     private int roundNo;
     private int roundStatus;
+    //白天回合流程头
     private List<Stage> dayStageList;
+    //黑夜回合流程头
     private List<Stage> nightStageList;
     private List<BaseRecord> recordList;
     private Stage hunterStage;
+    private List<Stage> allStageList;
 
     public int getRoundNo() {
         return roundNo;
@@ -86,5 +89,21 @@ public class Round implements Serializable{
 
     public void setHunterStage(Stage hunterStage) {
         this.hunterStage = hunterStage;
+    }
+
+    public List<Stage> getAllStageList() {
+        return allStageList;
+    }
+
+    public void setAllStageList(List<Stage> allStageList) {
+        this.allStageList = allStageList;
+    }
+
+    public void addStageList(List<Stage> stageList) {
+        if(CollectionUtils.isEmpty(this.allStageList)){
+            this.allStageList = stageList;
+        } else {
+            this.allStageList.addAll(stageList);
+        }
     }
 }

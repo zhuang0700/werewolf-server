@@ -334,7 +334,7 @@ public class GameProcessor {
 		final Player player = memGameManager.getPlayer(playerId);
 		PlayerEngine.quitGameAfterStart(player);
 		playerManager.updatePlayerById(player.getPlayerDO());
-		GameMsg gameMsg = GameMsgFactory.createGameMsg(GameMsgSubType.QUIT_GAME, Visibility.ALL, new ArrayList<Object>(){{add(player.getPlayerNo());}});
+		GameMsg gameMsg = GameMsgFactory.createGameMsg(GameMsgSubType.QUIT_GAME, Visibility.ALL, new Object[]{player.getPlayerNo()});
 		RecordEngine.sendNormalMsg(gameInfo, gameMsg);
 		memGameManager.removePlayer(player);
 		result.setValue(gameInfo);

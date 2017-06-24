@@ -68,7 +68,8 @@ public class PlayerEngine {
         Round currentRound = gameInfo.getCurrentRound();
         Stage hunterStage = StageFactory.createRoleStage(RoleType.HUNTER.getType());
         hunterStage.linkNext(stage);
-        currentRound.setHunterStage(hunterStage);
+//        currentRound.setHunterStage(hunterStage);
+        currentRound.getAllStageList().add(hunterStage);
         hunterStage.update(stage);
     }
 }

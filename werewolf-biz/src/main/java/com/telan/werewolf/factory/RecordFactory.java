@@ -39,7 +39,7 @@ public class RecordFactory {
         }
     }
     
-    public static NormalRecord createNormalRecord(int msgSubType, List<Object> contents) {
+    public static NormalRecord createNormalRecord(int msgSubType, Object[] contents) {
         NormalRecord normalRecord = new NormalRecord();
         normalRecord.setRecordType(RecordType.NORMAL.getType());
         normalRecord.setMsgSubType(msgSubType);
@@ -59,7 +59,7 @@ public class RecordFactory {
         List<Player> deadPlayers = new ArrayList<>();
         deadPlayers.add(deadPlayer);
         deathRecord.setDeathList(deadPlayers);
-        List<Object> contents = new ArrayList<>();
+        Object[] contents = new Object[1];
         String content = "";
         if(CollectionUtils.isEmpty(deadPlayers)) {
             content = "没有";
@@ -68,7 +68,7 @@ public class RecordFactory {
                 content += " " + player.getPlayerNo() + "号";
             }
         }
-        contents.add(content);
+        contents[0] = content;
         GameMsgSubType gameMsgSubType = GameMsgSubType.getBySubType(msgSubType);
         if(gameMsgSubType != null) {
             String msg = MessageFormat.format(gameMsgSubType.getDesc(), contents);

@@ -1,6 +1,12 @@
 package com.telan.werewolf.game.domain;
 
+import com.telan.werewolf.game.enums.RoleType;
+
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.telan.werewolf.game.domain.GameConfigConst.*;
 
 /**
  * Created by weiwenliang on 2017/6/16.
@@ -15,6 +21,14 @@ public class GameConfig implements Serializable {
     private boolean hasJudgeRole = false;
     //法官角色id
     private long judgePlayerId = 0;
+
+    private String victoryRule = VICTORY_RULE_CAMP;
+
+    private List<Integer> shareInfoRoles = new ArrayList<>();
+
+    public GameConfig(){
+        shareInfoRoles.add(RoleType.WOLF.getType());
+    }
 
     public int getMaxEqualVoteBeforeNight() {
         return MaxEqualVoteBeforeNight;
@@ -38,5 +52,21 @@ public class GameConfig implements Serializable {
 
     public void setJudgePlayerId(long judgePlayerId) {
         this.judgePlayerId = judgePlayerId;
+    }
+
+    public String getVictoryRule() {
+        return victoryRule;
+    }
+
+    public void setVictoryRule(String victoryRule) {
+        this.victoryRule = victoryRule;
+    }
+
+    public List<Integer> getShareInfoRoles() {
+        return shareInfoRoles;
+    }
+
+    public void setShareInfoRoles(List<Integer> shareInfoRoles) {
+        this.shareInfoRoles = shareInfoRoles;
     }
 }

@@ -15,7 +15,7 @@ public class GameMsg {
 
     private Date actionTime;
 
-    private List<Object> objects;
+    private Object[] objects;
 
     public int getType() {
         return type;
@@ -41,11 +41,11 @@ public class GameMsg {
         this.actionTime = actionTime;
     }
 
-    public List<Object> getObjects() {
+    public Object[] getObjects() {
         return objects;
     }
 
-    public void setObjects(List<Object> objects) {
+    public void setObjects(Object[] objects) {
         this.objects = objects;
     }
 

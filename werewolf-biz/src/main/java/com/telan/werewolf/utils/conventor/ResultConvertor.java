@@ -15,56 +15,69 @@ import java.util.List;
  */
 public class ResultConvertor {
 
-    public static GameData convertToData(GameInfo gameInfo, UserDO userDO) {
+    public static GameData convertToData(GameInfo gameInfo, UserDO userDO, boolean judgeMode) {
         GameData gameData = new GameData();
         if(gameInfo == null || userDO == null) {
             return null;
         }
         gameData.gameDO = gameInfo.getGameDO();
         gameData.playerDOList = new ArrayList<>();
+        Player myPlayer = null;
         for(Player player : gameInfo.getPlayerMap().values()) {
-            PlayerDO playerDO = player.getPlayerDO();
-            playerDO.setRole(0);
-            gameData.playerDOList.add(playerDO);
-            if(player.getUserId() == userDO.getId()) {
-                gameData.recordList = player.getRecordList();
+            if(userDO.getId() == player.getUserId()){
+                myPlayer = player;
+                break;
             }
         }
-        gameData.actionList = convertActionList(gameInfo);
+        boolean shareRoleInfo = gameInfo.getGameConfig().getShareInfoRoles().contains(myPlayer.getRole().getRole());
+        for(Player player : gameInfo.getPlayerMap().values()) {
+            PlayerDO playerDO = player.getPlayerDO();
+            if(!judgeMode && userDO.getId() != playerDO.getUserId()) {
+                if(!shareRoleInfo || player.getRole().getRole() != myPlayer.getRole().getRole()) {
+                    //角色信息不共享，或者该玩家和自己角色不同，均需隐藏角色信息
+                    playerDO.setRole(0);
+                }
+                gameData.actionList = convertActionList(gameInfo, myPlayer);
+            } else {
+                gameData.recordList = player.getRecordList();
+                gameData.actionList = convertActionList(gameInfo, null);
+            }
+            gameData.playerDOList.add(playerDO);
+        }
         return gameData;
     }
 
-    public static List<Action> convertActionList(GameInfo gameInfo) {
+    //userDO有效时只填装该用户可用action，为null时填装所有
+    public static List<Action> convertActionList(GameInfo gameInfo, Player player) {
         Round currentRound = gameInfo.getCurrentRound();
         List<Action> actionList = new ArrayList<>();
         if(currentRound != null) {
-            if(currentRound.getRoundStatus() == RoundStatus.DAY.getType() && !CollectionUtils.isEmpty(currentRound.getDayStageList())) {
-                for(Stage stage : currentRound.getDayStageList()) {
-                    actionList.addAll(convertStageActionList(stage, gameInfo));
-                }
-            } else if(currentRound.getRoundStatus() == RoundStatus.DARK.getType() && !CollectionUtils.isEmpty(currentRound.getNightStageList())) {
-                for(Stage stage : currentRound.getNightStageList()) {
-                    actionList.addAll(convertStageActionList(stage, gameInfo));
+            if((currentRound.getRoundStatus() == RoundStatus.DAY.getType() || currentRound.getRoundStatus() == RoundStatus.DARK.getType()) && !CollectionUtils.isEmpty(currentRound.getAllStageList())) {
+                for(Stage stage : currentRound.getAllStageList()) {
+                    actionList.addAll(convertStageActionList(stage, gameInfo, player));
                 }
             }
         }
         return actionList;
     }
 
-    private static List<Action> convertStageActionList(Stage myStage, GameInfo gameInfo) {
+    private static List<Action> convertStageActionList(Stage myStage, GameInfo gameInfo, Player player) {
         if(myStage.status != StageStatus.WAITING_ACTION.getType()) {
             return new ArrayList<>();
         }
-        List<Action> myActionList =convertAction(myStage, gameInfo);
+        if(myStage.roleList != null && !myStage.roleList.contains(player.getRole().getRole())) {
+            return new ArrayList<>();
+        }
+        List<Action> myActionList =convertAction(myStage, gameInfo, player);
         if(!CollectionUtils.isEmpty(myStage.next)) {
             for(Stage stage : myStage.next) {
-                myActionList.addAll(convertStageActionList(stage, gameInfo));
+                myActionList.addAll(convertStageActionList(stage, gameInfo, player));
             }
         }
         return myActionList;
     }
 
-    public static List<Action> convertAction(final Stage stage, GameInfo gameInfo) {
+    public static List<Action> convertAction(final Stage stage, GameInfo gameInfo, final Player player) {
         List<Action> actionList = new ArrayList<>();
         Action action = new Action();
         switch (stage.stageType) {

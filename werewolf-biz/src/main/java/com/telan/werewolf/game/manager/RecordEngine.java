@@ -63,34 +63,23 @@ public class RecordEngine {
         switch (actionType) {
             case KILL:
                 visibility.setVisableRoleType(new ArrayList<Integer>(){{add(RoleType.WOLF.getType());}});
-                objects.add(fromPlayer.getPlayerNo());
-                objects.add(toPlayer.getPlayerNo());
-                msg = GameMsgFactory.createGameMsg(GameMsgSubType.KILL_ACTION, visibility, objects);
+                msg = GameMsgFactory.createGameMsg(GameMsgSubType.KILL_ACTION, visibility, new Object[]{fromPlayer.getPlayerNo(), toPlayer.getPlayerNo()});
                 break;
             case SAVE:
                 visibility.setVisableRoleType(new ArrayList<Integer>(){{add(RoleType.WITCH.getType());}});
-                objects.add(fromPlayer.getPlayerNo());
-                objects.add(toPlayer.getPlayerNo());
-                msg = GameMsgFactory.createGameMsg(GameMsgSubType.CURE_ACTION, visibility, objects);
+                msg = GameMsgFactory.createGameMsg(GameMsgSubType.CURE_ACTION, visibility, new Object[]{fromPlayer.getPlayerNo(), toPlayer.getPlayerNo()});
                 break;
             case POISON:
                 visibility.setVisableRoleType(new ArrayList<Integer>(){{add(RoleType.WITCH.getType());}});
-                objects.add(fromPlayer.getPlayerNo());
-                objects.add(toPlayer.getPlayerNo());
-                msg = GameMsgFactory.createGameMsg(GameMsgSubType.POSITION_ACTION, visibility, objects);
+                msg = GameMsgFactory.createGameMsg(GameMsgSubType.POSITION_ACTION, visibility, new Object[]{fromPlayer.getPlayerNo(), toPlayer.getPlayerNo()});
                 break;
             case SHOOT:
                 visibility.setType(VisibilityType.ALL);
-                objects.add(fromPlayer.getPlayerNo());
-                objects.add(toPlayer.getPlayerNo());
-                msg = GameMsgFactory.createGameMsg(GameMsgSubType.POSITION_ACTION, visibility, objects);
+                msg = GameMsgFactory.createGameMsg(GameMsgSubType.POSITION_ACTION, visibility, new Object[]{fromPlayer.getPlayerNo(), toPlayer.getPlayerNo()});
                 break;
             case SEE:
                 visibility.setVisableRoleType(new ArrayList<Integer>(){{add(RoleType.SEER.getType());}});
-                objects.add(fromPlayer.getPlayerNo());
-                objects.add(toPlayer.getPlayerNo());
-                objects.add(toPlayer.getRole().getName());
-                msg = GameMsgFactory.createGameMsg(GameMsgSubType.SEER_ACTION, visibility, objects);
+                msg = GameMsgFactory.createGameMsg(GameMsgSubType.SEER_ACTION, visibility, new Object[]{fromPlayer.getPlayerNo(), toPlayer.getPlayerNo(), toPlayer.getRole().getName()});
                 break;
             case VOTE:
             case RUN_SHERIFF:
@@ -112,7 +101,7 @@ public class RecordEngine {
         GameMsg msg = null;
         switch (judgeActionType) {
             case FINISH_STAGE:
-                msg = GameMsgFactory.createGameMsg(GameMsgSubType.JUDGE_END_STAGE, Visibility.ALL, objects);
+                msg = GameMsgFactory.createGameMsg(GameMsgSubType.JUDGE_END_STAGE, Visibility.ALL, new Object[]{stage.stageType.getDesc()});
                 break;
             default:
                 break;
@@ -134,7 +123,6 @@ public class RecordEngine {
 
     public static void sendVoteResultMsg(GameInfo gameInfo, int gameMsgSubType, List<Long> maxVotedIds, boolean voteAgain) {
         Round currentRound = gameInfo.getCurrentRound();
-        List<Object> contents = new ArrayList<>();
         if(CollectionUtils.isEmpty(maxVotedIds)) {
             return;
         }
@@ -142,8 +130,7 @@ public class RecordEngine {
         for (Long playerId : maxVotedIds) {
             playersStr += gameInfo.getPlayer(playerId).getPlayerNo()+"号 ";
         }
-        contents.add(playersStr);
-        BaseRecord record = RecordFactory.createNormalRecord(gameMsgSubType, contents);
+        BaseRecord record = RecordFactory.createNormalRecord(gameMsgSubType, new Object[]{playersStr});
         currentRound.addRecord(record);
         Map<Long, Player> playerMap = gameInfo.getPlayerMap();
         for(Player player : playerMap.values()) {
@@ -152,7 +139,7 @@ public class RecordEngine {
 
         if(voteAgain) {
             //重新投票
-            BaseRecord voteAgainRecord = RecordFactory.createNormalRecord(GameMsgSubType.VOTE_AGAIN.getSubType(), contents);
+            BaseRecord voteAgainRecord = RecordFactory.createNormalRecord(GameMsgSubType.VOTE_AGAIN.getSubType(), null);
             currentRound.addRecord(voteAgainRecord);
             for(Player player : playerMap.values()) {
                 player.addRecord(voteAgainRecord);

@@ -2,6 +2,7 @@ package com.telan.werewolf.game.domain;
 
 import com.telan.werewolf.enums.WeErrorCode;
 import com.telan.werewolf.game.enums.ActionType;
+import com.telan.werewolf.game.enums.RoleType;
 import com.telan.werewolf.game.enums.StageType;
 import com.telan.werewolf.result.WeResultSupport;
 import org.springframework.util.CollectionUtils;
@@ -35,6 +36,8 @@ public class WitchStage extends Stage {
     public WitchStage(){
         super();
         this.stageType = StageType.WITCH;
+        this.roleList = new ArrayList<>();
+        this.roleList.add(RoleType.WITCH.getType());
     }
 
     @Override

@@ -1,10 +1,7 @@
 package com.telan.werewolf.game.domain;
 
 import com.telan.werewolf.enums.WeErrorCode;
-import com.telan.werewolf.game.enums.ActionType;
-import com.telan.werewolf.game.enums.PlayerStatus;
-import com.telan.werewolf.game.enums.StageStatus;
-import com.telan.werewolf.game.enums.StageType;
+import com.telan.werewolf.game.enums.*;
 import com.telan.werewolf.result.WeResultSupport;
 import com.telan.werewolf.utils.ActionUtil;
 import org.springframework.util.CollectionUtils;
@@ -24,6 +21,8 @@ public class WolfStage extends Stage {
     public WolfStage(){
         super();
         this.stageType = StageType.WOLF;
+        this.roleList = new ArrayList<>();
+        this.roleList.add(RoleType.WOLF.getType());
     }
 
     @Override

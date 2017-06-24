@@ -40,7 +40,7 @@ public abstract class Stage {
 
     public List<Stage> before;
 
-    public List<Role> roleList;
+    public List<Integer> roleList;
 
     protected List<PlayerAction> actionList;
 
