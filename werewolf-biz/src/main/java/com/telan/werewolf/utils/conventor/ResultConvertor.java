@@ -4,6 +4,7 @@ import com.telan.werewolf.domain.PlayerDO;
 import com.telan.werewolf.domain.UserDO;
 import com.telan.werewolf.game.domain.*;
 import com.telan.werewolf.game.enums.*;
+import com.telan.werewolf.game.vo.PlayerVO;
 import com.telan.werewolf.utils.PlayerUtil;
 import org.springframework.util.CollectionUtils;
 
@@ -21,7 +22,7 @@ public class ResultConvertor {
             return null;
         }
         gameData.gameDO = gameInfo.getGameDO();
-        gameData.playerDOList = new ArrayList<>();
+        gameData.playerVOList = new ArrayList<>();
         Player myPlayer = null;
         for(Player player : gameInfo.getPlayerMap().values()) {
             if(userDO.getId() == player.getUserId()){
@@ -29,25 +30,26 @@ public class ResultConvertor {
                 break;
             }
         }
-        boolean shareRoleInfo = gameInfo.getGameConfig().getShareInfoRoles().contains(myPlayer.getRole().getRole());
+        boolean shareRoleInfo = gameInfo.getGameConfig().getShareInfoRoles().contains(myPlayer.getRoleType());
         for(Player player : gameInfo.getPlayerMap().values()) {
             PlayerDO playerDO = player.getPlayerDO();
+            boolean hideRole = false;
             if(!judgeMode && userDO.getId() != playerDO.getUserId()) {
-                if(!shareRoleInfo || player.getRole().getRole() != myPlayer.getRole().getRole()) {
+                if(!shareRoleInfo || player.getRoleType() != myPlayer.getRoleType()) {
                     //角色信息不共享，或者该玩家和自己角色不同，均需隐藏角色信息
-                    playerDO.setRole(0);
+                    hideRole = true;
                 }
-                gameData.actionList = convertActionList(gameInfo, myPlayer);
             } else {
                 gameData.recordList = player.getRecordList();
-                gameData.actionList = convertActionList(gameInfo, null);
             }
-            gameData.playerDOList.add(playerDO);
+            PlayerVO playerVO = PlayerConvertor.convertPlayerVO(player, hideRole);
+            gameData.playerVOList.add(playerVO);
         }
+        gameData.actionList = convertActionList(gameInfo, myPlayer);
         return gameData;
     }
 
-    //userDO有效时只填装该用户可用action，为null时填装所有
+    //只填装该用户可用action
     public static List<Action> convertActionList(GameInfo gameInfo, Player player) {
         Round currentRound = gameInfo.getCurrentRound();
         List<Action> actionList = new ArrayList<>();
@@ -61,23 +63,13 @@ public class ResultConvertor {
         return actionList;
     }
 
-    private static List<Action> convertStageActionList(Stage myStage, GameInfo gameInfo, Player player) {
-        if(myStage.status != StageStatus.WAITING_ACTION.getType()) {
+    private static List<Action> convertStageActionList(final Stage stage, GameInfo gameInfo, Player player) {
+        if(stage.status != StageStatus.WAITING_ACTION.getType()) {
             return new ArrayList<>();
         }
-        if(myStage.roleList != null && !myStage.roleList.contains(player.getRole().getRole())) {
+        if(stage.roleList != null && !stage.roleList.contains(player.getRoleType())) {
             return new ArrayList<>();
         }
-        List<Action> myActionList =convertAction(myStage, gameInfo, player);
-        if(!CollectionUtils.isEmpty(myStage.next)) {
-            for(Stage stage : myStage.next) {
-                myActionList.addAll(convertStageActionList(stage, gameInfo, player));
-            }
-        }
-        return myActionList;
-    }
-
-    public static List<Action> convertAction(final Stage stage, GameInfo gameInfo, final Player player) {
         List<Action> actionList = new ArrayList<>();
         Action action = new Action();
         switch (stage.stageType) {

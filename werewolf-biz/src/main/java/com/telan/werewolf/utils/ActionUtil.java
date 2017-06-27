@@ -31,9 +31,13 @@ public class ActionUtil {
             return null;
         }
         for(PlayerAction playerAction : playerActions) {
-            if(playerAction.fromPlayerId == fromId && playerAction.actionType == actionType) {
-                return playerAction;
+            if(fromId > 0 && playerAction.fromPlayerId != fromId){
+                continue;
             }
+            if(actionType > 0 && playerAction.actionType != actionType) {
+                continue;
+            }
+            return playerAction;
         }
         return null;
     }

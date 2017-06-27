@@ -11,6 +11,8 @@ public class Visibility {
 
     public static Visibility ALL;
 
+    public static Visibility JUDGE_ONLY;
+
     private VisibilityType type;
 
     private List<Integer> visableRoleType;
@@ -57,26 +59,7 @@ public class Visibility {
     static {
         ALL = new Visibility();
         ALL.setType(VisibilityType.ALL);
-    }
-
-    public boolean isVisiable(Player player) {
-        if(type == null) {
-            return false;
-        }
-        switch (type) {
-            case ALL:
-                return true;
-            case BY_PLAYER:
-                if(visablePlayer.contains(player.getId())) {
-                    return true;
-                }
-                return false;
-            case BY_ROLE:
-                if(visableRoleType.contains(player.getRole().getRole())) {
-                    return true;
-                }
-                return false;
-        }
-        return false;
+        JUDGE_ONLY = new Visibility();
+        JUDGE_ONLY.setType(VisibilityType.JUDGE_ONLY);
     }
 }

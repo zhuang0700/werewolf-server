@@ -6,6 +6,7 @@ public enum VisibilityType {
     ALL("全部",1),
     BY_ROLE("指定角色可见",2),
     BY_PLAYER("指定玩家可见",3),
+    JUDGE_ONLY("仅法官可见",4),
     ;
     private String desc;
     private int type;

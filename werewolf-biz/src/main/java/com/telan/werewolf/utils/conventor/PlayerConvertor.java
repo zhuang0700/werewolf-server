@@ -5,6 +5,7 @@ import com.telan.werewolf.domain.UserDO;
 import com.telan.werewolf.game.domain.Player;
 import com.telan.werewolf.game.enums.PlayerStatus;
 import com.telan.werewolf.factory.RoleFactory;
+import com.telan.werewolf.game.vo.PlayerVO;
 import org.omg.CORBA.CODESET_INCOMPATIBLE;
 import org.springframework.util.CollectionUtils;
 
@@ -70,5 +71,22 @@ public class PlayerConvertor {
             playerMap.put(playerDO.getId(), convertPlayer(playerDO, userDOMap.get(playerDO.getUserId())));
         }
         return playerMap;
+    }
+
+    public static PlayerVO convertPlayerVO(Player player, boolean hideRole) {
+        PlayerVO playerVO = new PlayerVO();
+        PlayerDO playerDO = player.getPlayerDO();
+        playerVO.setNick(playerDO.getNick());
+        playerVO.setAvatar(playerDO.getAvatar());
+        playerVO.setGameId(player.getGameId());
+        playerVO.setId(player.getId());
+        playerVO.setStatus(player.getStatus());
+        playerVO.setGameStatus(player.getGameStatus());
+        playerVO.setType(playerDO.getType());
+        playerVO.setUserId(playerDO.getUserId());
+        if (!hideRole) {
+            playerVO.setRole(playerDO.getRole());
+        }
+        return playerVO;
     }
 }

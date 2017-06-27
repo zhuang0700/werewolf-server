@@ -122,9 +122,11 @@ public class GameProcessor {
 		if(gameInfo.getGameStatus() == GameStatus.CREATE.getType()) {
 			gameInfo.setGameStatus(GameStatus.INIT.getType());
 		}
-		gameInfo.setRoleList(RoleEngine.initRoleList(gameInfo.getPlayerNum()));
+		gameInfo.setRoleList(RoleEngine.initRoleList(gameInfo));
 		//分配角色
 		RoleEngine.allocateRole(gameInfo.getRoleList(), gameInfo.getPlayerMap());
+		//分配玩家编号
+		PlayerEngine.initPlayerNumber(gameInfo.getPlayerMap());
 		//初始化回合
 		Round firstRound = RoundFactory.createRound(1, gameInfo);
 		gameInfo.changeCurrentRound(firstRound);

@@ -2,6 +2,7 @@ package com.telan.werewolf.game.domain;
 
 import com.telan.werewolf.enums.WeErrorCode;
 import com.telan.werewolf.game.enums.*;
+import com.telan.werewolf.game.manager.PlayerEngine;
 import com.telan.werewolf.result.WeResultSupport;
 import com.telan.werewolf.utils.ActionUtil;
 import org.springframework.util.CollectionUtils;
@@ -24,17 +25,6 @@ public class SeerStage extends Stage {
     }
 
     @Override
-    public boolean checkStageUpdate(Stage prevStage) {
-        for(Stage st : before) {
-            if(!st.isFinish()){
-                return false;
-            }
-        }
-        //all finished
-        return true;
-    }
-
-    @Override
     public void roleStart() {
         if(voteMap == null) {
             voteMap = new HashMap<>();
@@ -49,13 +39,14 @@ public class SeerStage extends Stage {
 
     @Override
     public void roleAnalyse() {
-        Map<Long, Integer> killMap = new HashMap<>();
-        for(PlayerAction action : actionList) {
-            if(killMap.get(action.toPlayerId) == null) {
-                killMap.put(action.toPlayerId, 1);
-            } else{
-                killMap.put(action.toPlayerId, killMap.get(action.toPlayerId) +1);
-            }
+        List<Player> seer = PlayerEngine.getPlayersByRoleAndStatus(gameInfo, PlayerStatus.LIVE.getType(), RoleType.SEER.getType());
+        if(CollectionUtils.isEmpty(seer)) {
+            finish();
+            return;
+        }
+        if(!CollectionUtils.isEmpty(actionList)) {
+            finish();
+            return;
         }
     }
 
@@ -67,7 +58,7 @@ public class SeerStage extends Stage {
     @Override
     public WeResultSupport roleUserAction(Player player, PlayerAction action){
         WeResultSupport resultSupport = new WeResultSupport();
-        if(action.actionType == ActionType.KILL.getType()) {
+        if(action.actionType == ActionType.SEE.getType()) {
             if(ActionUtil.findActionByFromId(actionList, action.fromPlayerId) != null) {
                 resultSupport.setErrorCode(WeErrorCode.DUPLICATE_ACTION);
                 return resultSupport;
@@ -76,34 +67,11 @@ public class SeerStage extends Stage {
                 resultSupport.setErrorCode(WeErrorCode.DEAD_ACTION);
                 return resultSupport;
             }
-            if(this.status != StageStatus.WAITING_ACTION.getType()) {
-                resultSupport.setErrorCode(WeErrorCode.WRONG_STAGE_ACTION);
-                return resultSupport;
-            }
             actionList.add(action);
+            analyse();
+            return resultSupport;
         }
         resultSupport.setErrorCode(WeErrorCode.UNSUPPORT_ACTION);
         return resultSupport;
-    }
-
-
-    private List<Long> findMaxVote(){
-        if(!CollectionUtils.isEmpty(voteMap)) {
-            int max = 0;
-            List<Long> ids = new ArrayList<>();
-            for(Long playerId : voteMap.keySet()) {
-                int votes = voteMap.get(playerId).size();
-                if(max > votes) {
-                    continue;
-                } else if(max < votes) {
-                    ids.clear();
-                    max = votes;
-                } else{
-                    ids.add(playerId);
-                }
-            }
-            return ids;
-        }
-        return null;
     }
 }

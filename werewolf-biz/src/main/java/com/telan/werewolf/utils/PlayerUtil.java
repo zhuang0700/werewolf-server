@@ -19,7 +19,7 @@ public class PlayerUtil {
         }
         List<Player> targetPlayers = new ArrayList<>();
         for(Player player : playerMap.values()) {
-            if(role > 0 && player.getRole().getRole() != role) {
+            if(role > 0 && player.getRoleType() != role) {
                 continue;
             }
             if(status > 0 && player.getStatus() != status) {
@@ -37,7 +37,7 @@ public class PlayerUtil {
         }
         List<Long> targetPlayerIds = new ArrayList<>();
         for(Player player : playerMap.values()) {
-            if(role >= 0 && player.getRole().getRole() != role) {
+            if(role >= 0 && player.getRoleType() != role) {
                 continue;
             }
             if(status >= 0 && player.getStatus() != status) {

@@ -24,6 +24,7 @@ public class GameInfo extends BaseGameInfo {
         this.roleList = new ArrayList<>();
         this.roundHistory = new ArrayList<>();
         this.roleList = new ArrayList<>();
+        this.setGameConfig(new GameConfig());
     }
 
     public GameInfo(GameDO gameDO){

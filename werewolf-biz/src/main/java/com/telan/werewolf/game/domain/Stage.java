@@ -3,6 +3,7 @@ package com.telan.werewolf.game.domain;
 import com.telan.werewolf.game.enums.StageStatus;
 import com.telan.werewolf.game.enums.StageType;
 import com.telan.werewolf.game.manager.ActionEngine;
+import com.telan.werewolf.game.manager.RecordEngine;
 import com.telan.werewolf.game.manager.RoundEngine;
 import com.telan.werewolf.manager.MemGameManager;
 import com.telan.werewolf.result.WeResultSupport;
@@ -107,6 +108,7 @@ public abstract class Stage {
             this.status = StageStatus.BEGIN.getType();
         }
         this.voteMap = new HashMap<>();
+        this.actionList = new ArrayList<>();
         roleStart();
     }
 
@@ -122,9 +124,6 @@ public abstract class Stage {
     public abstract void roleWaitingAction();
 
     public void analyse(){
-        synchronized(this) {
-            this.status = StageStatus.ANALYSE.getType();
-        }
         roleAnalyse();
     }
 
@@ -151,11 +150,18 @@ public abstract class Stage {
     }
 
     public WeResultSupport userAction(Player player, PlayerAction action){
-        WeResultSupport resultSupport = ActionEngine.checkAction(player, action);
-        if(!resultSupport.isSuccess()) {
+        synchronized(this) {
+            WeResultSupport resultSupport = ActionEngine.checkAction(player, action);
+            if(!resultSupport.isSuccess()) {
+                return resultSupport;
+            }
+            resultSupport = roleUserAction(player, action);
+            if(resultSupport.isSuccess()) {
+                RecordEngine.sendActionMsg(gameInfo, action);
+            }
+            analyse();
             return resultSupport;
         }
-        return roleUserAction(player, action);
     }
 
     public abstract WeResultSupport roleUserAction(Player player, PlayerAction action);

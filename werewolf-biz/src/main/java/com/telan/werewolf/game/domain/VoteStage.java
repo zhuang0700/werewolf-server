@@ -31,9 +31,6 @@ public class VoteStage extends Stage {
 
     @Override
     public void roleStart() {
-        if(voteMap == null) {
-            voteMap = new HashMap<>();
-        }
         waitingAction();
     }
 
@@ -44,9 +41,26 @@ public class VoteStage extends Stage {
 
     @Override
     public void roleAnalyse() {
-        voteMap = ActionUtil.convertListToMap(actionList);
-        List<Long> maxVoteIds = ActionUtil.findMaxVote(voteMap);
+        List<Player> voters = PlayerEngine.getPlayersByRoleAndStatus(gameInfo, PlayerStatus.LIVE.getType(), -1);
+        if(CollectionUtils.isEmpty(voters)) {
+            finish();
+            return;
+        }
+        if(actionList.size() == voters.size()) {
+            finish();
+            return;
+        }
+    }
+
+    private void reVote() {
+        this.repeatNum++;
+        this.start();
+    }
+
+    @Override
+    public void roleFinish() {
         RecordEngine.sendVoteActionMsg(gameInfo, actionList);
+        List<Long> maxVoteIds = ActionUtil.findMaxVote(voteMap);
         if(!CollectionUtils.isEmpty(maxVoteIds) && maxVoteIds.size() > 1 && repeatNum < getGameConfig().getMaxEqualVoteBeforeNight()) {
             RecordEngine.sendVoteResultMsg(gameInfo, GameMsgSubType.VOTE_RESULT.getSubType(), maxVoteIds, true);
             reVote();
@@ -60,18 +74,7 @@ public class VoteStage extends Stage {
                     return;
                 }
             }
-            finish();
         }
-    }
-
-    private void reVote() {
-        this.repeatNum++;
-        this.start();
-    }
-
-    @Override
-    public void roleFinish() {
-
     }
 
     @Override
@@ -82,16 +85,20 @@ public class VoteStage extends Stage {
                 resultSupport.setErrorCode(WeErrorCode.DUPLICATE_ACTION);
                 return resultSupport;
             }
-            if(this.status != StageStatus.WAITING_ACTION.getType()) {
-                resultSupport.setErrorCode(WeErrorCode.WRONG_STAGE_ACTION);
-                return resultSupport;
-            }
             Player toPlayer = getPlayerMap().get(action.toPlayerId);
             if(toPlayer == null || toPlayer.getStatus() != PlayerStatus.LIVE.getType()) {
                 resultSupport.setErrorCode(WeErrorCode.WRONG_ACTION_TARGET);
                 return resultSupport;
             }
             actionList.add(action);
+            if(voteMap.get(action.toPlayerId) == null) {
+                List<PlayerAction> actions = new ArrayList<>();
+                actions.add(action);
+                voteMap.put(action.toPlayerId, actions);
+            } else{
+                voteMap.get(action.toPlayerId).add(action);
+            }
+            analyse();
         } else {
             resultSupport.setErrorCode(WeErrorCode.UNSUPPORT_ACTION);
         }

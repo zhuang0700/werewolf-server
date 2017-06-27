@@ -38,8 +38,7 @@ public class ActionEngine {
             weResultSupport.setErrorCode(WeErrorCode.WRONG_STAGE_ACTION);
             return weResultSupport;
         }
-        stage.userAction(player, action);
-        RecordEngine.sendActionMsg(gameInfo, action);
+        weResultSupport = stage.userAction(player, action);
 //        switch (actionType) {
 //            case KILL:
 //                WolfStage wolfStage = (WolfStage)currentRound.getStageByType(StageType.WOLF);
@@ -67,15 +66,21 @@ public class ActionEngine {
     public static WeResultSupport performJudgeAction(GameInfo gameInfo, JudgeAction action) {
         WeResultSupport weResultSupport = new WeResultSupport();
         Round currentRound = gameInfo.getCurrentRound();
+        Stage stage = currentRound.getStageByType(StageType.getByType(action.getStageType()));
 
         JudgeActionType judgeActionType = JudgeActionType.getByType(action.getActionType());
-        Stage stage = currentRound.getStageByType(StageType.getByType(action.getStageType()));
-        if(stage == null || stage.status != StageStatus.WAITING_ACTION.getType()) {
+        if(stage == null || stage.status != StageStatus.WAITING_ACTION.getType() || judgeActionType == null) {
             weResultSupport.setErrorCode(WeErrorCode.WRONG_STAGE_ACTION);
             return weResultSupport;
         }
-        stage.analyse();
         RecordEngine.sendJudgeActionMsg(gameInfo, stage, action);
+        switch (judgeActionType) {
+            case FINISH_STAGE:
+                stage.finish();
+                break;
+                default:
+                    break;
+        }
         return weResultSupport;
     }
 

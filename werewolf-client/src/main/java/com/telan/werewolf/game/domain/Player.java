@@ -42,12 +42,20 @@ public class Player {
         this.userDO = userDO;
     }
 
+    public int getRoleType() {
+        if(role == null) {
+            return 0;
+        }
+        return role.getRole();
+    }
+
     public BaseRole getRole() {
         return role;
     }
 
     public void setRole(BaseRole role) {
         this.role = role;
+        this.playerDO.setRole(role.getRole());
     }
 
     public PlayerDO getPlayerDO() {

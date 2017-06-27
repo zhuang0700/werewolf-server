@@ -38,7 +38,6 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/mock")
-@LoginRequired
 public class MockGameController {
 	private final static Logger LOGGER = LoggerFactory.getLogger(MockGameController.class);
 	@Autowired
@@ -183,10 +182,14 @@ public class MockGameController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/playerAction", method=RequestMethod.GET )
-	@LoginRequired
-	public Map playerAction(PlayerAction action, ModelMap modelMap) throws IOException
+	@RequestMapping(value = "/playerAction", method=RequestMethod.POST )
+	public Map playerAction(long fromPlayerId, long toPlayerId, long gameId, int actionType, ModelMap modelMap) throws IOException
 	{
+		PlayerAction action = new PlayerAction();
+		action.fromPlayerId = fromPlayerId;
+		action.toPlayerId = toPlayerId;
+		action.gameId = gameId;
+		action.actionType = actionType;
 		HttpServletRequest request = SpringHttpHolder.getRequest();
 		UserDO userDO = userManager.mockUser(request);
 		action.setUserDO(userDO);
@@ -198,10 +201,14 @@ public class MockGameController {
 	@ResponseBody
 	@RequestMapping(value = "/judgeAction", method=RequestMethod.GET )
 	@LoginRequired
-	public Map judgeAction( JudgeAction action, ModelMap modelMap) throws IOException
+	public Map judgeAction(long gameId, int actionType, int stageType, ModelMap modelMap) throws IOException
 	{
 		HttpServletRequest request = SpringHttpHolder.getRequest();
 		UserDO userDO = userManager.mockUser(request);
+		JudgeAction action = new JudgeAction();
+		action.setActionType(actionType);
+		action.setStageType(stageType);
+		action.setGameId(gameId);
 		action.setUserDO(userDO);
 		WeBaseResult<GameInfo> baseResult = gameProcessor.judgeAction(action);
 //		LOGGER.info("JudgeAction, result={}" , baseResult);

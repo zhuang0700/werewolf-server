@@ -18,16 +18,23 @@ import java.util.Map;
  */
 public class RoleEngine {
 
-    public static List<BaseRole> initRoleList(int playerNum) {
+    public static List<BaseRole> initRoleList(GameInfo gameInfo) {
+        int playerNum = gameInfo.getPlayerNum();
         List<BaseRole> roleList = new ArrayList<>();
-        if(playerNum < 3) {
-            RoleType[] roleTypes_2 = {RoleType.WOLF,RoleType.WITCH};
-            return formRoleList(roleTypes_2);
-        }
         switch (playerNum) {
+            case 1:
+            case 2:
+                RoleType[] roleTypes_2 = {RoleType.WOLF,RoleType.WITCH};
+                return formRoleList(roleTypes_2);
+            case 3:
+            case 4:
+            case 5:
             case 6:
                 RoleType[] roleTypes_6 = {RoleType.WOLF,RoleType.WOLF,RoleType.SEER,RoleType.VILLAGER,RoleType.VILLAGER,RoleType.VILLAGER};
                 return formRoleList(roleTypes_6);
+            case 7:
+            case 8:
+            case 9:
             default:
                 RoleType[] roleTypes_default = {RoleType.WOLF,RoleType.WOLF,RoleType.WOLF,RoleType.WITCH,RoleType.HUNTER,RoleType.SEER,RoleType.VILLAGER,RoleType.VILLAGER,RoleType.VILLAGER};
                 return formRoleList(roleTypes_default);
@@ -37,15 +44,16 @@ public class RoleEngine {
     public static void allocateRole(List<BaseRole> roleList, Map<Long, Player> playerMap) {
         int playerNums = playerMap.size();
         int roles = roleList.size();
-        List<Integer> randomSeq = RandomUtil.generateSeq(0, roles - 1, playerNums);
+        List<Integer> randomSeq = RandomUtil.generateSeq(0, roles - 1, roleList.size());
         int i = 0;
         for(Long playId : playerMap.keySet()) {
             Player player = playerMap.get(playId);
-            if(i++ < randomSeq.size()) {
-                player.setRole(roleList.get(i));
+            if(i < randomSeq.size()) {
+                player.setRole(roleList.get(randomSeq.get(i)));
             } else {
                 player.setRole(new VillagerRole());
             }
+            i++;
         }
     }
 

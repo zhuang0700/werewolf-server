@@ -28,7 +28,7 @@ public class RecordEngine {
         currentRound.addRecord(record);
         Map<Long, Player> playerMap = gameInfo.getPlayerMap();
         for(Player player : playerMap.values()) {
-            if(msg.getVisibility().isVisiable(player)) {
+            if(isVisiable(player, msg.getVisibility(), gameInfo)) {
                 player.addRecord(record);
             }
         }
@@ -101,7 +101,7 @@ public class RecordEngine {
         GameMsg msg = null;
         switch (judgeActionType) {
             case FINISH_STAGE:
-                msg = GameMsgFactory.createGameMsg(GameMsgSubType.JUDGE_END_STAGE, Visibility.ALL, new Object[]{stage.stageType.getDesc()});
+                msg = GameMsgFactory.createGameMsg(GameMsgSubType.JUDGE_END_STAGE, Visibility.JUDGE_ONLY, new Object[]{stage.stageType.getDesc()});
                 break;
             default:
                 break;
@@ -167,5 +167,32 @@ public class RecordEngine {
         for(Player player : playerMap.values()) {
             player.addRecord(deathRecord);
         }
+    }
+
+
+    public static boolean isVisiable(Player player, Visibility visibility, GameInfo gameInfo) {
+        if(visibility.getType() == null) {
+            return false;
+        }
+        switch (visibility.getType()) {
+            case ALL:
+                return true;
+            case BY_PLAYER:
+                if(visibility.getVisablePlayer().contains(player.getId())) {
+                    return true;
+                }
+                return false;
+            case BY_ROLE:
+                if(visibility.getVisableRoleType().contains(player.getRoleType())) {
+                    return true;
+                }
+                return false;
+            case JUDGE_ONLY:
+                if(PlayerEngine.isJudge(gameInfo, player)) {
+                    return true;
+                }
+                return false;
+        }
+        return false;
     }
 }

@@ -2,11 +2,9 @@ package com.telan.werewolf.game.manager;
 
 import com.telan.werewolf.enums.BaseStatus;
 import com.telan.werewolf.factory.StageFactory;
-import com.telan.werewolf.game.domain.GameInfo;
-import com.telan.werewolf.game.domain.Player;
-import com.telan.werewolf.game.domain.Round;
-import com.telan.werewolf.game.domain.Stage;
+import com.telan.werewolf.game.domain.*;
 import com.telan.werewolf.game.domain.role.HunterRole;
+import com.telan.werewolf.game.enums.GameStatus;
 import com.telan.werewolf.game.enums.PlayerStatus;
 import com.telan.werewolf.game.enums.RoleType;
 
@@ -25,12 +23,20 @@ public class PlayerEngine {
         }
     }
 
+    public static void initPlayerNumber(Map<Long, Player> playerMap) {
+        int playerNo = 1;
+        for(Player player : playerMap.values()) {
+            player.getPlayerDO().setPlayerNo(playerNo);
+            playerNo++;
+        }
+    }
+
     public static void quitGameAfterStart(Player player) {
         player.setGameStatus(BaseStatus.DELETED.getType());
     }
 
     public static boolean isJudge(GameInfo gameInfo, Player player){
-        if(player.getRole().getRole() == RoleType.JUDGE.getType()) {
+        if(player.getRoleType() == RoleType.JUDGE.getType()) {
             return true;
         }
         //没有法官时，创建者充当法官角色
@@ -38,6 +44,24 @@ public class PlayerEngine {
             return true;
         }
         return false;
+    }
+
+    public static List<Player> getPlayersByRoleAndStatus(GameInfo gameInfo, int playerStatus, int roleType) {
+        List<Player> players = new ArrayList<>();
+        for(Player player : gameInfo.getPlayerMap().values()) {
+            if((playerStatus > 0 && player.getStatus() != playerStatus)){
+                continue;
+            }
+            if(roleType > 0 && player.getRoleType() != roleType) {
+                continue;
+            }
+            if(player.getGameStatus() != BaseStatus.AVAILABLE.getType()) {
+                continue;
+            }
+            players.add(player);
+
+        }
+        return players;
     }
 
     //return true means continue, false means stop
@@ -56,7 +80,7 @@ public class PlayerEngine {
             deadPlayers.add(player);
         }
         for(Player player : deadPlayers) {
-            if(player.getRole().getRole() == RoleType.HUNTER.getType()) {
+            if(player.getRoleType() == RoleType.HUNTER.getType()) {
                 addHunterStage(gameInfo, stage);
                 noHunter = false;
             }

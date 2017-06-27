@@ -25,7 +25,7 @@ public class ResponseMapUtils {
 		map.put("msg", result.getResultMsg());
 		map.put("code", result.getErrorCode());
 		GameInfo gameInfo = result.getValue();
-		GameData gameData = ResultConvertor.convertToData(gameInfo, userDO);
+		GameData gameData = ResultConvertor.convertToData(gameInfo, userDO, false);
 		map.put("result", gameData);
 		return map;
 	}

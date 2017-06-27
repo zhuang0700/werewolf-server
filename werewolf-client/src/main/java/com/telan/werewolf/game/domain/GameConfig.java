@@ -26,6 +26,8 @@ public class GameConfig implements Serializable {
 
     private List<Integer> shareInfoRoles = new ArrayList<>();
 
+    private long actionTimeout = 30; //单位s
+
     public GameConfig(){
         shareInfoRoles.add(RoleType.WOLF.getType());
     }

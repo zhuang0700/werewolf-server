@@ -72,10 +72,10 @@ public class Round implements Serializable{
     }
 
     public Stage getStageByType(StageType stageType) {
-        if(CollectionUtils.isEmpty(nightStageList)) {
+        if(CollectionUtils.isEmpty(allStageList)) {
             return null;
         }
-        for(Stage stage : nightStageList) {
+        for(Stage stage : allStageList) {
             if(stage.stageType == stageType) {
                 return stage;
             }

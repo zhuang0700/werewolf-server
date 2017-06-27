@@ -2,6 +2,7 @@ package com.telan.werewolf.game.domain;
 
 import com.telan.werewolf.enums.WeErrorCode;
 import com.telan.werewolf.game.enums.*;
+import com.telan.werewolf.game.manager.PlayerEngine;
 import com.telan.werewolf.result.WeResultSupport;
 import com.telan.werewolf.utils.ActionUtil;
 import org.springframework.util.CollectionUtils;
@@ -40,22 +41,18 @@ public class WolfStage extends Stage {
 
     @Override
     public void roleAnalyse() {
-        for(PlayerAction action : actionList) {
-            if(voteMap.get(action.toPlayerId) == null) {
-                List<PlayerAction> actions = new ArrayList<>();
-                actions.add(action);
-                voteMap.put(action.toPlayerId, actions);
-            } else{
-                voteMap.get(action.toPlayerId).add(action);
-            }
-        }
+        List<Player> aliveWolfList = PlayerEngine.getPlayersByRoleAndStatus(gameInfo, PlayerStatus.LIVE.getType(), RoleType.WOLF.getType());
+
         List<Long> killUsers = ActionUtil.findMaxVote(voteMap);
         if(CollectionUtils.isEmpty(killUsers) || killUsers.size() > 1) {
-
+            markedPlayerId = 0;
+            return;
         } else {
             markedPlayerId = killUsers.get(0);
         }
-        finish();
+        if(aliveWolfList.size() == actionList.size() && markedPlayerId > 0) {
+            finish();
+        }
     }
 
     @Override
@@ -80,8 +77,19 @@ public class WolfStage extends Stage {
             PlayerAction oldAction = ActionUtil.findActionByFromId(actionList, action.fromPlayerId);
             if(oldAction != null) {
                 actionList.remove(oldAction);
+                List<PlayerAction> actions = voteMap.get(oldAction.toPlayerId);
+                if(!CollectionUtils.isEmpty(actions)) {
+                    actions.remove(oldAction);
+                }
             }
             actionList.add(action);
+            if(voteMap.get(action.toPlayerId) == null) {
+                List<PlayerAction> actions = new ArrayList<>();
+                actions.add(action);
+                voteMap.put(action.toPlayerId, actions);
+            } else{
+                voteMap.get(action.toPlayerId).add(action);
+            }
         }
         resultSupport.setErrorCode(WeErrorCode.UNSUPPORT_ACTION);
         return resultSupport;

@@ -7,6 +7,7 @@ import com.telan.werewolf.game.manager.PlayerEngine;
 import com.telan.werewolf.game.manager.RecordEngine;
 import com.telan.werewolf.game.manager.RoundEngine;
 import com.telan.werewolf.result.WeResultSupport;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -2,14 +2,14 @@ package com.telan.werewolf.game.enums;
 
 /**
  */
-public enum JudgeActionType {
-    FINISH_STAGE("结束阶段",1),
-    ANNOUNCE_DEAD("宣布死亡",2),
+public enum ActionMsg {
+    YES("是",1),
+    NO("否",2),
     ;
     private String desc;
     private int type;
 
-    JudgeActionType(String desc, int type) {
+    ActionMsg(String desc, int type) {
         this.desc = desc;
         this.type = type;
     }
@@ -22,8 +22,8 @@ public enum JudgeActionType {
         return type;
     }
 
-    public static JudgeActionType getByType(int type) {
-        for (JudgeActionType userType : values()) {
+    public static ActionMsg getByType(int type) {
+        for (ActionMsg userType : values()) {
             if (userType.getType() == type) {
                 return userType;
             }
@@ -31,11 +31,11 @@ public enum JudgeActionType {
         return null;
     }
 
-    public static JudgeActionType getByName(String name) {
+    public static ActionMsg getByName(String name) {
         if (name == null) {
             return null;
         }
-        for (JudgeActionType userType : values()) {
+        for (ActionMsg userType : values()) {
             if (userType.name().equals(name)) {
                 return userType;
             }
