@@ -53,6 +53,7 @@ public class ActionUtil {
                     continue;
                 } else if(max < votes) {
                     ids.clear();
+                    ids.add(playerId);
                     max = votes;
                 } else{ //equal
                     ids.add(playerId);

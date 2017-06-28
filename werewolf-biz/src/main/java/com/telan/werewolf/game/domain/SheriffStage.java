@@ -1,10 +1,9 @@
 package com.telan.werewolf.game.domain;
 
 import com.telan.werewolf.enums.WeErrorCode;
-import com.telan.werewolf.game.enums.ActionType;
-import com.telan.werewolf.game.enums.PlayerStatus;
-import com.telan.werewolf.game.enums.StageStatus;
-import com.telan.werewolf.game.enums.StageType;
+import com.telan.werewolf.factory.GameMsgFactory;
+import com.telan.werewolf.game.enums.*;
+import com.telan.werewolf.game.manager.RecordEngine;
 import com.telan.werewolf.result.WeResultSupport;
 import com.telan.werewolf.utils.ActionUtil;
 import org.springframework.util.CollectionUtils;
@@ -31,6 +30,8 @@ public class SheriffStage extends Stage {
         if(voteMap == null) {
             voteMap = new HashMap<>();
         }
+        GameMsg msg = GameMsgFactory.createGameMsg(GameMsgSubType.STAGE_START, Visibility.ALL, new Object[]{stageType.name()});
+        RecordEngine.sendNormalMsg(gameInfo, msg);
         waitingAction();
     }
 

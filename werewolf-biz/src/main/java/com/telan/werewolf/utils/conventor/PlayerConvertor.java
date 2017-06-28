@@ -84,9 +84,21 @@ public class PlayerConvertor {
         playerVO.setGameStatus(player.getGameStatus());
         playerVO.setType(playerDO.getType());
         playerVO.setUserId(playerDO.getUserId());
+        playerVO.setPlayerNo(playerDO.getPlayerNo());
         if (!hideRole) {
             playerVO.setRole(playerDO.getRole());
         }
         return playerVO;
+    }
+
+    public static List<PlayerVO> convertPlayerVOList(List<Player> playerList) {
+        if(CollectionUtils.isEmpty(playerList)) {
+            return new ArrayList<>();
+        }
+        List<PlayerVO> playerVOList = new ArrayList<>();
+        for(Player player : playerList) {
+            playerVOList.add(convertPlayerVO(player, true));
+        }
+        return playerVOList;
     }
 }

@@ -1,6 +1,7 @@
 package com.telan.werewolf.game.domain.record;
 
 import com.telan.werewolf.game.domain.Player;
+import com.telan.werewolf.game.vo.PlayerVO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,12 +11,12 @@ import java.util.List;
  */
 public class DeathRecord extends BaseRecord {
     private int msgSubType;
-    private List<String> msgList;
-    private List<Player> deathList;
+    private List<String> recordMsgs;
+    private List<PlayerVO> deathList;
     private int deathReason;
 
     public List<String> getRecordMsgs(){
-        return msgList;
+        return recordMsgs;
     }
 
     public void setMsgSubType(int msgSubType) {
@@ -27,17 +28,17 @@ public class DeathRecord extends BaseRecord {
     }
 
     public void addMsg(String msg) {
-        if(msgList == null) {
-            msgList = new ArrayList<>();
+        if(recordMsgs == null) {
+            recordMsgs = new ArrayList<>();
         }
-        msgList.add(msg);
+        recordMsgs.add(msg);
     }
 
-    public List<Player> getDeathList() {
+    public List<PlayerVO> getDeathList() {
         return deathList;
     }
 
-    public void setDeathList(List<Player> deathList) {
+    public void setDeathList(List<PlayerVO> deathList) {
         this.deathList = deathList;
     }
 

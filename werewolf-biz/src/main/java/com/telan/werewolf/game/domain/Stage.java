@@ -6,20 +6,20 @@ import com.telan.werewolf.game.manager.ActionEngine;
 import com.telan.werewolf.game.manager.RecordEngine;
 import com.telan.werewolf.game.manager.RoundEngine;
 import com.telan.werewolf.manager.MemGameManager;
+import com.telan.werewolf.result.WeBaseResult;
 import com.telan.werewolf.result.WeResultSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
 import javax.management.relation.Role;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by weiwenliang on 17/5/16.
  */
 public abstract class Stage {
+
+    private Timer timer;
 
     protected GameInfo gameInfo;
 
@@ -109,6 +109,7 @@ public abstract class Stage {
         }
         this.voteMap = new HashMap<>();
         this.actionList = new ArrayList<>();
+        this.timer = new Timer();
         roleStart();
     }
 
@@ -119,6 +120,11 @@ public abstract class Stage {
             this.status = StageStatus.WAITING_ACTION.getType();
         }
         roleWaitingAction();
+        if(getGameConfig().isEnableActionTimeout()) {
+            timer.schedule(new MyTask(), getGameConfig().getNoAvailableActionDelay(), getGameConfig().getActionTimeOut(stageType.getType()));
+        } else {
+            timer.schedule(new MyTask(), getGameConfig().getNoAvailableActionDelay());
+        }
     }
 
     public abstract void roleWaitingAction();
@@ -164,5 +170,16 @@ public abstract class Stage {
         }
     }
 
-    public abstract WeResultSupport roleUserAction(Player player, PlayerAction action);
+    public abstract WeBaseResult<ActionResult> roleUserAction(Player player, PlayerAction action);
+
+    class MyTask extends TimerTask {
+        public void run(){
+            if(status == StageStatus.WAITING_ACTION.getType()) {
+                System.out.println("-------timer start: stage type = " + stageType.name());
+                analyse();
+            } else {
+                cancel();
+            }
+        }
+    }
 }

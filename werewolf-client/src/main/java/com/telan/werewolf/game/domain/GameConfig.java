@@ -1,10 +1,14 @@
 package com.telan.werewolf.game.domain;
 
+import com.telan.werewolf.game.enums.ActionType;
 import com.telan.werewolf.game.enums.RoleType;
+import com.telan.werewolf.game.enums.StageType;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.telan.werewolf.game.domain.GameConfigConst.*;
 
@@ -26,10 +30,20 @@ public class GameConfig implements Serializable {
 
     private List<Integer> shareInfoRoles = new ArrayList<>();
 
-    private long actionTimeout = 30; //单位s
+    private long defaultActionTimeout = 30000; //单位ms
+
+    private long noAvailableActionDelay = 10000; //单位ms
+
+    private Map<Integer, Long> actionTimeoutMap;
+
+    private boolean enableActionTimeout = false;
 
     public GameConfig(){
         shareInfoRoles.add(RoleType.WOLF.getType());
+        actionTimeoutMap = new HashMap<>();
+        for(StageType stageType : StageType.values()) {
+            actionTimeoutMap.put(stageType.getType(), defaultActionTimeout);
+        }
     }
 
     public int getMaxEqualVoteBeforeNight() {
@@ -70,5 +84,37 @@ public class GameConfig implements Serializable {
 
     public void setShareInfoRoles(List<Integer> shareInfoRoles) {
         this.shareInfoRoles = shareInfoRoles;
+    }
+
+    public long getDefaultActionTimeout() {
+        return defaultActionTimeout;
+    }
+
+    public void setDefaultActionTimeout(long defaultActionTimeout) {
+        this.defaultActionTimeout = defaultActionTimeout;
+    }
+
+    public void setActionTimeoutMap(Map<Integer, Long> actionTimeoutMap) {
+        this.actionTimeoutMap = actionTimeoutMap;
+    }
+
+    public long getNoAvailableActionDelay() {
+        return noAvailableActionDelay;
+    }
+
+    public void setNoAvailableActionDelay(long noAvailableActionDelay) {
+        this.noAvailableActionDelay = noAvailableActionDelay;
+    }
+
+    public boolean isEnableActionTimeout() {
+        return enableActionTimeout;
+    }
+
+    public void setEnableActionTimeout(boolean enableActionTimeout) {
+        this.enableActionTimeout = enableActionTimeout;
+    }
+
+    public long getActionTimeOut(int stageType) {
+        return actionTimeoutMap.get(stageType);
     }
 }

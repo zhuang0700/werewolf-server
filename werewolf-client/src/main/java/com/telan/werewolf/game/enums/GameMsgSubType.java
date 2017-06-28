@@ -7,7 +7,6 @@ public enum GameMsgSubType {
     NIGHT_END("第{0}天黑夜结束",1, 1002),
     DAY_START("第{0}天白天开始",1, 1003),
     DAY_END("第{0}天白天结束",1, 1004),
-    STAGE_BEGIN("{0}回合开始",1, 1005),
 
     STAGE_START("{0}开始",2, 2001),
     STAGE_END("{0}结束",2, 2002),

@@ -11,6 +11,7 @@ import com.telan.werewolf.game.domain.record.VoteRecord;
 import com.telan.werewolf.game.domain.role.*;
 import com.telan.werewolf.game.enums.GameMsgSubType;
 import com.telan.werewolf.game.enums.RecordType;
+import com.telan.werewolf.utils.conventor.PlayerConvertor;
 import org.springframework.util.CollectionUtils;
 
 import java.text.MessageFormat;
@@ -58,7 +59,7 @@ public class RecordFactory {
         deathRecord.setMsgSubType(msgSubType);
         List<Player> deadPlayers = new ArrayList<>();
         deadPlayers.add(deadPlayer);
-        deathRecord.setDeathList(deadPlayers);
+        deathRecord.setDeathList(PlayerConvertor.convertPlayerVOList(deadPlayers));
         Object[] contents = new Object[1];
         String content = "";
         if(CollectionUtils.isEmpty(deadPlayers)) {
