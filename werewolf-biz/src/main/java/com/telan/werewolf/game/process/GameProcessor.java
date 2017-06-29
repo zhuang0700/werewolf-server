@@ -167,8 +167,8 @@ public class GameProcessor {
 		return result;
 	}
 
-	public WeBaseResult<GameInfo> playerAction(PlayerAction action) {
-		WeBaseResult<GameInfo> result = new WeBaseResult<>();
+	public WeBaseResult<ActionResult> playerAction(PlayerAction action) {
+		WeBaseResult<ActionResult> result = new WeBaseResult<>();
 		GameInfo gameInfo = memGameManager.getGame(action.gameId);
 		if(gameInfo == null) {
 			result.setErrorCode(WeErrorCode.WRONG_GAME);
@@ -187,12 +187,7 @@ public class GameProcessor {
 			result.setErrorCode(WeErrorCode.WRONG_GAME);
 			return result;
 		}
-		WeResultSupport weResultSupport = ActionEngine.performAction(gameInfo, action);
-		if(!weResultSupport.isSuccess()) {
-			result.setErrorCode(weResultSupport.getErrorCode());
-			return result;
-		}
-		result.setValue(gameInfo);
+		result = ActionEngine.performAction(gameInfo, action);
 		return result;
 	}
 

@@ -8,10 +8,7 @@ import com.telan.weixincenter.utils.ResponseMapUtils;
 import com.telan.weixincenter.utils.SpringHttpHolder;
 import com.telan.werewolf.domain.UserDO;
 import com.telan.werewolf.enums.WeErrorCode;
-import com.telan.werewolf.game.domain.GameInfo;
-import com.telan.werewolf.game.domain.JudgeAction;
-import com.telan.werewolf.game.domain.Player;
-import com.telan.werewolf.game.domain.PlayerAction;
+import com.telan.werewolf.game.domain.*;
 import com.telan.werewolf.game.param.CreateGameParam;
 import com.telan.werewolf.game.param.OperateGameParam;
 import com.telan.werewolf.game.process.GameProcessor;
@@ -193,9 +190,9 @@ public class MockGameController {
 		HttpServletRequest request = SpringHttpHolder.getRequest();
 		UserDO userDO = userManager.mockUser(request);
 		action.setUserDO(userDO);
-		WeBaseResult<GameInfo> baseResult = gameProcessor.playerAction(action);
+		WeBaseResult<ActionResult> baseResult = gameProcessor.playerAction(action);
 		LOGGER.info("playerAction, result={}", baseResult);
-		return ResponseMapUtils.convertGameInfo(baseResult, userDO);
+		return ResponseMapUtils.convertActionResult(baseResult, userDO);
 	}
 
 	@ResponseBody

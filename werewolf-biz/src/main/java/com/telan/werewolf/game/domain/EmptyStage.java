@@ -1,5 +1,6 @@
 package com.telan.werewolf.game.domain;
 
+import com.telan.werewolf.result.WeBaseResult;
 import com.telan.werewolf.result.WeResultSupport;
 import org.springframework.util.CollectionUtils;
 
@@ -42,12 +43,7 @@ public class EmptyStage extends Stage {
     }
 
     @Override
-    public WeResultSupport userAction(Player player, PlayerAction action){
-        return null;
-    }
-
-    @Override
-    public WeResultSupport roleUserAction(Player player, PlayerAction action) {
+    public WeBaseResult<ActionResult> roleUserAction(Player player, PlayerAction action) {
         return null;
     }
 

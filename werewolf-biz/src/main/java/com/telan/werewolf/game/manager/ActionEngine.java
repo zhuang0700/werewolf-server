@@ -11,8 +11,8 @@ import com.telan.werewolf.utils.ActionUtil;
  * Created by weiwenliang on 17/5/23.
  */
 public class ActionEngine {
-    public static  WeResultSupport checkAction(Player player, PlayerAction action) {
-        WeResultSupport resultSupport = new WeResultSupport();
+    public static  WeBaseResult<ActionResult> checkAction(Player player, PlayerAction action) {
+        WeBaseResult<ActionResult> resultSupport = new WeBaseResult<ActionResult>();
         if(player.getStatus() == PlayerStatus.DEAD.getType()) {
             resultSupport.setErrorCode(WeErrorCode.DEAD_ACTION);
             return resultSupport;
@@ -20,25 +20,26 @@ public class ActionEngine {
         return resultSupport;
     }
 
-    public static WeResultSupport performAction(GameInfo gameInfo, PlayerAction action) {
-        WeResultSupport weResultSupport;
+    public static WeBaseResult<ActionResult> performAction(GameInfo gameInfo, PlayerAction action) {
+        WeBaseResult<ActionResult> baseResult;
         Player player = gameInfo.getPlayer(action.fromPlayerId);
-        weResultSupport = checkAction(player, action);
-        if(!weResultSupport.isSuccess()) {
-            return weResultSupport;
+        baseResult = checkAction(player, action);
+        if(!baseResult.isSuccess()) {
+            return baseResult;
         }
         Round currentRound = gameInfo.getCurrentRound();
-        weResultSupport = roundCheck(currentRound, action);
+        WeResultSupport weResultSupport = roundCheck(currentRound, action);
         if(!weResultSupport.isSuccess()) {
-            return weResultSupport;
+            baseResult.setErrorCode(weResultSupport.getErrorCode());
+            return baseResult;
         }
         ActionType actionType = ActionType.getByType(action.actionType);
         Stage stage = currentRound.getStageByType(StageType.getByActionType(actionType));
         if(stage == null || stage.status != StageStatus.WAITING_ACTION.getType()) {
-            weResultSupport.setErrorCode(WeErrorCode.WRONG_STAGE_ACTION);
-            return weResultSupport;
+            baseResult.setErrorCode(WeErrorCode.WRONG_STAGE_ACTION);
+            return baseResult;
         }
-        weResultSupport = stage.userAction(player, action);
+        baseResult = stage.userAction(player, action);
 //        switch (actionType) {
 //            case KILL:
 //                WolfStage wolfStage = (WolfStage)currentRound.getStageByType(StageType.WOLF);
@@ -60,7 +61,7 @@ public class ActionEngine {
 //                RecordEngine.sendActionMsg(gameInfo, action);
 //                break;
 //        }
-        return weResultSupport;
+        return baseResult;
     }
 
     public static WeResultSupport performJudgeAction(GameInfo gameInfo, JudgeAction action) {

@@ -155,9 +155,9 @@ public abstract class Stage {
         }
     }
 
-    public WeResultSupport userAction(Player player, PlayerAction action){
+    public WeBaseResult<ActionResult> userAction(Player player, PlayerAction action){
         synchronized(this) {
-            WeResultSupport resultSupport = ActionEngine.checkAction(player, action);
+            WeBaseResult<ActionResult> resultSupport = ActionEngine.checkAction(player, action);
             if(!resultSupport.isSuccess()) {
                 return resultSupport;
             }

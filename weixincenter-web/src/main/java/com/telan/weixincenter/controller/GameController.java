@@ -8,12 +8,9 @@ import com.telan.weixincenter.utils.ResponseMapUtils;
 import com.telan.weixincenter.utils.SpringHttpHolder;
 import com.telan.werewolf.domain.UserDO;
 import com.telan.werewolf.enums.WeErrorCode;
-import com.telan.werewolf.game.domain.JudgeAction;
-import com.telan.werewolf.game.domain.Player;
-import com.telan.werewolf.game.domain.PlayerAction;
+import com.telan.werewolf.game.domain.*;
 import com.telan.werewolf.game.param.CreateGameParam;
 import com.telan.werewolf.game.param.OperateGameParam;
-import com.telan.werewolf.game.domain.GameInfo;
 import com.telan.werewolf.game.process.GameProcessor;
 import com.telan.werewolf.manager.UserManager;
 import com.telan.werewolf.result.WeBaseResult;
@@ -69,7 +66,7 @@ public class GameController {
 		UserDO userDO = SessionHelper.getUser();
 		param.setCreator(userDO);
 		WeBaseResult<GameInfo> baseResult = gameProcessor.createGame(param);
-		LOGGER.info("create game test, param=" + JSON.toJSONString(param) + ", modelmap=" + JSON.toJSONString(modelMap));
+//		LOGGER.info("create game test, param=" + JSON.toJSONString(param) + ", modelmap=" + JSON.toJSONString(modelMap));
 		return ResponseMapUtils.convertGameInfo(baseResult, userDO);
 	}
 
@@ -82,7 +79,7 @@ public class GameController {
 		UserDO userDO = SessionHelper.getUser();
 		param.setUser(userDO);
 		WeBaseResult<GameInfo> baseResult = gameProcessor.joinGame(param);
-		LOGGER.info("join game test, param=" + JSON.toJSONString(param) + ", modelmap=" + JSON.toJSONString(modelMap));
+//		LOGGER.info("join game test, param=" + JSON.toJSONString(param) + ", modelmap=" + JSON.toJSONString(modelMap));
 
 		if(param.getMockPlayerNum() > 0) {
 			List<UserDO> userDOList = userManager.mockUserList(param.getMockPlayerNum());
@@ -103,7 +100,7 @@ public class GameController {
 		Map map = new HashMap();
 		UserDO userDO = SessionHelper.getUser();
 		WeBaseResult<GameInfo> baseResult = gameProcessor.getCurrentGameInfo(userDO.getId());
-		LOGGER.info("get game info, result=" + JSON.toJSONString(baseResult));
+//		LOGGER.info("get game info, result=" + JSON.toJSONString(baseResult));
 		if(!baseResult.isSuccess() && baseResult.getErrorCode() == WeErrorCode.NO_ACTIVE_GAME.getErrorCode()) {
 			map.put("status", 1);
 			map.put("msg", baseResult.getResultMsg());
@@ -121,7 +118,7 @@ public class GameController {
 		Map map = new HashMap();
 		UserDO userDO = SessionHelper.getUser();
 		WeBaseResult<GameInfo> baseResult = gameProcessor.startGame(userDO.getId(), gameId);
-		LOGGER.info("startGame, result=" + JSON.toJSONString(baseResult));
+//		LOGGER.info("startGame, result=" + JSON.toJSONString(baseResult));
 		if(!baseResult.isSuccess() && baseResult.getErrorCode() == WeErrorCode.NO_ACTIVE_GAME.getErrorCode()) {
 			map.put("status", 1);
 			map.put("msg", baseResult.getResultMsg());
@@ -148,7 +145,7 @@ public class GameController {
 				gameProcessor.quitGame(param);
 			}
 		}
-		LOGGER.info("startGame, result=" + JSON.toJSONString(baseResult));
+//		LOGGER.info("startGame, result=" + JSON.toJSONString(baseResult));
 		if(!baseResult.isSuccess() && baseResult.getErrorCode() == WeErrorCode.NO_ACTIVE_GAME.getErrorCode()) {
 			map.put("status", 1);
 			map.put("msg", baseResult.getResultMsg());
@@ -165,9 +162,9 @@ public class GameController {
 	{
 		UserDO userDO = SessionHelper.getUser();
 		action.setUserDO(userDO);
-		WeBaseResult<GameInfo> baseResult = gameProcessor.playerAction(action);
-		LOGGER.info("playerAction, result={}", baseResult);
-		return ResponseMapUtils.convertGameInfo(baseResult, userDO);
+		WeBaseResult<ActionResult> baseResult = gameProcessor.playerAction(action);
+//		LOGGER.info("playerAction, result={}", baseResult);
+		return ResponseMapUtils.convertActionResult(baseResult, userDO);
 	}
 
 	@ResponseBody
@@ -178,7 +175,7 @@ public class GameController {
 		UserDO userDO = SessionHelper.getUser();
 		action.setUserDO(userDO);
 		WeBaseResult<GameInfo> baseResult = gameProcessor.judgeAction(action);
-		LOGGER.info("JudgeAction, result={}" , baseResult);
+//		LOGGER.info("JudgeAction, result={}" , baseResult);
 		return ResponseMapUtils.convertGameInfo(baseResult, userDO);
 	}
 }

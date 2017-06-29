@@ -2,6 +2,7 @@ package com.telan.werewolf.game.domain;
 
 import com.telan.werewolf.enums.WeErrorCode;
 import com.telan.werewolf.game.enums.*;
+import com.telan.werewolf.result.WeBaseResult;
 import com.telan.werewolf.result.WeResultSupport;
 import com.telan.werewolf.utils.ActionUtil;
 import org.springframework.util.CollectionUtils;
@@ -65,8 +66,8 @@ public class HunterStage extends Stage {
     }
 
     @Override
-    public WeResultSupport roleUserAction(Player player, PlayerAction action){
-        WeResultSupport resultSupport = new WeResultSupport();
+    public WeBaseResult<ActionResult> roleUserAction(Player player, PlayerAction action){
+        WeBaseResult<ActionResult> resultSupport = new WeBaseResult<ActionResult>();
         if(action.actionType == ActionType.KILL.getType()) {
             if(ActionUtil.findActionByFromId(actionList, action.fromPlayerId) != null) {
                 resultSupport.setErrorCode(WeErrorCode.DUPLICATE_ACTION);

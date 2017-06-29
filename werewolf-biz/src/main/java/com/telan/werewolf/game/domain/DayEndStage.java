@@ -3,6 +3,7 @@ package com.telan.werewolf.game.domain;
 import com.telan.werewolf.game.enums.StageType;
 import com.telan.werewolf.game.manager.PlayerEngine;
 import com.telan.werewolf.game.manager.RoundEngine;
+import com.telan.werewolf.result.WeBaseResult;
 import com.telan.werewolf.result.WeResultSupport;
 import com.telan.werewolf.utils.ActionUtil;
 
@@ -53,7 +54,7 @@ public class DayEndStage extends Stage {
     }
 
     @Override
-    public WeResultSupport roleUserAction(Player player, PlayerAction action){
+    public WeBaseResult<ActionResult> roleUserAction(Player player, PlayerAction action){
         return null;
     }
 }

@@ -30,4 +30,13 @@ public class ResponseMapUtils {
 		return map;
 	}
 
+	public static Map convertActionResult(WeBaseResult<ActionResult> result, UserDO userDO) {
+		Map map = new HashMap();
+		map.put("status", result.isSuccess()?1:0);
+		map.put("msg", result.getResultMsg());
+		map.put("code", result.getErrorCode());
+		ActionResult actionResult = result.getValue();
+		map.put("result", actionResult);
+		return map;
+	}
 }

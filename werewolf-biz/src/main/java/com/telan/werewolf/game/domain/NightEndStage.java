@@ -6,6 +6,7 @@ import com.telan.werewolf.game.enums.StageType;
 import com.telan.werewolf.game.manager.PlayerEngine;
 import com.telan.werewolf.game.manager.RecordEngine;
 import com.telan.werewolf.game.manager.RoundEngine;
+import com.telan.werewolf.result.WeBaseResult;
 import com.telan.werewolf.result.WeResultSupport;
 import org.springframework.util.CollectionUtils;
 
@@ -75,7 +76,7 @@ public class NightEndStage extends Stage {
     }
 
     @Override
-    public WeResultSupport roleUserAction(Player player, PlayerAction action){
+    public WeBaseResult<ActionResult> roleUserAction(Player player, PlayerAction action){
         return null;
     }
 }
