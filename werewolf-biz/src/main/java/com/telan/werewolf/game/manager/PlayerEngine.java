@@ -23,6 +23,12 @@ public class PlayerEngine {
         }
     }
 
+    public static void setGameEnd(Map<Long, Player> playerMap) {
+        for(Player player : playerMap.values()) {
+            player.setGameStatus(BaseStatus.DELETED.getType());
+        }
+    }
+
     public static void initPlayerNumber(Map<Long, Player> playerMap) {
         int playerNo = 1;
         for(Player player : playerMap.values()) {
@@ -85,6 +91,7 @@ public class PlayerEngine {
                 noHunter = false;
             }
         }
+        GameEngine.tryEndGame(gameInfo);
         return noHunter;
     }
 
@@ -97,8 +104,4 @@ public class PlayerEngine {
         hunterStage.update(stage);
     }
 
-    private static int checkGameFinish(GameInfo gameInfo) {
-        List<Player> wolves = getPlayersByRoleAndStatus(gameInfo, PlayerStatus.LIVE.getType(), RoleType.WOLF.getType());
-
-    }
 }

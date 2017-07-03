@@ -3,10 +3,10 @@ package com.telan.werewolf.game.enums;
 /**
  */
 public enum GameResult {
-    CREATE("初始化",0),
-    LIVE("存活",1),
-    DEAD("死亡",2),
-    GAME_OVER("游戏结束",1000);
+    NOT_FINISH("未结束",0),
+    GOOD_WIN("好人胜利",1),
+    WOLF_WIN("狼人胜利",2),
+    NOBODY_WIN("无人胜利",1000);
     private String desc;
     private int type;
 
@@ -50,18 +50,18 @@ public enum GameResult {
                 return userType;
             }
         }
-        return CREATE;
+        return NOT_FINISH;
     }
 
     public static GameResult getByNameWithDefault(String name) {
         if (name == null) {
-            return CREATE;
+            return NOT_FINISH;
         }
         for (GameResult userType : values()) {
             if (userType.name().equals(name)) {
                 return userType;
             }
         }
-        return CREATE;
+        return NOT_FINISH;
     }
 }

@@ -32,10 +32,6 @@ import java.util.Map;
 public class GameManager {
 	@Autowired
 	private GameDOMapper gameDOMapper;
-	@Autowired
-	private PlayerManager playerManager;
-	@Autowired
-	private UserManager userManager;
 
 	private final static Logger log	= LoggerFactory.getLogger(GameManager.class);
 
@@ -69,14 +65,14 @@ public class GameManager {
 		return result;
 	}
 
-	public Boolean updateGameById(GameDO gameDO) throws Exception {
+	public Boolean updateGameById(GameDO gameDO) {
 		try {
 			int c = gameDOMapper.updateByPrimaryKeySelective(gameDO);
 			return c == 1;
 		} catch (Exception e) {
 			log.error("int c = gameDOMapper.updateByPrimaryKey(gameDO); exception,gameDO:" + gameDO, e);
-			throw e;
 		}
+		return false;
 	}
 
 	public Boolean deleteGameById(GameDO gameDO) {

@@ -50,7 +50,7 @@ public class DayEndStage extends Stage {
     @Override
     public void roleFinish() {
         Round round = getCurrentRound();
-        RoundEngine.finishRound(gameInfo);
+        RoundEngine.moveToNextStatus(gameInfo);
     }
 
     @Override

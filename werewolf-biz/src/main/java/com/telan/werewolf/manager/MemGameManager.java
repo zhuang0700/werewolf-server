@@ -163,6 +163,43 @@ public class MemGameManager {
 		this.userPlayerMap = userPlayerMap;
 	}
 
+	public void syncAllGameToDB(boolean eraseExpireGame) {
+		for(Long gameId : gameMap.keySet()) {
+			syncGameToDB(gameId, false, false);
+		}
+		for(Player player : playerMap.values()) {
+			playerManager.updatePlayerById(player.getPlayerDO());
+		}
+		if(eraseExpireGame) {
+			//TODO:
+		}
+	}
+
+	public void syncGameToDB(long gameId, boolean syncPlayer, boolean eraseExpireGame) {
+		GameInfo gameInfo = gameMap.get(gameId);
+		if(gameInfo == null) {
+			return;
+		}
+		gameManager.updateGameById(gameInfo.getGameDO());
+		if(syncPlayer) {
+			for(Player player : gameInfo.getPlayerMap().values()) {
+				playerManager.updatePlayerById(player.getPlayerDO());
+			}
+		}
+		if(eraseExpireGame) {
+			if(gameInfo.getGameStatus() == GameStatus.FINISH.getType()) {
+				for(Player player : gameInfo.getPlayerMap().values()) {
+					playerMap.remove(player.getId());
+					userPlayerMap.remove(player.getUserId());
+					gameInfo.getPlayerMap().remove(player.getId());
+				}
+				gameMap.remove(gameId);
+				gameInfo = null;
+				System.gc();
+			}
+		}
+	}
+
 	public void destroy() {
 		this.gameMap.clear();
 		this.gameMap = null;

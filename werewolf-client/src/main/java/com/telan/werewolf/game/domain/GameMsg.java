@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by weiwenliang on 17/5/15.
  */
-public class GGameMsg {
+public class GameMsg {
     private int type;
 
     private int subType;

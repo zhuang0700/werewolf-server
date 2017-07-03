@@ -22,12 +22,15 @@ public class RoundEngine {
         moveToNextStatus(currentGame);
     }
 
-    public static Round finishRound(GameInfo currentGame) {
-        moveToNextStatus(currentGame);
-        Round round = RoundFactory.createRound(currentGame.getCurrentRound().getRoundNo() + 1, currentGame);
-        currentGame.changeCurrentRound(round);
-        startRound(currentGame);
-        return round;
+    public static Round finishRound(GameInfo currentGame, boolean gameFinish) {
+        currentGame.getCurrentRound().setRoundStatus(RoundStatus.FINISH.getType());
+        if(!gameFinish) {
+            Round round = RoundFactory.createRound(currentGame.getCurrentRound().getRoundNo() + 1, currentGame);
+            currentGame.changeCurrentRound(round);
+            startRound(currentGame);
+            return round;
+        }
+        return null;
     }
 
     public static void moveToNextStatus(GameInfo currentGame) {
@@ -70,7 +73,7 @@ public class RoundEngine {
             case DAY:
                 round.setRoundStatus(RoundStatus.FINISH.getType());
                 RecordEngine.sendNormalMsg(currentGame, GameMsgFactory.createGameMsg(GameMsgSubType.DAY_END, Visibility.ALL, roundNoContent));
-
+                finishRound(currentGame, false);
 //                round.addRecord(RecordFactory.createNormalRecord(GameMsgSubType.DAY_END.getSubType(), roundNoContent));
                 break;
         }
