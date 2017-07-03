@@ -96,4 +96,9 @@ public class PlayerEngine {
         currentRound.getAllStageList().add(hunterStage);
         hunterStage.update(stage);
     }
+
+    private static int checkGameFinish(GameInfo gameInfo) {
+        List<Player> wolves = getPlayersByRoleAndStatus(gameInfo, PlayerStatus.LIVE.getType(), RoleType.WOLF.getType());
+
+    }
 }

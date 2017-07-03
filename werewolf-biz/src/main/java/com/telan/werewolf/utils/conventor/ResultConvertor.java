@@ -30,20 +30,22 @@ public class ResultConvertor {
                 break;
             }
         }
-        boolean shareRoleInfo = gameInfo.getGameConfig().getShareInfoRoles().contains(myPlayer.getRoleType());
-        for(Player player : gameInfo.getPlayerMap().values()) {
-            PlayerDO playerDO = player.getPlayerDO();
-            boolean hideRole = false;
-            if(!judgeMode && userDO.getId() != playerDO.getUserId()) {
-                if(!shareRoleInfo || player.getRoleType() != myPlayer.getRoleType()) {
-                    //角色信息不共享，或者该玩家和自己角色不同，均需隐藏角色信息
-                    hideRole = true;
+        if(myPlayer != null) {
+            boolean shareRoleInfo = gameInfo.getGameConfig().getShareInfoRoles().contains(myPlayer.getRoleType());
+            for(Player player : gameInfo.getPlayerMap().values()) {
+                PlayerDO playerDO = player.getPlayerDO();
+                boolean hideRole = false;
+                if(!judgeMode && userDO.getId() != playerDO.getUserId()) {
+                    if(!shareRoleInfo || player.getRoleType() != myPlayer.getRoleType()) {
+                        //角色信息不共享，或者该玩家和自己角色不同，均需隐藏角色信息
+                        hideRole = true;
+                    }
+                } else {
+                    gameData.recordList = player.getRecordList();
                 }
-            } else {
-                gameData.recordList = player.getRecordList();
+                PlayerVO playerVO = PlayerConvertor.convertPlayerVO(player, hideRole);
+                gameData.playerVOList.add(playerVO);
             }
-            PlayerVO playerVO = PlayerConvertor.convertPlayerVO(player, hideRole);
-            gameData.playerVOList.add(playerVO);
         }
         gameData.actionList = convertActionList(gameInfo, myPlayer);
         return gameData;

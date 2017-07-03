@@ -26,6 +26,8 @@ public enum GameMsgSubType {
     SEER_ACTION("{0}号玩家（预言家）查验了{1}号（{2}）的身份",5,5005),
 
     QUIT_GAME("{0}号玩家退出了游戏",6,6001),
+    GAME_FINISH("游戏结束",6,6002),
+    GAME_RESULT("游戏结束,{0}胜利",6,6003),
     ;
     private String desc;
     private int type;
