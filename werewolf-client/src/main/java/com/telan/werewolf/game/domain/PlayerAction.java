@@ -23,7 +23,7 @@ public class PlayerAction {
 
     public int actionType;
 
-    public String msg;
+    public String msg = "YES";
 
     public UserDO getUserDO() {
         return userDO;

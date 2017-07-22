@@ -3,8 +3,11 @@ package com.telan.werewolf.utils.conventor;
 import com.telan.werewolf.domain.PlayerDO;
 import com.telan.werewolf.domain.UserDO;
 import com.telan.werewolf.game.domain.*;
+import com.telan.werewolf.game.domain.role.WitchRole;
 import com.telan.werewolf.game.enums.*;
+import com.telan.werewolf.game.vo.GameState;
 import com.telan.werewolf.game.vo.PlayerVO;
+import com.telan.werewolf.utils.ActionUtil;
 import com.telan.werewolf.utils.PlayerUtil;
 import org.springframework.util.CollectionUtils;
 
@@ -48,6 +51,17 @@ public class ResultConvertor {
             }
         }
         gameData.actionList = convertActionList(gameInfo, myPlayer);
+        if(gameInfo.getGameStatus() == GameStatus.PROCESS.getType()) {
+            gameData.gameState = new GameState();
+            gameData.gameState.setRoundStatus(gameInfo.getCurrentRound().getRoundStatus());
+            List<Integer> stageList = new ArrayList<>();
+            for(Stage stage : gameInfo.getCurrentRound().getAllStageList()) {
+                if(stage.status == StageStatus.WAITING_ACTION.getType()) {
+                    stageList.add(stage.stageType.getType());
+                }
+            }
+            gameData.gameState.setStageTypeList(stageList);
+        }
         return gameData;
     }
 
@@ -76,38 +90,69 @@ public class ResultConvertor {
         Action action = new Action();
         switch (stage.stageType) {
             case WOLF:
-                action.playerActionType = ActionType.KILL.name();
+                action.playerActionType = ActionType.KILL.getType();
                 action.actionPlayerIds = PlayerUtil.getPlayerIdsByRoleAndStatus(gameInfo.getPlayerMap(), RoleType.WOLF.getType(), PlayerStatus.LIVE.getType());
                 action.targetPlayerIds = PlayerUtil.getPlayerIdsByRoleAndStatus(gameInfo.getPlayerMap(), -1, PlayerStatus.LIVE.getType());
+                if(stage.getAction(player.getId()) != null) {
+                    action.actionStatus = ActionStatus.ADJUEST_ACTION.getType();
+                } else {
+                    action.actionStatus = ActionStatus.WAITING_ACTION.getType();
+                }
                 actionList.add(action);
                 return actionList;
             case WITCH:
-                action.playerActionType = ActionType.SAVE.name();
+                action.playerActionType = ActionType.SAVE.getType();
                 action.actionPlayerIds = PlayerUtil.getPlayerIdsByRoleAndStatus(gameInfo.getPlayerMap(), RoleType.WITCH.getType(), PlayerStatus.LIVE.getType());
                 action.targetPlayerIds = new ArrayList<Long>(){{add(stage.markedPlayerId);}};
+                WitchRole role = (WitchRole)player.getRole();
+                if(stage.getAction(player.getId(), ActionType.SAVE.getType()) != null || role.getMedicineLeft() < 1) {
+                    action.actionStatus = ActionStatus.ALREADY_ACTION.getType();
+                } else {
+                    action.actionStatus = ActionStatus.WAITING_ACTION.getType();
+                }
                 actionList.add(action);
                 Action positionAction = new Action();
-                positionAction.playerActionType = ActionType.POISON.name();
+                positionAction.playerActionType = ActionType.POISON.getType();
                 positionAction.actionPlayerIds = PlayerUtil.getPlayerIdsByRoleAndStatus(gameInfo.getPlayerMap(), RoleType.WITCH.getType(), PlayerStatus.LIVE.getType());
                 positionAction.targetPlayerIds = PlayerUtil.getPlayerIdsByRoleAndStatus(gameInfo.getPlayerMap(), -1, PlayerStatus.LIVE.getType());
+                if(stage.getAction(player.getId(), ActionType.POISON.getType()) != null || role.getPoision() < 1) {
+                    action.actionStatus = ActionStatus.ALREADY_ACTION.getType();
+                } else {
+                    action.actionStatus = ActionStatus.WAITING_ACTION.getType();
+                }
                 actionList.add(positionAction);
                 return actionList;
             case SEER:
-                action.playerActionType = ActionType.SEE.name();
+                action.playerActionType = ActionType.SEE.getType();
                 action.actionPlayerIds = PlayerUtil.getPlayerIdsByRoleAndStatus(gameInfo.getPlayerMap(), RoleType.SEER.getType(), PlayerStatus.LIVE.getType());
                 action.targetPlayerIds = PlayerUtil.getPlayerIdsByRoleAndStatus(gameInfo.getPlayerMap(), -1, PlayerStatus.LIVE.getType());
+                if(stage.getAction(player.getId()) != null) {
+                    action.actionStatus = ActionStatus.ALREADY_ACTION.getType();
+                } else {
+                    action.actionStatus = ActionStatus.WAITING_ACTION.getType();
+                }
                 actionList.add(action);
                 return actionList;
             case SHERIFF:
-                action.playerActionType = ActionType.RUN_SHERIFF.name();
+                action.playerActionType = ActionType.RUN_SHERIFF.getType();
                 action.actionPlayerIds = PlayerUtil.getPlayerIdsByRoleAndStatus(gameInfo.getPlayerMap(), -1, -1);
                 action.targetPlayerIds = PlayerUtil.getPlayerIdsByRoleAndStatus(gameInfo.getPlayerMap(), -1, -1);
+                if(stage.getAction(player.getId()) != null) {
+                    action.actionStatus = ActionStatus.ALREADY_ACTION.getType();
+                } else {
+                    action.actionStatus = ActionStatus.WAITING_ACTION.getType();
+                }
                 actionList.add(action);
                 return actionList;
             case VOTE:
-                action.playerActionType = ActionType.VOTE.name();
+                action.playerActionType = ActionType.VOTE.getType();
                 action.actionPlayerIds = PlayerUtil.getPlayerIdsByRoleAndStatus(gameInfo.getPlayerMap(), -1, PlayerStatus.LIVE.getType());
                 action.targetPlayerIds = PlayerUtil.getPlayerIdsByRoleAndStatus(gameInfo.getPlayerMap(), -1, PlayerStatus.LIVE.getType());
+                if(stage.getAction(player.getId()) != null) {
+                    action.actionStatus = ActionStatus.ALREADY_ACTION.getType();
+                } else {
+                    action.actionStatus = ActionStatus.WAITING_ACTION.getType();
+                }
                 actionList.add(action);
                 return actionList;
         }

@@ -8,6 +8,7 @@ import com.telan.werewolf.game.manager.RoundEngine;
 import com.telan.werewolf.manager.MemGameManager;
 import com.telan.werewolf.result.WeBaseResult;
 import com.telan.werewolf.result.WeResultSupport;
+import com.telan.werewolf.utils.ActionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
@@ -44,6 +45,14 @@ public abstract class Stage {
     public List<Integer> roleList;
 
     protected List<PlayerAction> actionList;
+
+    public PlayerAction getAction(long fromId) {
+        return ActionUtil.findActionByFromId(actionList, fromId);
+    }
+
+    public PlayerAction getAction(long fromId, int actionType) {
+        return ActionUtil.findActionByFromIdAndType(actionList, fromId, actionType);
+    }
 
     public void setGameInfo(GameInfo gameInfo) {
         this.gameInfo = gameInfo;

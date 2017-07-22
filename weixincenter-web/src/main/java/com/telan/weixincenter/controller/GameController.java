@@ -89,7 +89,11 @@ public class GameController {
 				LOGGER.info("join game mock user, userDO=" + JSON.toJSONString(mockUser) + ", modelmap=" + JSON.toJSONString(modelMap));
 			}
 		}
-		return ResponseMapUtils.convertGameInfo(baseResult, userDO);
+		if(baseResult.isSuccess()) {
+			return ResponseMapUtils.convertGameInfo(baseResult, userDO);
+		} else {
+			return ResponseMapUtils.convertError(baseResult, userDO);
+		}
 	}
 
 	@ResponseBody

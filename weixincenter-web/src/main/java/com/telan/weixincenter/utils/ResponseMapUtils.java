@@ -30,6 +30,15 @@ public class ResponseMapUtils {
 		return map;
 	}
 
+
+	public static Map convertError(WeBaseResult<GameInfo> result, UserDO userDO) {
+		Map map = new HashMap();
+		map.put("status", result.isSuccess()?1:0);
+		map.put("msg", result.getResultMsg());
+		map.put("code", result.getErrorCode());
+		return map;
+	}
+
 	public static Map convertActionResult(WeBaseResult<ActionResult> result, UserDO userDO) {
 		Map map = new HashMap();
 		map.put("status", result.isSuccess()?1:0);

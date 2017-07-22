@@ -9,9 +9,13 @@ import java.util.List;
  */
 public class Action implements Serializable {
     private static final long serialVersionUID = 3642691792135772736L;
-    public String playerActionType;
+    public int playerActionType;
+
+    public int actionStatus;
 
     public List<Long> actionPlayerIds;
 
     public List<Long> targetPlayerIds;
+
+    public int maxTargetNumber = 1;
 }

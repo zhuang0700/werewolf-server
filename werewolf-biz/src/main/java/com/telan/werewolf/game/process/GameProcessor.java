@@ -62,7 +62,8 @@ public class GameProcessor {
 		PlayerDO playerDO = PlayerConvertor.convertFromUser(param.getCreator(), gameDO.getId());
 		playerDO = playerManager.insertPlayer(playerDO);
 		GameInfo gameInfo = new GameInfo(gameDO);
-		initGameInfo(gameInfo);
+		gameInfo.init();
+//		initGameInfo(gameInfo);
 		memGameManager.addGame(gameInfo);
 		Player player = PlayerConvertor.convertPlayer(playerDO, param.getCreator());
 		gameInfo.addPlayer(player);
@@ -145,7 +146,7 @@ public class GameProcessor {
 			return result;
 		}
 		Player player = memGameManager.getPlayerByUserId(param.getUser().getId(), param.getGameId());
-		if(player == null) {
+		if(player == null || player.getGameId() != gameInfo.getGameId()) {
 			result.setErrorCode(WeErrorCode.WRONG_GAME);
 			return result;
 		}
@@ -174,15 +175,12 @@ public class GameProcessor {
 			result.setErrorCode(WeErrorCode.WRONG_GAME);
 			return result;
 		}
-		Player player = memGameManager.getPlayer(action.fromPlayerId);
+		Player player = memGameManager.getPlayerByUserId(action.getUserDO().getId(), action.gameId);
 		if(player == null) {
 			result.setErrorCode(WeErrorCode.WRONG_GAME);
 			return result;
 		}
-		if(player.getUserId() != action.getUserDO().getId()) {
-			result.setErrorCode(WeErrorCode.UNSUPPORT_ACTION);
-			return result;
-		}
+		action.fromPlayerId = player.getId();
 		if(gameInfo.getGameStatus() != GameStatus.PROCESS.getType()) {
 			result.setErrorCode(WeErrorCode.WRONG_GAME);
 			return result;
@@ -259,7 +257,7 @@ public class GameProcessor {
 		}
 		GameDO gameDO = gameDOBaseResult.getValue();
 		GameInfo gameInfo = new GameInfo(gameDO);
-		initGameInfo(gameInfo);
+		gameInfo.init();
 
 		PlayerPageQuery playerPageQuery = new PlayerPageQuery();
 		playerPageQuery.setGameId(gameId);
@@ -305,13 +303,13 @@ public class GameProcessor {
 		}
 		return memGameManager.getGame(gameId);
 	}
-
-	private void initGameInfo(GameInfo gameInfo) {
-		gameInfo.setPlayerMap(new HashMap<Long, Player>());
-		gameInfo.setRoleList(new ArrayList<BaseRole>());
-		gameInfo.setRoundHistory(new ArrayList<Round>());
-		gameInfo.setRoleList(new ArrayList<BaseRole>());
-	}
+//
+//	private void initGameInfo(GameInfo gameInfo) {
+//		gameInfo.setPlayerMap(new HashMap<Long, Player>());
+//		gameInfo.setRoleList(new ArrayList<BaseRole>());
+//		gameInfo.setRoundHistory(new ArrayList<Round>());
+//		gameInfo.setRoleList(new ArrayList<BaseRole>());
+//	}
 
 	private WeBaseResult<GameInfo> quitGameBeforeStart(GameInfo gameInfo, long playerId) {
 		WeBaseResult<GameInfo> result = new WeBaseResult<>();

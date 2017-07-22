@@ -3,6 +3,7 @@ package com.telan.werewolf.game.domain;
 import com.telan.werewolf.domain.GameDO;
 import com.telan.werewolf.domain.PlayerDO;
 import com.telan.werewolf.game.domain.record.BaseRecord;
+import com.telan.werewolf.game.vo.GameState;
 import com.telan.werewolf.game.vo.PlayerVO;
 
 import java.io.Serializable;
@@ -20,4 +21,6 @@ public class GameData implements Serializable {
     public List<PlayerVO> playerVOList;
 
     public List<Action> actionList;
+
+    public GameState gameState;
 }
