@@ -3,6 +3,7 @@ package com.telan.werewolf.utils.conventor;
 import com.telan.werewolf.domain.PlayerDO;
 import com.telan.werewolf.domain.UserDO;
 import com.telan.werewolf.game.domain.*;
+import com.telan.werewolf.game.domain.record.BaseRecord;
 import com.telan.werewolf.game.domain.role.WitchRole;
 import com.telan.werewolf.game.enums.*;
 import com.telan.werewolf.game.vo.GameState;
@@ -44,16 +45,20 @@ public class ResultConvertor {
                         hideRole = true;
                     }
                 } else {
-                    gameData.recordList = player.getRecordList();
+                    gameData.recordList = revertRecords(player.getRecordList());
                 }
                 PlayerVO playerVO = PlayerConvertor.convertPlayerVO(player, hideRole);
                 gameData.playerVOList.add(playerVO);
+                if(player.getId() == myPlayer.getId()) {
+                    gameData.myInfo = playerVO;
+                }
             }
         }
         gameData.actionList = convertActionList(gameInfo, myPlayer);
         if(gameInfo.getGameStatus() == GameStatus.PROCESS.getType()) {
             gameData.gameState = new GameState();
             gameData.gameState.setRoundStatus(gameInfo.getCurrentRound().getRoundStatus());
+            gameData.gameState.setRoundNo(gameInfo.getCurrentRound().getRoundNo());
             List<Integer> stageList = new ArrayList<>();
             for(Stage stage : gameInfo.getCurrentRound().getAllStageList()) {
                 if(stage.status == StageStatus.WAITING_ACTION.getType()) {
@@ -79,6 +84,16 @@ public class ResultConvertor {
         return actionList;
     }
 
+    private static List<BaseRecord> revertRecords(List<BaseRecord> records) {
+        List<BaseRecord> newRecords = new ArrayList<>();
+        if(CollectionUtils.isEmpty(records)) {
+            return newRecords;
+        }
+        for(int i=records.size()-1;i>=0;i--) {
+            newRecords.add(records.get(i));
+        }
+        return newRecords;
+    }
     private static List<Action> convertStageActionList(final Stage stage, GameInfo gameInfo, Player player) {
         if(stage.status != StageStatus.WAITING_ACTION.getType()) {
             return new ArrayList<>();

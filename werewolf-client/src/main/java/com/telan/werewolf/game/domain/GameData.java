@@ -20,6 +20,8 @@ public class GameData implements Serializable {
 
     public List<PlayerVO> playerVOList;
 
+    public PlayerVO myInfo;
+
     public List<Action> actionList;
 
     public GameState gameState;
