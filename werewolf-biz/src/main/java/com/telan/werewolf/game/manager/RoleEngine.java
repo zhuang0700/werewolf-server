@@ -8,6 +8,7 @@ import com.telan.werewolf.game.domain.role.VillagerRole;
 import com.telan.werewolf.game.enums.RoleType;
 import com.telan.werewolf.factory.RoleFactory;
 import com.telan.werewolf.utils.RandomUtil;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,23 +21,33 @@ public class RoleEngine {
 
     public static List<BaseRole> initRoleList(GameInfo gameInfo) {
         int playerNum = gameInfo.getPlayerNum();
-        List<BaseRole> roleList = new ArrayList<>();
+        List<Integer> roleList = new ArrayList<>();
+        if(gameInfo.getGameConfig().isCustomRoleList() && !CollectionUtils.isEmpty(gameInfo.getGameConfig().getRoleNum())) {
+            Map<Integer, Integer> roleNumMap = gameInfo.getGameConfig().getRoleNum();
+            List<Integer> roleTypeList = new ArrayList<>();
+            for(Integer role : roleNumMap.keySet()) {
+                for(int i=0;i<roleNumMap.get(role);i++){
+                    roleList.add(role);
+                }
+            }
+            return formRoleList(new int[0]);
+        }
         switch (playerNum) {
             case 1:
             case 2:
-                RoleType[] roleTypes_2 = {RoleType.WOLF,RoleType.WITCH};
+                int[] roleTypes_2 = {RoleType.WOLF.getType(),RoleType.WITCH.getType()};
                 return formRoleList(roleTypes_2);
             case 3:
             case 4:
             case 5:
             case 6:
-                RoleType[] roleTypes_6 = {RoleType.WOLF,RoleType.WOLF,RoleType.SEER,RoleType.VILLAGER,RoleType.VILLAGER,RoleType.VILLAGER};
+                int[] roleTypes_6 = {RoleType.WOLF.getType(),RoleType.WOLF.getType(),RoleType.SEER.getType(),RoleType.VILLAGER.getType(),RoleType.VILLAGER.getType(),RoleType.VILLAGER.getType()};
                 return formRoleList(roleTypes_6);
             case 7:
             case 8:
             case 9:
             default:
-                RoleType[] roleTypes_default = {RoleType.WOLF,RoleType.WOLF,RoleType.WOLF,RoleType.WITCH,RoleType.HUNTER,RoleType.SEER,RoleType.VILLAGER,RoleType.VILLAGER,RoleType.VILLAGER};
+                int[] roleTypes_default = {RoleType.WOLF.getType(),RoleType.WOLF.getType(),RoleType.WOLF.getType(),RoleType.WITCH.getType(),RoleType.HUNTER.getType(),RoleType.SEER.getType(),RoleType.VILLAGER.getType(),RoleType.VILLAGER.getType(),RoleType.VILLAGER.getType()};
                 return formRoleList(roleTypes_default);
         }
     }
@@ -57,10 +68,10 @@ public class RoleEngine {
         }
     }
 
-    private static List<BaseRole> formRoleList(RoleType[] roleTypes) {
+    private static List<BaseRole> formRoleList(int[] roleTypes) {
         List<BaseRole> baseRoleList = new ArrayList<>();
-        for(RoleType roleType : roleTypes) {
-            baseRoleList.add(RoleFactory.createRoleById(roleType.getType()));
+        for(int roleType : roleTypes) {
+            baseRoleList.add(RoleFactory.createRoleById(roleType));
         }
         return baseRoleList;
     }

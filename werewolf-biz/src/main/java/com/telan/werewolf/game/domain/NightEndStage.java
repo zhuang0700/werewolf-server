@@ -3,6 +3,7 @@ package com.telan.werewolf.game.domain;
 import com.telan.werewolf.factory.StageFactory;
 import com.telan.werewolf.game.enums.DeadReason;
 import com.telan.werewolf.game.enums.StageType;
+import com.telan.werewolf.game.manager.GameEngine;
 import com.telan.werewolf.game.manager.PlayerEngine;
 import com.telan.werewolf.game.manager.RecordEngine;
 import com.telan.werewolf.game.manager.RoundEngine;
@@ -72,7 +73,9 @@ public class NightEndStage extends Stage {
 
     @Override
     public void roleFinish() {
-        RoundEngine.moveToNextStatus(gameInfo);
+        if(!GameEngine.tryEndGame(gameInfo)) {
+            RoundEngine.moveToNextStatus(gameInfo);
+        }
     }
 
     @Override

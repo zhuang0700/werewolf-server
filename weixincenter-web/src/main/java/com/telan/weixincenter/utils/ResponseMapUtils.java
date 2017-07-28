@@ -3,6 +3,7 @@ package com.telan.weixincenter.utils;
 import com.telan.werewolf.domain.UserDO;
 import com.telan.werewolf.game.domain.*;
 import com.telan.werewolf.result.WeBaseResult;
+import com.telan.werewolf.result.WeResultSupport;
 import com.telan.werewolf.utils.conventor.ResultConvertor;
 
 import java.util.HashMap;
@@ -10,12 +11,11 @@ import java.util.Map;
 
 
 public class ResponseMapUtils {
-	public static Map convertWeBaseResultToMap(WeBaseResult result) {
+	public static Map convertWeResultSupportToMap(WeResultSupport result) {
 		Map map = new HashMap();
 		map.put("status", result.isSuccess()?1:0);
 		map.put("msg", result.getResultMsg());
 		map.put("code", result.getErrorCode());
-		map.put("result", result.getValue());
 		return map;
 	}
 

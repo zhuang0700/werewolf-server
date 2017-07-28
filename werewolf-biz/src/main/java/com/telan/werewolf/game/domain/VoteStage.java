@@ -4,6 +4,7 @@ import com.telan.werewolf.enums.WeErrorCode;
 import com.telan.werewolf.game.domain.record.BaseRecord;
 import com.telan.werewolf.game.domain.role.BaseRole;
 import com.telan.werewolf.game.enums.*;
+import com.telan.werewolf.game.manager.GameEngine;
 import com.telan.werewolf.game.manager.PlayerEngine;
 import com.telan.werewolf.game.manager.RecordEngine;
 import com.telan.werewolf.manager.MemGameManager;
@@ -72,9 +73,9 @@ public class VoteStage extends Stage {
                 deathInfo.put(maxVoteIds.get(0), DeadReason.VOTE.getType());
                 if(!PlayerEngine.setPlayerDead(gameInfo, deathInfo, this)) {
                     //stop
-                    return;
                 }
             }
+            GameEngine.tryEndGame(gameInfo);
         }
     }
 

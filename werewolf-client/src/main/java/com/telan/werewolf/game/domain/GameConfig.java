@@ -36,7 +36,11 @@ public class GameConfig implements Serializable {
 
     private Map<Integer, Long> actionTimeoutMap;
 
-    private boolean enableActionTimeout = false;
+    private boolean enableActionTimeout = true;
+
+    private Map<Integer, Integer> roleNum;
+
+    private boolean customRoleList = false;
 
     public GameConfig(){
         shareInfoRoles.add(RoleType.WOLF.getType());
@@ -116,5 +120,21 @@ public class GameConfig implements Serializable {
 
     public long getActionTimeOut(int stageType) {
         return actionTimeoutMap.get(stageType);
+    }
+
+    public Map<Integer, Integer> getRoleNum() {
+        return roleNum;
+    }
+
+    public void setRoleNum(Map<Integer, Integer> roleNum) {
+        this.roleNum = roleNum;
+    }
+
+    public boolean isCustomRoleList() {
+        return customRoleList;
+    }
+
+    public void setCustomRoleList(boolean customRoleList) {
+        this.customRoleList = customRoleList;
     }
 }

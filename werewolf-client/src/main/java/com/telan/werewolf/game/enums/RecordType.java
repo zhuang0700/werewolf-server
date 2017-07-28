@@ -6,6 +6,7 @@ public enum RecordType {
     NORMAL("普通记录",1),
     DEATH("死亡记录",2),
     VOTE("投票记录",3),
+    ROLE_INFO("身份记录",4),
 ;
     private String desc;
     private int type;

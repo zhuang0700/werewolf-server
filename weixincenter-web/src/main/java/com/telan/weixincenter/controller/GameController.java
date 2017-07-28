@@ -12,8 +12,10 @@ import com.telan.werewolf.game.domain.*;
 import com.telan.werewolf.game.param.CreateGameParam;
 import com.telan.werewolf.game.param.OperateGameParam;
 import com.telan.werewolf.game.process.GameProcessor;
+import com.telan.werewolf.game.vo.UserGameConfig;
 import com.telan.werewolf.manager.UserManager;
 import com.telan.werewolf.result.WeBaseResult;
+import com.telan.werewolf.result.WeResultSupport;
 import com.telan.werewolf.utils.SessionHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -181,5 +183,16 @@ public class GameController {
 		WeBaseResult<GameInfo> baseResult = gameProcessor.judgeAction(action);
 //		LOGGER.info("JudgeAction, result={}" , baseResult);
 		return ResponseMapUtils.convertGameInfo(baseResult, userDO);
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/configGame", method=RequestMethod.POST )
+	@LoginRequired
+	public Map configGame(@RequestBody UserGameConfig config, ModelMap modelMap) throws IOException
+	{
+		UserDO userDO = SessionHelper.getUser();
+		WeResultSupport baseResult = gameProcessor.configGame(config, userDO);
+//		LOGGER.info("JudgeAction, result={}" , baseResult);
+		return ResponseMapUtils.convertWeResultSupportToMap(baseResult);
 	}
 }

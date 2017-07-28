@@ -1,13 +1,7 @@
 package com.telan.werewolf.factory;
 
-import com.telan.werewolf.game.domain.GameInfo;
-import com.telan.werewolf.game.domain.GameMsg;
-import com.telan.werewolf.game.domain.Player;
-import com.telan.werewolf.game.domain.PlayerAction;
-import com.telan.werewolf.game.domain.record.BaseRecord;
-import com.telan.werewolf.game.domain.record.DeathRecord;
-import com.telan.werewolf.game.domain.record.NormalRecord;
-import com.telan.werewolf.game.domain.record.VoteRecord;
+import com.telan.werewolf.game.domain.*;
+import com.telan.werewolf.game.domain.record.*;
 import com.telan.werewolf.game.domain.role.*;
 import com.telan.werewolf.game.enums.GameMsgSubType;
 import com.telan.werewolf.game.enums.RecordType;
@@ -113,6 +107,28 @@ public class RecordFactory {
             }
         }
         return voteRecord;
+    }
+
+    public RoleInfoRecord createRoleInfoRecord(int msgSubType, Map<Long, Player> playerMap) {
+        RoleInfoRecord roleInfoRecord = new RoleInfoRecord();
+        roleInfoRecord.setMsgSubType(msgSubType);
+        roleInfoRecord.setPlayerList(new ArrayList<>(playerMap.values()));
+        roleInfoRecord.setRecordType(RecordType.ROLE_INFO.getType());
+        GameMsgSubType gameMsgSubType = GameMsgSubType.getBySubType(msgSubType);
+        if(gameMsgSubType == null) {
+            return roleInfoRecord;
+        }
+        List<String> msgList = new ArrayList<>();
+
+        for(Player player : playerMap.values()) {
+            List<Object> objectList = new ArrayList<>();
+            objectList.add(player.getPlayerNo());
+            objectList.add(player.getRole().getName());
+            String msg = MessageFormat.format(gameMsgSubType.getDesc(), objectList);
+            msgList.add(msg);
+        }
+        roleInfoRecord.setMsgList(msgList);
+        return roleInfoRecord;
     }
 
 }

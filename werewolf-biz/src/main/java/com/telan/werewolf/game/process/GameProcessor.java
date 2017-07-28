@@ -15,6 +15,7 @@ import com.telan.werewolf.game.enums.GameStatus;
 import com.telan.werewolf.game.manager.*;
 import com.telan.werewolf.game.param.CreateGameParam;
 import com.telan.werewolf.game.param.OperateGameParam;
+import com.telan.werewolf.game.vo.UserGameConfig;
 import com.telan.werewolf.manager.GameManager;
 import com.telan.werewolf.manager.MemGameManager;
 import com.telan.werewolf.manager.PlayerManager;
@@ -101,6 +102,7 @@ public class GameProcessor {
 				Player player = PlayerConvertor.convertPlayer(playerDO, param.getUser());
 				gameInfo.addPlayer(player);
 				baseResult.setValue(gameInfo);
+//				memGameManager.syncGameToDB(gameInfo.getGameId(), true, false);
 				return baseResult;
 			} else {
 				baseResult.setErrorCode(WeErrorCode.MAX_PLAYER_ACHIVED);
@@ -120,8 +122,9 @@ public class GameProcessor {
 			result.setErrorCode(WeErrorCode.HAS_ACTIVE_GAME);
 			return result;
 		}
-		if(gameInfo.getGameStatus() == GameStatus.CREATE.getType()) {
-			gameInfo.setGameStatus(GameStatus.INIT.getType());
+		if(gameInfo.getGameStatus() != GameStatus.CREATE.getType()) {
+			result.setErrorCode(WeErrorCode.GAME_INIT);
+			return result;
 		}
 		gameInfo.setRoleList(RoleEngine.initRoleList(gameInfo));
 		//分配角色
@@ -133,8 +136,10 @@ public class GameProcessor {
 		gameInfo.changeCurrentRound(firstRound);
 		RoundEngine.startRound(gameInfo);
 		PlayerEngine.setGameStart(gameInfo.getPlayerMap());
-		gameInfo.setGameStatus(GameStatus.PROCESS.getType());
+
 		result.setValue(gameInfo);
+		gameInfo.setGameStatus(GameStatus.PROCESS.getType());
+		memGameManager.syncGameToDB(gameInfo.getGameId(), true, false);
 		return result;
 	}
 
@@ -186,6 +191,9 @@ public class GameProcessor {
 			return result;
 		}
 		result = ActionEngine.performAction(gameInfo, action);
+		if(gameInfo.getGameStatus() == GameStatus.FINISH.getType()) {
+			memGameManager.syncGameToDB(gameInfo.getGameId(), true, false);
+		}
 		return result;
 	}
 
@@ -214,7 +222,19 @@ public class GameProcessor {
 			return result;
 		}
 		result.setValue(gameInfo);
+//		memGameManager.syncGameToDB(gameInfo.getGameId(), true, false);
 		return result;
+	}
+
+	public WeResultSupport configGame(UserGameConfig userGameConfig, UserDO userDO) {
+		GameInfo gameInfo = memGameManager.getGame(userGameConfig.getGameId());
+		if(gameInfo.getCreatorId() != userDO.getId()) {
+			WeResultSupport resultSupport = new WeResultSupport();
+			resultSupport.setErrorCode(WeErrorCode.UNSUPPORT_ACTION);
+			return resultSupport;
+		}
+		gameInfo.setGameConfig(ConfigEngine.convertGameConfig(gameInfo.getGameConfig(), userGameConfig));
+		return new WeResultSupport();
 	}
 
 	public WeBaseResult<GameInfo> getCurrentGameInfo(long userId) {

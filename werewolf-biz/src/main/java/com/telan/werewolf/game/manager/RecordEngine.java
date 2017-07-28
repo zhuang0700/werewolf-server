@@ -169,6 +169,9 @@ public class RecordEngine {
         }
     }
 
+    public static void sendRoleInfoMsg(GameInfo gameInfo) {
+
+    }
 
     public static boolean isVisiable(Player player, Visibility visibility, GameInfo gameInfo) {
         if(visibility.getType() == null) {
