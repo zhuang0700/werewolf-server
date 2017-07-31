@@ -99,7 +99,7 @@ public class GameController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/gameInfo", method=RequestMethod.POST )
+	@RequestMapping(value = "/gameInfo", method=RequestMethod.GET )
 	@LoginRequired
 	public Map getGameInfo(ModelMap modelMap) throws IOException
 	{
