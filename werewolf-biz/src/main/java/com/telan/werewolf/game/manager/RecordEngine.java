@@ -6,6 +6,7 @@ import com.telan.werewolf.factory.RecordFactory;
 import com.telan.werewolf.game.domain.*;
 import com.telan.werewolf.game.domain.record.BaseRecord;
 import com.telan.werewolf.game.domain.record.DeathRecord;
+import com.telan.werewolf.game.domain.record.RoleInfoRecord;
 import com.telan.werewolf.game.domain.record.VoteRecord;
 import com.telan.werewolf.game.enums.*;
 import org.slf4j.Logger;
@@ -170,7 +171,13 @@ public class RecordEngine {
     }
 
     public static void sendRoleInfoMsg(GameInfo gameInfo) {
-
+        RoleInfoRecord roleInfoRecord = RecordFactory.createRoleInfoRecord(GameMsgSubType.GAME_ROLE_RESULT.getSubType(), gameInfo.getPlayerMap());
+        Round currentRound = gameInfo.getCurrentRound();
+        currentRound.addRecord(roleInfoRecord);
+        Map<Long, Player> playerMap = gameInfo.getPlayerMap();
+        for(Player player : playerMap.values()) {
+            player.addRecord(roleInfoRecord);
+        }
     }
 
     public static boolean isVisiable(Player player, Visibility visibility, GameInfo gameInfo) {

@@ -109,7 +109,7 @@ public class RecordFactory {
         return voteRecord;
     }
 
-    public RoleInfoRecord createRoleInfoRecord(int msgSubType, Map<Long, Player> playerMap) {
+    public static RoleInfoRecord createRoleInfoRecord(int msgSubType, Map<Long, Player> playerMap) {
         RoleInfoRecord roleInfoRecord = new RoleInfoRecord();
         roleInfoRecord.setMsgSubType(msgSubType);
         roleInfoRecord.setPlayerList(new ArrayList<>(playerMap.values()));
