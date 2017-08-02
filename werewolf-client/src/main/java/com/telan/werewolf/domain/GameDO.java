@@ -12,6 +12,8 @@ public class GameDO implements Serializable {
 
     private int status;
 
+    private int result;
+
     private int playerNum;
 
     private int hasJudge;
@@ -64,6 +66,14 @@ public class GameDO implements Serializable {
 
     public int getHasJudge() {
         return hasJudge;
+    }
+
+    public int getResult() {
+        return result;
+    }
+
+    public void setResult(int result) {
+        this.result = result;
     }
 
     public void setHasJudge(int hasJudge) {

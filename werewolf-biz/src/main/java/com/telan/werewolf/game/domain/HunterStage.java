@@ -17,11 +17,12 @@ import java.util.Map;
  */
 public class HunterStage extends Stage {
 
-    public HunterStage() {
+    public HunterStage(GameInfo gameInfo) {
         super();
         this.stageType = StageType.HUNTER;
         this.roleList = new ArrayList<>();
         this.roleList.add(RoleType.HUNTER.getType());
+        this.setGameInfo(gameInfo);
     }
 
     @Override

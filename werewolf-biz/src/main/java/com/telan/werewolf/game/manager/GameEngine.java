@@ -23,6 +23,7 @@ public class GameEngine {
         }
         //finish
         currentGame.setGameStatus(GameStatus.FINISH.getType());
+        currentGame.getGameDO().setResult(gameResult);
         RoundEngine.finishRound(currentGame, true);
         PlayerEngine.setGameEnd(currentGame.getPlayerMap());
         return true;

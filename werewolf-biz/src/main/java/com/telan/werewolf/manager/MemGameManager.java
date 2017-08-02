@@ -136,6 +136,7 @@ public class MemGameManager {
 		PlayerPageQuery playerPageQuery = new PlayerPageQuery();
 		playerPageQuery.setGameIdList(gameIdList);
 		playerPageQuery.setNeedPageQuery(false);
+		playerPageQuery.setGameStatus(BaseStatus.AVAILABLE.getType());
 		List<PlayerDO> playerDOList = playerManager.pageQuery(playerPageQuery);
 		Map<Long, UserDO> userDOMap = userManager.getUserByIds(PlayerConvertor.convertUserIdList(playerDOList));
 

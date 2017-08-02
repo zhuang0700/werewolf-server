@@ -3,7 +3,7 @@ package com.telan.werewolf.game.enums;
 /**
  */
 public enum GameResult {
-    NOT_FINISH("未结束",0),
+    NOT_FINISH("无结果",0),
     GOOD_WIN("好人胜利",1),
     WOLF_WIN("狼人胜利",2),
     NOBODY_WIN("无人胜利",1000);

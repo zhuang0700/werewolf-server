@@ -18,11 +18,12 @@ import java.util.Map;
  */
 public class SeerStage extends Stage {
 
-    public SeerStage(){
+    public SeerStage(GameInfo gameInfo){
         super();
         this.stageType = StageType.SEER;
         this.roleList = new ArrayList<>();
         this.roleList.add(RoleType.SEER.getType());
+        this.setGameInfo(gameInfo);
     }
 
     @Override

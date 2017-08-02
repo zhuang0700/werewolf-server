@@ -20,11 +20,12 @@ public class WolfStage extends Stage {
 
     Map<Long, List<PlayerAction>> voteMap;
 
-    public WolfStage(){
+    public WolfStage(GameInfo gameInfo){
         super();
         this.stageType = StageType.WOLF;
         this.roleList = new ArrayList<>();
         this.roleList.add(RoleType.WOLF.getType());
+        this.setGameInfo(gameInfo);
     }
 
     @Override
@@ -43,7 +44,9 @@ public class WolfStage extends Stage {
     @Override
     public void roleAnalyse() {
         List<Player> aliveWolfList = PlayerEngine.getPlayersByRoleAndStatus(gameInfo, PlayerStatus.LIVE.getType(), RoleType.WOLF.getType());
-
+        if(CollectionUtils.isEmpty(aliveWolfList)) {
+            finish();
+        }
         List<Long> killUsers = ActionUtil.findMaxVote(voteMap);
         if(CollectionUtils.isEmpty(killUsers) || killUsers.size() > 1) {
             markedPlayerId = 0;

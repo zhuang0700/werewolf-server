@@ -35,11 +35,12 @@ public class WitchStage extends Stage {
         return true;
     }
 
-    public WitchStage(){
+    public WitchStage(GameInfo gameInfo){
         super();
         this.stageType = StageType.WITCH;
         this.roleList = new ArrayList<>();
         this.roleList.add(RoleType.WITCH.getType());
+        this.setGameInfo(gameInfo);
     }
 
     @Override

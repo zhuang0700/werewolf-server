@@ -97,7 +97,7 @@ public class PlayerEngine {
 
     private static void addHunterStage(GameInfo gameInfo, Stage stage) {
         Round currentRound = gameInfo.getCurrentRound();
-        Stage hunterStage = StageFactory.createRoleStage(RoleType.HUNTER.getType());
+        Stage hunterStage = StageFactory.createRoleStage(RoleType.HUNTER.getType(), gameInfo);
         hunterStage.linkNext(stage);
 //        currentRound.setHunterStage(hunterStage);
         currentRound.getAllStageList().add(hunterStage);

@@ -17,6 +17,8 @@ public class GamePageQuery extends PageQuery {
 
     private Integer type;
 
+    private Integer result;
+
     public List<Long> getIds() {
         return ids;
     }
@@ -39,6 +41,14 @@ public class GamePageQuery extends PageQuery {
 
     public void setCreatorId(Long creatorId) {
         this.creatorId = creatorId;
+    }
+
+    public Integer getResult() {
+        return result;
+    }
+
+    public void setResult(Integer result) {
+        this.result = result;
     }
 
     public Integer getType() {

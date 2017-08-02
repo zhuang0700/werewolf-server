@@ -11,18 +11,18 @@ import java.util.List;
  * Created by weiwenliang on 17/5/31.
  */
 public class StageFactory {
-    public static Stage createRoleStage(int type) {
+    public static Stage createRoleStage(int type, GameInfo gameInfo) {
         RoleType roleType = RoleType.getByType(type);
         if(roleType != null) {
             switch (roleType) {
                 case WOLF:
-                    return new WolfStage();
+                    return new WolfStage(gameInfo);
                 case WITCH:
-                    return new WitchStage();
+                    return new WitchStage(gameInfo);
                 case HUNTER:
-                    return new HunterStage();
+                    return new HunterStage(gameInfo);
                 case SEER:
-                    return new SeerStage();
+                    return new SeerStage(gameInfo);
                 case VILLAGER:
                     return new EmptyStage();
                 default:
@@ -45,21 +45,19 @@ public class StageFactory {
 
     public static List<Stage> createDefaultNightStages(List<BaseRole> roleList, GameInfo gameInfo) {
         List<Stage> stageList = new ArrayList<>();
-        Stage wolfStage = createRoleStage(RoleType.WOLF.getType());
+        Stage wolfStage = createRoleStage(RoleType.WOLF.getType(), gameInfo);
         stageList.add(wolfStage);
         Stage nightEndStage = new NightEndStage();
         nightEndStage.setGameInfo(gameInfo);
         wolfStage.linkNext(nightEndStage);
         if(roleList.contains(new WitchRole())){
-            Stage witchStage = createRoleStage(RoleType.WITCH.getType());
-            witchStage.setGameInfo(gameInfo);
+            Stage witchStage = createRoleStage(RoleType.WITCH.getType(), gameInfo);
             wolfStage.linkNext(witchStage);
             witchStage.linkNext(nightEndStage);
             stageList.add(witchStage);
         }
         if(roleList.contains(new SeerRole())){
-            Stage seerStage = createRoleStage(RoleType.SEER.getType());
-            wolfStage.setGameInfo(gameInfo);
+            Stage seerStage = createRoleStage(RoleType.SEER.getType(), gameInfo);
             wolfStage.linkNext(seerStage);
             seerStage.linkNext(nightEndStage);
             stageList.add(seerStage);
