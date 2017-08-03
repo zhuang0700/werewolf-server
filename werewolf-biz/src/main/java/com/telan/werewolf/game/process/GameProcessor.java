@@ -48,6 +48,18 @@ public class GameProcessor {
 
 	private final static Logger log	= LoggerFactory.getLogger(GameProcessor.class);
 
+	public void loadAllLiveGame() {
+		memGameManager.loadAllLiveGame();
+		for(GameInfo gameInfo : memGameManager.gameMap.values()) {
+			if(gameInfo.getGameStatus() == GameStatus.CREATE.getType()) {
+				eraseGameIfQuit(gameInfo);
+			} else if(gameInfo.getGameStatus()== GameStatus.PROCESS.getType()) {
+				this.startGame(gameInfo);
+			}
+			memGameManager.syncGameToDB(gameInfo.getGameId(), true, true);
+		}
+	}
+
 	public WeBaseResult<GameInfo> createGame(CreateGameParam param) {
 		WeBaseResult<GameInfo> baseResult = new WeBaseResult<>();
 		GameInfo currentGame = findCurrentGame(param.getCreator().getId());
@@ -170,6 +182,7 @@ public class GameProcessor {
 				result.setValue(gameInfo);
 				return result;
 		}
+		eraseGameIfQuit(gameInfo);
 		return result;
 	}
 
@@ -291,6 +304,14 @@ public class GameProcessor {
 		return baseResult;
 	}
 
+	public void eraseGameIfQuit(GameInfo gameInfo) {
+		Player player = memGameManager.getPlayerByUserId(gameInfo.getCreatorId(), gameInfo.getGameId());
+		if(GameEngine.checkGameStatus(gameInfo) == GameStatus.FINISH.getType()) {
+			gameInfo.setGameStatus(GameStatus.PROCESS.getType());
+			PlayerEngine.setGameEnd(gameInfo.getPlayerMap());
+		}
+	}
+
 	private long findCurrentGameIdFromDB(long userId) {
 		PlayerPageQuery playerPageQuery = new PlayerPageQuery();
 		playerPageQuery.setUserId(userId);
@@ -354,5 +375,14 @@ public class GameProcessor {
 		memGameManager.removePlayer(player);
 		result.setValue(gameInfo);
 		return result;
+	}
+
+	private void startGame(GameInfo gameInfo) {
+		//初始化回合
+		Round firstRound = RoundFactory.createRound(1, gameInfo);
+		gameInfo.changeCurrentRound(firstRound);
+		RoundEngine.startRound(gameInfo);
+		PlayerEngine.setGameStart(gameInfo.getPlayerMap());
+		gameInfo.setGameStatus(GameStatus.PROCESS.getType());
 	}
 }

@@ -20,7 +20,7 @@
 	}
 	PrintWriter write = response.getWriter();
 	//write.println(code);
-	write.print(JSON.toJSON(memGameManager.gameMap));
+	write.print(JSON.toJSON(memGameManager.gameMap.values()));
 	write.flush();
 	write.close();
 

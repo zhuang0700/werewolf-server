@@ -78,4 +78,13 @@ public class GameInfo extends BaseGameInfo {
     public void removePlayer(long playerId) {
         playerMap.remove(playerId);
     }
+
+    public Player getCreator() {
+        for(Player player : playerMap.values()) {
+            if(player.getUserId() == getGameDO().getCreatorId()) {
+                return player;
+            }
+        }
+        return null;
+    }
 }

@@ -1,5 +1,6 @@
 package com.telan.werewolf.game.manager;
 
+import com.telan.werewolf.enums.BaseStatus;
 import com.telan.werewolf.factory.GameMsgFactory;
 import com.telan.werewolf.factory.RoundFactory;
 import com.telan.werewolf.game.domain.*;
@@ -14,6 +15,16 @@ import java.util.List;
 public class GameEngine {
     public static void startGame(GameInfo currentGame){
         currentGame.setGameStatus(GameStatus.PROCESS.getType());
+    }
+
+    public static int checkGameStatus(GameInfo gameInfo) {
+        Player creator = gameInfo.getCreator();
+        if(creator == null || creator.getGameStatus() == BaseStatus.DELETED.getType()) {
+            return GameStatus.FINISH.getType();
+        } else {
+            //TODO: 继续完善
+            return gameInfo.getGameStatus();
+        }
     }
 
     public static boolean tryEndGame(GameInfo currentGame) {
