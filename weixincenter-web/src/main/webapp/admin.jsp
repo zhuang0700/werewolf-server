@@ -7,6 +7,8 @@
 <%@ page import="com.telan.werewolf.manager.MemGameManager" %>
 <%@ page import="com.alibaba.fastjson.JSON" %>
 <%@ page import="com.alibaba.fastjson.support.spring.FastJsonJsonView" %>
+<%@ page import="com.alibaba.fastjson.JSONArray" %>
+<%@ page import="com.alibaba.fastjson.parser.ParserConfig" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
@@ -20,7 +22,15 @@
 	}
 	PrintWriter write = response.getWriter();
 	//write.println(code);
-	write.print(JSON.toJSON(memGameManager.gameMap.values()));
+	JSONArray jsonArray = new JSONArray();
+
+	write.print(JSON.toJSONString(memGameManager.gameMap));
+	for(GameInfo gameInfo : memGameManager.gameMap.values()) {
+		jsonArray.add(JSON.toJSONString(gameInfo));
+//		write.print(JSON.toJSONString(gameInfo));
+	}
+//	write.print(jsonArray.toJSONString());
+
 	write.flush();
 	write.close();
 

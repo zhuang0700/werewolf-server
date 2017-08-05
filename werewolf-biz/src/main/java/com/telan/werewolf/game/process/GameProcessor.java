@@ -25,6 +25,7 @@ import com.telan.werewolf.result.WeBaseResult;
 import com.telan.werewolf.result.WeResultSupport;
 import com.telan.werewolf.utils.conventor.GameConvertor;
 import com.telan.werewolf.utils.conventor.PlayerConvertor;
+import org.jsoup.Connection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -274,9 +275,9 @@ public class GameProcessor {
 			}
 		}
 		GameInfo gameInfo = memGameManager.getGame(currentGameId);
-		if(gameInfo == null) {
-			return getGameInfoFromDB(gameId);
-		}
+//		if(gameInfo == null) {
+//			return getGameInfoFromDB(gameId);
+//		}
 		baseResult.setValue(gameInfo);
 		return baseResult;
 	}
@@ -336,6 +337,9 @@ public class GameProcessor {
 
 	private GameInfo findCurrentGame(long userId) {
 		Player player = memGameManager.getPlayerByUserId(userId, 0);
+		if(player.getGameStatus() == BaseStatus.DELETED.getType()) {
+			return null;
+		}
 		long gameId = 0;
 		if(player == null) {
 			gameId = findCurrentGameIdFromDB(userId);

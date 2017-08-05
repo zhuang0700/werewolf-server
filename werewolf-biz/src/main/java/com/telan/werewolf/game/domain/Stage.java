@@ -1,5 +1,6 @@
 package com.telan.werewolf.game.domain;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.telan.werewolf.game.enums.StageStatus;
 import com.telan.werewolf.game.enums.StageType;
 import com.telan.werewolf.game.manager.ActionEngine;
@@ -22,8 +23,10 @@ public abstract class Stage {
 
     private Timer timer;
 
+    @JSONField(serialize=false)
     protected GameInfo gameInfo;
 
+    @JSONField(serialize=false)
     public Map<Long, List<PlayerAction>> voteMap;
 
     public int status = StageStatus.NOT_BEGIN.getType();
@@ -38,8 +41,9 @@ public abstract class Stage {
 
     public StageType stageType;
 
+    @JSONField(serialize=false)
     public List<Stage> next;
-
+    @JSONField(serialize=false)
     public List<Stage> before;
 
     public List<Integer> roleList;
