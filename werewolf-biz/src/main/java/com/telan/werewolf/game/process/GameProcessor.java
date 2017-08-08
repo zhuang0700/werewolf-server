@@ -180,7 +180,7 @@ public class GameProcessor {
 				result = quitGameAfterStart(gameInfo, player.getId());
 				break;
 			case FINISH:
-				result.setValue(gameInfo);
+				result = quitGameAfterStart(gameInfo, player.getId());
 				return result;
 		}
 		eraseGameIfQuit(gameInfo);

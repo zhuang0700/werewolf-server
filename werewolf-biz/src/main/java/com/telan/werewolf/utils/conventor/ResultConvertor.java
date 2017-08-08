@@ -49,7 +49,7 @@ public class ResultConvertor {
                         hideRole = true;
                     }
                 } else {
-                    gameData.recordList = revertRecords(player.getRecordList());
+                    gameData.recordList = player.getRecordList();
                 }
                 PlayerVO playerVO = PlayerConvertor.convertPlayerVO(player, hideRole);
                 gameData.playerVOList.add(playerVO);
