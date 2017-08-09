@@ -337,13 +337,15 @@ public class GameProcessor {
 
 	private GameInfo findCurrentGame(long userId) {
 		Player player = memGameManager.getPlayerByUserId(userId, 0);
-		if(player.getGameStatus() == BaseStatus.DELETED.getType()) {
-			return null;
-		}
+
 		long gameId = 0;
 		if(player == null) {
 			gameId = findCurrentGameIdFromDB(userId);
 		} else {
+			if(player.getGameStatus() == BaseStatus.DELETED.getType()) {
+				memGameManager.removePlayer(player);
+				return null;
+			}
 			gameId = player.getGameId();
 		}
 		return memGameManager.getGame(gameId);
