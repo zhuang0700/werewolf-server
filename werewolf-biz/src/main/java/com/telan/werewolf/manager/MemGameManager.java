@@ -81,10 +81,7 @@ public class MemGameManager {
 		}
 		playerMap.remove(player.getId());
 		userPlayerMap.remove(player.getUserId());
-		GameInfo gameInfo = gameMap.get(player.getId());
-		if(gameInfo != null) {
-			gameInfo.removePlayer(player.getId());
-		}
+
 	}
 
 	public void removePlayerInGame(Player player) {
@@ -96,13 +93,6 @@ public class MemGameManager {
 
 	public Player getPlayerByUserId(long userId, long gameId) {
 		Player player = userPlayerMap.get(userId);
-		if(player == null) {
-			player = loadPlayer(userId, gameId);
-			if(player == null) {
-				return null;
-			}
-			addPlayer(player);
-		}
 		return player;
 	}
 

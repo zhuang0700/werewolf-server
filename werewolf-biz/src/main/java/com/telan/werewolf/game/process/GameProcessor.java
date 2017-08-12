@@ -253,12 +253,13 @@ public class GameProcessor {
 
 	public WeBaseResult<GameInfo> getCurrentGameInfo(long userId) {
 		WeBaseResult<GameInfo> baseResult = new WeBaseResult<>();
-		long currentGameId = findCurrentGameId(userId);
-		if(currentGameId <=0) {
+		GameInfo currentGame = findCurrentGame(userId);
+		if(currentGame == null) {
 			baseResult.setErrorCode(WeErrorCode.NO_ACTIVE_GAME);
 			return baseResult;
 		}
-		return getGameInfo(userId, currentGameId);
+		baseResult.setValue(currentGame);
+		return baseResult;
 	}
 
 	public WeBaseResult<GameInfo> getGameInfo(long userId, long gameId) {
@@ -330,7 +331,7 @@ public class GameProcessor {
 	private long findCurrentGameId(long userId) {
 		Player player = memGameManager.getPlayerByUserId(userId, 0);
 		if(player == null) {
-			return findCurrentGameIdFromDB(userId);
+			return 0;
 		}
 		return player.getGameId();
 	}
@@ -367,6 +368,7 @@ public class GameProcessor {
 			return result;
 		}
 		memGameManager.removePlayer(player);
+		gameInfo.removePlayer(player.getId());
 		result.setValue(gameInfo);
 		return result;
 	}
