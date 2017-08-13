@@ -81,7 +81,6 @@ public class MemGameManager {
 		}
 		playerMap.remove(player.getId());
 		userPlayerMap.remove(player.getUserId());
-
 	}
 
 	public void removePlayerInGame(Player player) {
