@@ -6,6 +6,7 @@ import com.telan.werewolf.game.manager.PlayerEngine;
 import com.telan.werewolf.result.WeBaseResult;
 import com.telan.werewolf.result.WeResultSupport;
 import com.telan.werewolf.utils.ActionUtil;
+import com.telan.werewolf.utils.conventor.PlayerConvertor;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -70,6 +71,8 @@ public class SeerStage extends Stage {
                 return resultSupport;
             }
             actionList.add(action);
+            ActionResult result = new ActionResult();
+            result.setTargetPlayer(PlayerConvertor.convertPlayerVO(gameInfo.getPlayer(action.toPlayerId), false));
             analyse();
             return resultSupport;
         }

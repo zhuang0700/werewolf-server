@@ -58,6 +58,12 @@
 	
 	<dependencies>
 		<dependency>
+		        <groupId>javax</groupId>
+		        <artifactId>javaee-api</artifactId>
+		        <version>7.0</version>
+		        <scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
