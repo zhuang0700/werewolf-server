@@ -15,8 +15,11 @@
 
 	WebApplicationContext wac = WebApplicationContextUtils.getWebApplicationContext(request.getServletContext());
 	int gameId = 0;
+	PrintWriter write = response.getWriter();
 	try {
+		write.println(request.getParameter("gameId"));
 		gameId = Integer.valueOf(request.getParameter("gameId"));
+		write.println("gameId:"+gameId);
 	} catch (NumberFormatException e) {
 		gameId = 0;
 	}
@@ -26,8 +29,6 @@
 	if (gameProcessor == null) {
 		code = -1;
 	}
-	PrintWriter write = response.getWriter();
-	//write.println(code);
 	JSONArray jsonArray = new JSONArray();
 
 	if(gameId > 0) {
