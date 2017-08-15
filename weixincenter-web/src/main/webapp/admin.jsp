@@ -14,6 +14,10 @@
 <%
 
 	WebApplicationContext wac = WebApplicationContextUtils.getWebApplicationContext(request.getServletContext());
+	int gameId = Integer.valueOf(request.getParameter("gameId"));
+	if(gameId <= 0) {
+	    gameId = 0;
+	}
 	GameProcessor gameProcessor = (GameProcessor) wac.getBean("gameProcessor");
 	MemGameManager memGameManager = (MemGameManager)wac.getBean("memGameManager");
 	int code = 0;
@@ -24,12 +28,11 @@
 	//write.println(code);
 	JSONArray jsonArray = new JSONArray();
 
-	write.print(JSON.toJSONString(memGameManager.gameMap));
-	for(GameInfo gameInfo : memGameManager.gameMap.values()) {
-		jsonArray.add(JSON.toJSONString(gameInfo));
-//		write.print(JSON.toJSONString(gameInfo));
+	if(gameId > 0) {
+		write.print(JSON.toJSONString(memGameManager.gameMap.get(gameId)));
+	} else {
+		write.print(JSON.toJSONString(memGameManager.gameMap));
 	}
-//	write.print(jsonArray.toJSONString());
 
 	write.flush();
 	write.close();
