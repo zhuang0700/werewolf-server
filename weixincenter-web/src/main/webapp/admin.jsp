@@ -14,9 +14,11 @@
 <%
 
 	WebApplicationContext wac = WebApplicationContextUtils.getWebApplicationContext(request.getServletContext());
-	int gameId = Integer.valueOf(request.getParameter("gameId"));
-	if(gameId <= 0) {
-	    gameId = 0;
+	int gameId = 0;
+	try {
+		gameId = Integer.valueOf(request.getParameter("gameId"));
+	} catch (NumberFormatException e) {
+		gameId = 0;
 	}
 	GameProcessor gameProcessor = (GameProcessor) wac.getBean("gameProcessor");
 	MemGameManager memGameManager = (MemGameManager)wac.getBean("memGameManager");
