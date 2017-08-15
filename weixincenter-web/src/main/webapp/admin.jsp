@@ -14,11 +14,11 @@
 <%
 
 	WebApplicationContext wac = WebApplicationContextUtils.getWebApplicationContext(request.getServletContext());
-	int gameId = 0;
+	long gameId = 0;
 	PrintWriter write = response.getWriter();
 	try {
 		write.println(request.getParameter("gameId"));
-		gameId = Integer.valueOf(request.getParameter("gameId"));
+		gameId = Long.valueOf(request.getParameter("gameId"));
 		write.println("gameId:"+gameId);
 	} catch (NumberFormatException e) {
 		gameId = 0;
@@ -31,8 +31,9 @@
 	}
 	JSONArray jsonArray = new JSONArray();
 
+	GameInfo gameInfo = memGameManager.getGame(gameId);
 	if(gameId > 0) {
-		write.print(JSON.toJSONString(memGameManager.gameMap.get(gameId)));
+		write.print(JSON.toJSONString(gameInfo));
 	} else {
 		write.print(JSON.toJSONString(memGameManager.gameMap));
 	}
