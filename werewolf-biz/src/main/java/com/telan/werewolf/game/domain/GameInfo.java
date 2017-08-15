@@ -16,7 +16,6 @@ public class GameInfo extends BaseGameInfo {
     private static final long serialVersionUID = -3408607345186297295L;
     private Map<Long, Player> playerMap;
     private List<BaseRole> roleList;
-    @JSONField(serialize=false)
     private Round currentRound;
     @JSONField(serialize=false)
     private List<Round> roundHistory;

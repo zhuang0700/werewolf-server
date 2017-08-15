@@ -17,9 +17,7 @@
 	long gameId = 0;
 	PrintWriter write = response.getWriter();
 	try {
-		write.println(request.getParameter("gameId"));
 		gameId = Long.valueOf(request.getParameter("gameId"));
-		write.println("gameId:"+gameId);
 	} catch (NumberFormatException e) {
 		gameId = 0;
 	}
