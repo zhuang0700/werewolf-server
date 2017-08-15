@@ -42,4 +42,9 @@ public class BaseRole {
         }
         return false;
     }
+
+    @Override
+    public int hashCode(){
+        return this.getRole();
+    }
 }
