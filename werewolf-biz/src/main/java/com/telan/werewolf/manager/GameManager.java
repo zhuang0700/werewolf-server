@@ -35,12 +35,12 @@ public class GameManager {
 
 	private final static Logger log	= LoggerFactory.getLogger(GameManager.class);
 
-	public Map<Long, GameInfo> batchQueryGameInfo(GamePageQuery gamePageQuery, GameQueryOption queryOption) {
-		List<GameDO> gameDOList = gameDOMapper.pageQuery(gamePageQuery);
-		Map<Long, GameInfo> gameInfoMap = GameConvertor.convertGameInfoMap(gameDOList);
-
-		return gameInfoMap;
-	}
+//	public Map<Long, GameInfo> batchQueryGameInfo(GamePageQuery gamePageQuery, GameQueryOption queryOption) {
+//		List<GameDO> gameDOList = gameDOMapper.pageQuery(gamePageQuery);
+//		Map<Long, GameInfo> gameInfoMap = GameConvertor.convertGameInfoMap(gameDOList);
+//
+//		return gameInfoMap;
+//	}
 
 	public WePageResult<GameDO> batchQueryGameDO(GamePageQuery gamePageQuery) {
 		List<GameDO> gameDOList = gameDOMapper.pageQuery(gamePageQuery);
