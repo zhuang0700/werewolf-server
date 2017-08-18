@@ -151,7 +151,7 @@ public class GameController {
 				gameProcessor.quitGame(param);
 			}
 		}
-//		LOGGER.info("startGame, result=" + JSON.toJSONString(baseResult));
+		LOGGER.info("quitGame, result=" + JSON.toJSONString(baseResult.getValue()));
 		if(!baseResult.isSuccess() && baseResult.getErrorCode() == WeErrorCode.NO_ACTIVE_GAME.getErrorCode()) {
 			map.put("status", 1);
 			map.put("msg", baseResult.getResultMsg());
