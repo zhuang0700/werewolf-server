@@ -255,7 +255,6 @@ public class GameProcessor {
 		WeBaseResult<GameInfo> baseResult = new WeBaseResult<>();
 		GameInfo currentGame = findCurrentGame(userId);
 		if(currentGame == null) {
-			baseResult.setErrorCode(WeErrorCode.NO_ACTIVE_GAME);
 			return baseResult;
 		}
 		baseResult.setValue(currentGame);
