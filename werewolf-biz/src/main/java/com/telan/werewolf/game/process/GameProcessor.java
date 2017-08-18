@@ -375,12 +375,14 @@ public class GameProcessor {
 
 	private WeBaseResult<GameInfo> quitGameAfterStart(GameInfo gameInfo, long playerId) {
 		WeBaseResult<GameInfo> result = new WeBaseResult<>();
-		final Player player = memGameManager.getPlayer(playerId);
+		Player player = memGameManager.getPlayer(playerId);
+		log.info("quitGameAfterStart begin, player:", JSON.toJSONString(player));
 		PlayerEngine.quitGameAfterStart(player);
 		playerManager.updatePlayerById(player.getPlayerDO());
 		GameMsg gameMsg = GameMsgFactory.createGameMsg(GameMsgSubType.QUIT_GAME, Visibility.ALL, new Object[]{player.getPlayerNo()});
 		RecordEngine.sendNormalMsg(gameInfo, gameMsg);
 		memGameManager.removePlayer(player);
+		log.info("quitGameAfterStart finish, player:", JSON.toJSONString(player));
 		result.setValue(gameInfo);
 		return result;
 	}
