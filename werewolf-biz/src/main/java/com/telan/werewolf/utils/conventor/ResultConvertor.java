@@ -135,9 +135,9 @@ public class ResultConvertor {
                 positionAction.actionPlayerIds = PlayerUtil.getPlayerIdsByRoleAndStatus(gameInfo.getPlayerMap(), RoleType.WITCH.getType(), PlayerStatus.LIVE.getType());
                 positionAction.targetPlayerIds = PlayerUtil.getPlayerIdsByRoleAndStatus(gameInfo.getPlayerMap(), -1, PlayerStatus.LIVE.getType());
                 if(stage.getAction(player.getId(), ActionType.POISON.getType()) != null || role.getPoision() < 1) {
-                    action.actionStatus = ActionStatus.ALREADY_ACTION.getType();
+                    positionAction.actionStatus = ActionStatus.ALREADY_ACTION.getType();
                 } else {
-                    action.actionStatus = ActionStatus.WAITING_ACTION.getType();
+                    positionAction.actionStatus = ActionStatus.WAITING_ACTION.getType();
                 }
                 actionList.add(positionAction);
                 return actionList;
