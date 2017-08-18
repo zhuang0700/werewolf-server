@@ -37,9 +37,8 @@ public class GameConvertor{
         Map<Long,GameInfo> gameDOMap = new HashMap<>();
         for(GameDO gameDO : gameDOList) {
             GameInfo gameInfo = new GameInfo(gameDO);
-            if(gameInfo.getGameStatus() == GameStatus.CREATE.getType()) {
-                gameInfo.init();
-            } else {
+            gameInfo.init();
+            if(gameInfo.getGameStatus() != GameStatus.CREATE.getType()) {
                 Set<BaseRole> roleSet = new HashSet<BaseRole>();
                 for(Player player : playerMap.values()) {
                     if(player.getGameId() == gameInfo.getGameId()) {

@@ -120,7 +120,6 @@ public class MemGameManager {
 		gamePageQuery.setNeedPageQuery(false);
 		WePageResult<GameDO> gameDOWePageResult = gameManager.batchQueryGameDO(gamePageQuery);
 		List<GameDO> gameDOList = gameDOWePageResult.getList();
-		Map<Long, GameInfo> gameInfoMap = GameConvertor.convertGameInfoMap(gameDOList);
 		List<Long> gameIdList = new ListConverter<>(GameConvertor.getDefaultConvertor()).convert(gameDOList);
 		PlayerPageQuery playerPageQuery = new PlayerPageQuery();
 		playerPageQuery.setGameIdList(gameIdList);
@@ -140,16 +139,12 @@ public class MemGameManager {
 				}
 				playerMap.put(player.getId(), player);
 				userPlayerMap.put(player.getUserId(), player);
-				GameInfo gameInfo = gameInfoMap.get(player.getGameId());
-				if (gameInfo == null) {
-					logger.error("loadAllLiveGame error. gameInfo lost. player={}", player);
-					continue;
-				}
-				gameInfo.addPlayer(player);
 			}
 		}
-		this.gameMap = gameInfoMap;
 		this.playerMap = playerMap;
+
+		Map<Long, GameInfo> gameInfoMap = GameConvertor.convertGameInfoMap(gameDOList, playerMap);
+		this.gameMap = gameInfoMap;
 		this.userPlayerMap = userPlayerMap;
 	}
 
