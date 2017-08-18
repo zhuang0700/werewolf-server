@@ -47,7 +47,7 @@ public class LoginFilter implements Filter {
             //401未授权访问
             JSONObject responseObject = new JSONObject();
             responseObject.put("status", 0);
-            responseObject.put("code", WXReturnCode.WEIXIN_LOGIN_ERROR);
+            responseObject.put("code", WXReturnCode.WEIXIN_LOGIN_ERROR.getCode());
             responseObject.put("msg", WXReturnCode.WEIXIN_LOGIN_ERROR.getDesc());
             response.setCharacterEncoding("UTF-8");
             PrintWriter out = response.getWriter();

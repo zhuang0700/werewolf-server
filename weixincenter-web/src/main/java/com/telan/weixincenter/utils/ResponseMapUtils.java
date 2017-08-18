@@ -24,9 +24,11 @@ public class ResponseMapUtils {
 		map.put("status", result.isSuccess()?1:0);
 		map.put("msg", result.getResultMsg());
 		map.put("code", result.getErrorCode());
-		GameInfo gameInfo = result.getValue();
-		GameData gameData = ResultConvertor.convertToData(gameInfo, userDO, false);
-		map.put("result", gameData);
+		if(result.isSuccess()) {
+			GameInfo gameInfo = result.getValue();
+			GameData gameData = ResultConvertor.convertToData(gameInfo, userDO, false);
+			map.put("result", gameData);
+		}
 		return map;
 	}
 

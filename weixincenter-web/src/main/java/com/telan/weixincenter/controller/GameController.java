@@ -107,12 +107,12 @@ public class GameController {
 		UserDO userDO = SessionHelper.getUser();
 		WeBaseResult<GameInfo> baseResult = gameProcessor.getCurrentGameInfo(userDO.getId());
 //		LOGGER.info("get game info, result=" + JSON.toJSONString(baseResult));
-		if(!baseResult.isSuccess() && baseResult.getErrorCode() == WeErrorCode.NO_ACTIVE_GAME.getErrorCode()) {
-			map.put("status", 1);
-			map.put("msg", baseResult.getResultMsg());
-			map.put("result", null);
-			return map;
-		}
+//		if(!baseResult.isSuccess() && baseResult.getErrorCode() == WeErrorCode.NO_ACTIVE_GAME.getErrorCode()) {
+//			map.put("status", 1);
+//			map.put("msg", baseResult.getResultMsg());
+//			map.put("result", null);
+//			return map;
+//		}
 		return ResponseMapUtils.convertGameInfo(baseResult, userDO);
 	}
 
@@ -125,12 +125,12 @@ public class GameController {
 		UserDO userDO = SessionHelper.getUser();
 		WeBaseResult<GameInfo> baseResult = gameProcessor.startGame(userDO.getId(), gameId);
 //		LOGGER.info("startGame, result=" + JSON.toJSONString(baseResult));
-		if(!baseResult.isSuccess() && baseResult.getErrorCode() == WeErrorCode.NO_ACTIVE_GAME.getErrorCode()) {
-			map.put("status", 1);
-			map.put("msg", baseResult.getResultMsg());
-			map.put("result", null);
-			return map;
-		}
+//		if(!baseResult.isSuccess() && baseResult.getErrorCode() == WeErrorCode.NO_ACTIVE_GAME.getErrorCode()) {
+//			map.put("status", 1);
+//			map.put("msg", baseResult.getResultMsg());
+//			map.put("result", null);
+//			return map;
+//		}
 		return ResponseMapUtils.convertGameInfo(baseResult, userDO);
 	}
 
@@ -152,12 +152,12 @@ public class GameController {
 			}
 		}
 		LOGGER.info("quitGame, result=" + JSON.toJSONString(baseResult.getValue()));
-		if(!baseResult.isSuccess() && baseResult.getErrorCode() == WeErrorCode.NO_ACTIVE_GAME.getErrorCode()) {
-			map.put("status", 1);
-			map.put("msg", baseResult.getResultMsg());
-			map.put("result", null);
-			return map;
-		}
+//		if(!baseResult.isSuccess() && baseResult.getErrorCode() == WeErrorCode.NO_ACTIVE_GAME.getErrorCode()) {
+//			map.put("status", 1);
+//			map.put("msg", baseResult.getResultMsg());
+//			map.put("result", null);
+//			return map;
+//		}
 		return ResponseMapUtils.convertGameInfo(baseResult, userDO);
 	}
 
