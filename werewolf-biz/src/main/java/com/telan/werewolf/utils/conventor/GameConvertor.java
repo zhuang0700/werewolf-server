@@ -3,14 +3,14 @@ package com.telan.werewolf.utils.conventor;
 import com.telan.werewolf.domain.GameDO;
 import com.telan.werewolf.domain.UserDO;
 import com.telan.werewolf.game.domain.GameInfo;
+import com.telan.werewolf.game.domain.Player;
+import com.telan.werewolf.game.domain.role.BaseRole;
+import com.telan.werewolf.game.enums.GameStatus;
 import com.telan.werewolf.game.param.CreateGameParam;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by weiwenliang on 17/5/31.
@@ -30,14 +30,27 @@ public class GameConvertor{
         return gameDO;
     }
 
-    public static Map<Long, GameInfo> convertGameInfoMap(List<GameDO> gameDOList) {
+    public static Map<Long, GameInfo> convertGameInfoMap(List<GameDO> gameDOList, Map<Long, Player> playerMap) {
         if(CollectionUtils.isEmpty(gameDOList)) {
             return new HashMap<>();
         }
         Map<Long,GameInfo> gameDOMap = new HashMap<>();
         for(GameDO gameDO : gameDOList) {
             GameInfo gameInfo = new GameInfo(gameDO);
-            gameInfo.init();
+            if(gameInfo.getGameStatus() == GameStatus.CREATE.getType()) {
+                gameInfo.init();
+            } else {
+                Set<BaseRole> roleSet = new HashSet<BaseRole>();
+                for(Player player : playerMap.values()) {
+                    if(player.getGameId() == gameInfo.getGameId()) {
+                        gameInfo.addPlayer(player);
+                        roleSet.add(player.getRole());
+                    }
+                }
+                List<BaseRole> roleList = new ArrayList<>();
+                roleList.addAll(roleSet);
+                gameInfo.setRoleList(roleList);
+            }
             gameDOMap.put(gameDO.getId(), gameInfo);
         }
         return gameDOMap;
