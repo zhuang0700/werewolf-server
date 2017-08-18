@@ -62,14 +62,17 @@ public abstract class Stage {
         this.gameInfo = gameInfo;
     }
 
+    @JSONField(serialize=false)
     public GameConfig getGameConfig() {
         return gameInfo.getGameConfig();
     }
 
+    @JSONField(serialize=false)
     public Round getCurrentRound() {
         return gameInfo.getCurrentRound();
     }
 
+    @JSONField(serialize=false)
     public Map<Long, Player> getPlayerMap() {
         return gameInfo.getPlayerMap();
     }

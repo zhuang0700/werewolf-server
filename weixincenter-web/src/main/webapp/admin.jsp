@@ -9,6 +9,7 @@
 <%@ page import="com.alibaba.fastjson.support.spring.FastJsonJsonView" %>
 <%@ page import="com.alibaba.fastjson.JSONArray" %>
 <%@ page import="com.alibaba.fastjson.parser.ParserConfig" %>
+<%@ page import="java.util.Map" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
@@ -30,12 +31,13 @@
 	JSONArray jsonArray = new JSONArray();
 
 	GameInfo gameInfo = memGameManager.getGame(gameId);
+	Map playerMap = memGameManager.playerMap;
 	if(gameId > 0) {
 		write.print(JSON.toJSONString(gameInfo));
 	} else {
 		write.print(JSON.toJSONString(memGameManager.gameMap));
 	}
-
+	write.print(JSON.toJSONString(playerMap));
 	write.flush();
 	write.close();
 
