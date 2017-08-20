@@ -144,13 +144,13 @@ public class GameController {
 		param.setUser(userDO);
 		WeBaseResult<GameInfo> baseResult = gameProcessor.quitGame(param);
 		//TODO: 测试逻辑
-		GameInfo gameInfo = baseResult.getValue();
-		for(Player player : gameInfo.getPlayerMap().values()) {
-			if(player.getUserId() != userDO.getId()) {
-				param.setUser(player.getUserDO());
-				gameProcessor.quitGame(param);
-			}
-		}
+//		GameInfo gameInfo = baseResult.getValue();
+//		for(Player player : gameInfo.getPlayerMap().values()) {
+//			if(player.getUserId() != userDO.getId()) {
+//				param.setUser(player.getUserDO());
+//				gameProcessor.quitGame(param);
+//			}
+//		}
 		LOGGER.info("quitGame, result=" + JSON.toJSONString(baseResult.getValue()));
 //		if(!baseResult.isSuccess() && baseResult.getErrorCode() == WeErrorCode.NO_ACTIVE_GAME.getErrorCode()) {
 //			map.put("status", 1);
