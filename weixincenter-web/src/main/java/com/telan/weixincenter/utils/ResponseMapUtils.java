@@ -1,5 +1,6 @@
 package com.telan.weixincenter.utils;
 
+import com.alibaba.fastjson.JSON;
 import com.telan.werewolf.domain.UserDO;
 import com.telan.werewolf.game.domain.*;
 import com.telan.werewolf.result.WeBaseResult;
@@ -48,6 +49,13 @@ public class ResponseMapUtils {
 		map.put("code", result.getErrorCode());
 		ActionResult actionResult = result.getValue();
 		map.put("result", actionResult);
+		return map;
+	}
+
+	public static Map syncGameInfo(WeBaseResult<GameInfo> result, UserDO userDO) {
+		Map map = convertGameInfo(result, userDO);
+		Map<Long, String> msgMap = new HashMap<>();
+		msgMap.put(userDO.getId(), JSON.toJSONString(map));
 		return map;
 	}
 }

@@ -139,7 +139,6 @@ public class GameController {
 	@LoginRequired
 	public Map quitGame(@RequestBody OperateGameParam param, ModelMap modelMap) throws IOException
 	{
-		Map map = new HashMap();
 		UserDO userDO = SessionHelper.getUser();
 		param.setUser(userDO);
 		WeBaseResult<GameInfo> baseResult = gameProcessor.quitGame(param);
@@ -151,14 +150,16 @@ public class GameController {
 //				gameProcessor.quitGame(param);
 //			}
 //		}
-		LOGGER.info("quitGame, result=" + JSON.toJSONString(baseResult.getValue()));
+//		LOGGER.info("startGame, result=" + JSON.toJSONString(baseResult));
 //		if(!baseResult.isSuccess() && baseResult.getErrorCode() == WeErrorCode.NO_ACTIVE_GAME.getErrorCode()) {
 //			map.put("status", 1);
 //			map.put("msg", baseResult.getResultMsg());
 //			map.put("result", null);
 //			return map;
 //		}
-		return ResponseMapUtils.convertGameInfo(baseResult, userDO);
+		Map map = ResponseMapUtils.convertGameInfo(baseResult, userDO);
+
+		return map;
 	}
 
 	@ResponseBody
@@ -170,7 +171,9 @@ public class GameController {
 		action.setUserDO(userDO);
 		WeBaseResult<ActionResult> baseResult = gameProcessor.playerAction(action);
 //		LOGGER.info("playerAction, result={}", baseResult);
-		return ResponseMapUtils.convertActionResult(baseResult, userDO);
+		Map map = ResponseMapUtils.convertActionResult(baseResult, userDO);
+
+		return map;
 	}
 
 	@ResponseBody
@@ -182,7 +185,9 @@ public class GameController {
 		action.setUserDO(userDO);
 		WeBaseResult<GameInfo> baseResult = gameProcessor.judgeAction(action);
 //		LOGGER.info("JudgeAction, result={}" , baseResult);
-		return ResponseMapUtils.convertGameInfo(baseResult, userDO);
+		Map map = ResponseMapUtils.convertGameInfo(baseResult, userDO);
+
+		return map;
 	}
 
 	@ResponseBody
