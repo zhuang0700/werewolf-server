@@ -3,6 +3,14 @@ package com.telan.werewolf.websocket;
 /**
  * Created by weiwenliang on 2017/8/2.
  */
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.telan.werewolf.event.EventAcceptor;
+import com.telan.werewolf.param.BaseRequestData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -16,6 +24,12 @@ import javax.websocket.server.ServerEndpoint;
  */
 @ServerEndpoint("/websocket")
 public class Webserver {
+
+
+    @Autowired
+    private EventAcceptor eventAcceptor;
+
+    private final static Logger logger = LoggerFactory.getLogger(Webserver.class);
     //静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
     private static int onlineCount = 0;
 
@@ -57,15 +71,23 @@ public class Webserver {
     @OnMessage
     public void onMessage(String message, Session session) {
         System.out.println("来自客户端的消息:" + message);
-        //群发消息
-        for(Webserver item: webSocketSet){
-            try {
-                item.sendMessage(message);
-            } catch (IOException e) {
-                e.printStackTrace();
-                continue;
-            }
-        }
+        eventAcceptor.doAccept(message);
+//        try {
+//            JSONObject jsonObj = (JSONObject) JSON.parse(message);
+//            BaseRequestData baseMsg = com.alibaba.fastjson.JSONObject.toJavaObject(jsonObj, BaseRequestData.class);
+//        } catch (Exception e) {
+//            logger.error("websocket onMessage error. unknown message:", message, e);
+//            System.out.println("websocket onMessage error. unknown message:" + message);
+//        }
+//        //群发消息
+//        for(Webserver item: webSocketSet){
+//            try {
+//                item.sendMessage(message);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                continue;
+//            }
+//        }
     }
 
     /**
@@ -76,7 +98,8 @@ public class Webserver {
     @OnError
     public void onError(Session session, Throwable error){
         System.out.println("发生错误");
-        error.printStackTrace();
+        System.out.println(error.getLocalizedMessage());
+//        error.printStackTrace();
     }
 
     /**
@@ -96,10 +119,14 @@ public class Webserver {
      * @throws IOException
      */
     public static void sendMessage(Map<Long, String> msgs) throws IOException{
-        for(Webserver item: webSocketSet){
-            if(msgs.keySet().contains(item.userId)) {
-                item.session.getBasicRemote().sendText(msgs.get(item.userId));
+        try {
+            for(Webserver item: webSocketSet){
+                if(msgs.keySet().contains(item.userId)) {
+                    item.session.getBasicRemote().sendText(msgs.get(item.userId));
+                }
             }
+        } catch (IOException e) {
+            throw e;
         }
 
         //this.session.getAsyncRemote().sendText(message);

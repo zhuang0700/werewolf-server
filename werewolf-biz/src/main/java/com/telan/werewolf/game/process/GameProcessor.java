@@ -20,11 +20,14 @@ import com.telan.werewolf.manager.GameManager;
 import com.telan.werewolf.manager.MemGameManager;
 import com.telan.werewolf.manager.PlayerManager;
 import com.telan.werewolf.manager.UserManager;
+import com.telan.werewolf.param.BaseResponseData;
 import com.telan.werewolf.query.PlayerPageQuery;
 import com.telan.werewolf.result.WeBaseResult;
 import com.telan.werewolf.result.WeResultSupport;
+import com.telan.werewolf.utils.ResponseMapUtils;
 import com.telan.werewolf.utils.conventor.GameConvertor;
 import com.telan.werewolf.utils.conventor.PlayerConvertor;
+import com.telan.werewolf.utils.conventor.ResultConvertor;
 import com.telan.werewolf.websocket.Webserver;
 import org.jsoup.Connection;
 import org.slf4j.Logger;
@@ -32,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -190,12 +194,12 @@ public class GameProcessor {
 
 	public WeBaseResult<ActionResult> playerAction(PlayerAction action) {
 		WeBaseResult<ActionResult> result = new WeBaseResult<>();
-		GameInfo gameInfo = memGameManager.getGame(action.gameId);
+		GameInfo gameInfo = memGameManager.getGame(action.getGameId());
 		if(gameInfo == null) {
 			result.setErrorCode(WeErrorCode.WRONG_GAME);
 			return result;
 		}
-		Player player = memGameManager.getPlayerByUserId(action.getUserDO().getId(), action.gameId);
+		Player player = memGameManager.getPlayerByUserId(action.getUserDO().getId(), action.getGameId());
 		if(player == null) {
 			result.setErrorCode(WeErrorCode.WRONG_GAME);
 			return result;
@@ -382,7 +386,7 @@ public class GameProcessor {
 		GameMsg gameMsg = GameMsgFactory.createGameMsg(GameMsgSubType.QUIT_GAME, Visibility.ALL, new Object[]{player.getPlayerNo()});
 		RecordEngine.sendNormalMsg(gameInfo, gameMsg);
 		memGameManager.removePlayer(player);
-		log.info("quitGameAfterStart finish, player:"+JSON.toJSONString(player));
+		log.info("quitGameAfterStart finish, player:" + JSON.toJSONString(player));
 		result.setValue(gameInfo);
 		return result;
 	}
@@ -394,5 +398,30 @@ public class GameProcessor {
 		RoundEngine.startRound(gameInfo);
 		PlayerEngine.setGameStart(gameInfo.getPlayerMap());
 		gameInfo.setGameStatus(GameStatus.PROCESS.getType());
+	}
+
+	public void updateGameInfo(GameInfo gameInfo) {
+		Map<Long,String> responseMap = new HashMap<>();
+		for(Player player : gameInfo.getPlayerMap().values()) {
+			UserDO userDO = player.getUserDO();
+			BaseResponseData baseResponseData = ResponseMapUtils.getGameInfoResponse(gameInfo, userDO);
+			responseMap.put(userDO.getId(), JSON.toJSONString(baseResponseData));
+		}
+		int retry = 0;
+		while (retry < 3) {
+			try {
+                Webserver.sendMessage(responseMap);
+            } catch (IOException e) {
+                log.error("sendMessage failed. retried {} times", retry, e);
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+				retry++;
+				continue;
+            }
+			break;
+		}
 	}
 }

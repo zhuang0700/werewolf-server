@@ -18,6 +18,7 @@ public class WeErrorCode implements Serializable{
 	public static final WeErrorCode PARAM_ERROR=new WeErrorCode(17000004,"参数异常");
 	public static final WeErrorCode TAIR_ERROR = new WeErrorCode(17000005,"tair操作异常");
 
+	public static final WeErrorCode WEIXIN_LOGIN_ERROR = new WeErrorCode(8000016,"微信账号未登录");
 
 	public static final WeErrorCode UNSUPPORT_ACTION = new WeErrorCode(18000001,"不支持的操作");
 	public static final WeErrorCode DUPLICATE_ACTION = new WeErrorCode(18000002,"已执行过该行动");

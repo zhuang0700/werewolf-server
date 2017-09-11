@@ -1,6 +1,7 @@
 package com.telan.werewolf.game.domain;
 
 import com.telan.werewolf.domain.UserDO;
+import com.telan.werewolf.param.GameBaseRequest;
 
 import java.util.Date;
 import java.util.List;
@@ -8,14 +9,12 @@ import java.util.List;
 /**
  * Created by weiwenliang on 17/5/15.
  */
-public class PlayerAction {
+public class PlayerAction extends GameBaseRequest {
     private UserDO userDO;
 
     public long fromPlayerId;
 
     public long toPlayerId;
-
-    public long gameId;
 
     public List<Long> extraPlayerList;
 

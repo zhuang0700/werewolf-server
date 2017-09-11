@@ -1,8 +1,9 @@
-package com.telan.weixincenter.utils;
+package com.telan.werewolf.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.telan.werewolf.domain.UserDO;
 import com.telan.werewolf.game.domain.*;
+import com.telan.werewolf.param.BaseResponseData;
 import com.telan.werewolf.result.WeBaseResult;
 import com.telan.werewolf.result.WeResultSupport;
 import com.telan.werewolf.utils.conventor.ResultConvertor;
@@ -57,5 +58,45 @@ public class ResponseMapUtils {
 		Map<Long, String> msgMap = new HashMap<>();
 		msgMap.put(userDO.getId(), JSON.toJSONString(map));
 		return map;
+	}
+
+	public static BaseResponseData getFailResponse(WeResultSupport resultSupport) {
+		BaseResponseData response = new BaseResponseData();
+		response.setStatus(0);
+		response.setCode(resultSupport.getErrorCode());
+		response.setMsg(resultSupport.getResultMsg());
+		return response;
+	}
+
+	public static BaseResponseData getGameInfoResponse(WeBaseResult<GameInfo> result, UserDO userDO) {
+		BaseResponseData response = new BaseResponseData();
+		response.setStatus(1);
+		response.setCode(result.getErrorCode());
+		response.setMsg(result.getResultMsg());
+		if(result.isSuccess()) {
+			GameData gameData = ResultConvertor.convertToData(result.getValue(), userDO, false);
+			response.setGameData(gameData);
+		}
+		return response;
+	}
+
+
+	public static BaseResponseData getGameInfoResponse(GameInfo gameInfo, UserDO userDO) {
+		BaseResponseData response = new BaseResponseData();
+		response.setStatus(1);
+		GameData gameData = ResultConvertor.convertToData(gameInfo, userDO, false);
+		response.setGameData(gameData);
+		return response;
+	}
+
+	public static BaseResponseData getActionResultResponse(WeBaseResult<ActionResult> result, UserDO userDO) {
+		BaseResponseData response = new BaseResponseData();
+		response.setStatus(1);
+		response.setCode(result.getErrorCode());
+		response.setMsg(result.getResultMsg());
+		if(result.isSuccess()) {
+			response.setActionResult(result.getValue());
+		}
+		return response;
 	}
 }

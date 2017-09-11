@@ -1,16 +1,16 @@
 package com.telan.werewolf.game.param;
 
 import com.telan.werewolf.domain.UserDO;
+import com.telan.werewolf.game.domain.BaseGameInfo;
+import com.telan.werewolf.param.GameBaseRequest;
 
 /**
  * Created by weiwenliang on 17/5/29.
  */
-public class OperateGameParam {
+public class OperateGameParam extends GameBaseRequest{
     private UserDO user;
 
     private int mockPlayerNum;
-
-    private long gameId;
 
     public UserDO getUser() {
         return user;
@@ -18,14 +18,6 @@ public class OperateGameParam {
 
     public void setUser(UserDO user) {
         this.user = user;
-    }
-
-    public long getGameId() {
-        return gameId;
-    }
-
-    public void setGameId(long gameId) {
-        this.gameId = gameId;
     }
 
     public int getMockPlayerNum() {
