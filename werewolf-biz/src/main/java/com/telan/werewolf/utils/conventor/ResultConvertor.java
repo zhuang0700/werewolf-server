@@ -6,6 +6,7 @@ import com.telan.werewolf.game.domain.*;
 import com.telan.werewolf.game.domain.record.BaseRecord;
 import com.telan.werewolf.game.domain.role.WitchRole;
 import com.telan.werewolf.game.enums.*;
+import com.telan.werewolf.game.manager.GameEngine;
 import com.telan.werewolf.game.vo.GameState;
 import com.telan.werewolf.game.vo.PlayerVO;
 import com.telan.werewolf.utils.ActionUtil;
@@ -59,7 +60,8 @@ public class ResultConvertor {
             }
         }
         gameData.actionList = convertActionList(gameInfo, myPlayer);
-        if(gameInfo.getGameStatus() == GameStatus.PROCESS.getType()) {
+        int gameStatus = GameEngine.checkGameStatus(gameInfo);
+        if(gameStatus == GameStatus.PROCESS.getType()) {
             gameData.gameState = new GameState();
             gameData.gameState.setRoundStatus(gameInfo.getCurrentRound().getRoundStatus());
             gameData.gameState.setRoundNo(gameInfo.getCurrentRound().getRoundNo());

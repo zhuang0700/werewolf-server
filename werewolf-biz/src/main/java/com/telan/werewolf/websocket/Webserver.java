@@ -71,7 +71,12 @@ public class Webserver {
     @OnMessage
     public void onMessage(String message, Session session) {
         System.out.println("来自客户端的消息:" + message);
-        eventAcceptor.doAccept(message);
+        try {
+            eventAcceptor.doAccept(message);
+            sendMessage(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 //        try {
 //            JSONObject jsonObj = (JSONObject) JSON.parse(message);
 //            BaseRequestData baseMsg = com.alibaba.fastjson.JSONObject.toJavaObject(jsonObj, BaseRequestData.class);

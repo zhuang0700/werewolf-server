@@ -21,10 +21,18 @@ public class GameEngine {
         Player creator = gameInfo.getCreator();
         if(creator == null || creator.getGameStatus() == BaseStatus.DELETED.getType()) {
             return GameStatus.FINISH.getType();
-        } else {
-            //TODO: 继续完善
+        } else if(gameInfo.getGameStatus() == GameStatus.PROCESS.getType()){
+            try {
+                check(gameInfo.getCurrentRound()!=null);
+                check(gameInfo.getCreator()!=null);
+                check(!CollectionUtils.isEmpty(gameInfo.getPlayerMap()));
+                check(!CollectionUtils.isEmpty(gameInfo.getRoleList()));
+            } catch (Exception e) {
+                return -1;
+            }
             return gameInfo.getGameStatus();
         }
+        return gameInfo.getGameStatus();
     }
 
     public static boolean tryEndGame(GameInfo currentGame) {
@@ -65,5 +73,11 @@ public class GameEngine {
             }
         }
         return GameResult.NOT_FINISH.getType();
+    }
+
+    public static void check(boolean exp) throws Exception {
+        if(!exp) {
+            throw new Exception();
+        }
     }
 }
