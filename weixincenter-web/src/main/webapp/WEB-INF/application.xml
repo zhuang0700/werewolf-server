@@ -34,7 +34,7 @@
 	<import resource="../META-INF/spring/werewolf/application-persistance.xml"/>
 
 	<import resource="../META-INF/spring/werewolf/application-manager.xml"/>
-
+	<import resource="../META-INF/spring/werewolf/application-socket.xml"/>
 
 	<!--<import resource="../META-INF/spring/tfs.xml"/>-->
 </beans>

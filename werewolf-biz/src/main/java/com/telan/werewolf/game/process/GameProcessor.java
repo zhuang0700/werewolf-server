@@ -409,18 +409,18 @@ public class GameProcessor {
 		}
 		int retry = 0;
 		while (retry < 3) {
-			try {
-                Webserver.sendMessage(responseMap);
-            } catch (IOException e) {
-                log.error("sendMessage failed. retried {} times", retry, e);
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-				}
-				retry++;
-				continue;
-            }
+//			try {
+//                Webserver.sendMessage(responseMap);
+//            } catch (IOException e) {
+//                log.error("sendMessage failed. retried {} times", retry, e);
+//				try {
+//					Thread.sleep(500);
+//				} catch (InterruptedException e1) {
+//					e1.printStackTrace();
+//				}
+//				retry++;
+//				continue;
+//            }
 			break;
 		}
 	}
