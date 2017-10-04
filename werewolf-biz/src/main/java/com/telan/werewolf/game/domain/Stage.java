@@ -191,7 +191,7 @@ public abstract class Stage {
     class MyTask extends TimerTask {
         public void run(){
             if(status == StageStatus.WAITING_ACTION.getType()) {
-                System.out.println("-------timer start: stage type = " + stageType.name());
+//                System.out.println("-------timer start: stage type = " + stageType.name());
                 analyse();
             } else {
                 cancel();
