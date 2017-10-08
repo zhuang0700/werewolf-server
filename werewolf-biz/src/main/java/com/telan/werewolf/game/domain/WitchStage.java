@@ -66,13 +66,13 @@ public class WitchStage extends Stage {
         WitchRole witchRole = (WitchRole)witchs.get(0).getRole();
         PlayerAction saveAction = ActionUtil.findActionByFromIdAndType(actionList, -1, ActionType.SAVE.getType());
         PlayerAction poisionAction = ActionUtil.findActionByFromIdAndType(actionList, -1, ActionType.POISON.getType());
-        if(saveAction == null && witchRole.getMedicineLeft() >= 1) {
-            return;
+        if(saveAction != null || witchRole.getMedicineLeft() < 1) {
+            finish();
         }
-        if(poisionAction == null && witchRole.getPoision() >= 1) {
-            return;
+        if(poisionAction != null || witchRole.getPoision() < 1) {
+            finish();
         }
-        finish();
+        return;
     }
 
     @Override

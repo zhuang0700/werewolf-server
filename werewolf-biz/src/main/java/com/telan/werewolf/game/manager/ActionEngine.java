@@ -13,7 +13,7 @@ import com.telan.werewolf.utils.ActionUtil;
 public class ActionEngine {
     public static  WeBaseResult<ActionResult> checkAction(Player player, PlayerAction action) {
         WeBaseResult<ActionResult> resultSupport = new WeBaseResult<ActionResult>();
-        if(player.getStatus() == PlayerStatus.DEAD.getType()) {
+        if(player == null || player.getStatus() == PlayerStatus.DEAD.getType()) {
             resultSupport.setErrorCode(WeErrorCode.DEAD_ACTION);
             return resultSupport;
         }
@@ -39,7 +39,11 @@ public class ActionEngine {
             baseResult.setErrorCode(WeErrorCode.WRONG_STAGE_ACTION);
             return baseResult;
         }
-        baseResult = stage.userAction(player, action);
+        try {
+            baseResult = stage.userAction(player, action);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 //        switch (actionType) {
 //            case KILL:
 //                WolfStage wolfStage = (WolfStage)currentRound.getStageByType(StageType.WOLF);

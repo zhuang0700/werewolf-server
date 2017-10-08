@@ -68,7 +68,7 @@ public class RecordEngine {
                 break;
             case SAVE:
                 visibility.setVisableRoleType(new ArrayList<Integer>(){{add(RoleType.WITCH.getType());}});
-                msg = GameMsgFactory.createGameMsg(GameMsgSubType.CURE_ACTION, visibility, new Object[]{fromPlayer.getPlayerNo(), toPlayer.getPlayerNo()});
+                msg = GameMsgFactory.createGameMsg(GameMsgSubType.CURE_ACTION, visibility, new Object[]{fromPlayer.getPlayerNo()});
                 break;
             case POISON:
                 visibility.setVisableRoleType(new ArrayList<Integer>(){{add(RoleType.WITCH.getType());}});

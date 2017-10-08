@@ -50,6 +50,14 @@ public abstract class Stage {
 
     protected List<PlayerAction> actionList;
 
+    public int getStatus() {
+        return status;
+    }
+
+    public String getStageTypeDesc() {
+        return stageType.getDesc();
+    }
+
     public PlayerAction getAction(long fromId) {
         return ActionUtil.findActionByFromId(actionList, fromId);
     }

@@ -88,4 +88,8 @@ public class GameInfo extends BaseGameInfo {
         }
         return null;
     }
+
+    public List<Player> getPlayerList() {
+        return new ArrayList<>(playerMap.values());
+    }
 }

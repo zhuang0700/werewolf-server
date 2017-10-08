@@ -119,8 +119,9 @@ public class GameProcessor {
 				playerDO = playerManager.insertPlayer(playerDO);
 				Player player = PlayerConvertor.convertPlayer(playerDO, param.getUser());
 				gameInfo.addPlayer(player);
+				memGameManager.addPlayer(player);
 				baseResult.setValue(gameInfo);
-//				memGameManager.syncGameToDB(gameInfo.getGameId(), true, false);
+				memGameManager.syncGameToDB(gameInfo.getGameId(), true, false);
 				return baseResult;
 			} else {
 				baseResult.setErrorCode(WeErrorCode.MAX_PLAYER_ACHIVED);
