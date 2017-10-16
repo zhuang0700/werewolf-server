@@ -44,6 +44,8 @@ public class GameEngine {
         currentGame.setGameStatus(GameStatus.FINISH.getType());
         currentGame.getGameDO().setResult(gameResult);
         RoundEngine.finishRound(currentGame, true);
+        GameMsg gameEndMsg = GameMsgFactory.createGameMsg(GameMsgSubType.GAME_RESULT, Visibility.ALL, new Object[]{GameResult.getByType(gameResult).getDesc()});
+        RecordEngine.sendNormalMsg(currentGame, gameEndMsg);
 //        PlayerEngine.setGameEnd(currentGame.getPlayerMap());
         return true;
     }

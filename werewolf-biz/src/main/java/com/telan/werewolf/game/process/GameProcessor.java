@@ -346,7 +346,7 @@ public class GameProcessor {
 
 		long gameId = 0;
 		if(player == null) {
-			gameId = findCurrentGameIdFromDB(userId);
+			return null;
 		} else {
 			if(player.getGameStatus() == BaseStatus.DELETED.getType()) {
 				memGameManager.removePlayer(player);

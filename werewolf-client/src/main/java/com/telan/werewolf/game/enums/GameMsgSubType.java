@@ -27,7 +27,7 @@ public enum GameMsgSubType {
 
     QUIT_GAME("{0}号玩家退出了游戏",6,6001),
     GAME_FINISH("游戏结束",6,6002),
-    GAME_RESULT("游戏结束,{0}胜利",6,6003),
+    GAME_RESULT("游戏结束,{0}",6,6003),
     GAME_ROLE_RESULT("{0}号身份：{1}",6,6004),
     ;
     private String desc;

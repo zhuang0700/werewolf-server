@@ -35,9 +35,34 @@ public class ResultConvertor {
                 break;
             }
         }
+        gameData.gameState = new GameState();
+        if(gameInfo.getGameStatus() == GameStatus.PROCESS.getType()) {
+            gameData.gameState.setRoundStatus(gameInfo.getCurrentRound().getRoundStatus());
+            gameData.gameState.setRoundNo(gameInfo.getCurrentRound().getRoundNo());
+            List<Integer> stageList = new ArrayList<>();
+            for(Stage stage : gameInfo.getCurrentRound().getAllStageList()) {
+                if(stage.status == StageStatus.WAITING_ACTION.getType()) {
+                    stageList.add(stage.stageType.getType());
+                }
+            }
+            gameData.gameState.setStageTypeList(stageList);
+        }
         boolean gameFinish = false;
         if(gameInfo.getGameStatus() == GameStatus.FINISH.getType()) {
             gameFinish = true;
+            if(gameInfo.getGameDO().getResult() == GameResult.GOOD_WIN.getType()) {
+                if(myPlayer.getRoleType() == RoleType.WOLF.getType()){
+                    gameData.gameState.setResult(PlayerResult.LOSE.getType());
+                } else {
+                    gameData.gameState.setResult(PlayerResult.WIN.getType());
+                }
+            } else if(gameInfo.getGameDO().getResult() == GameResult.WOLF_WIN.getType()) {
+                if(myPlayer.getRoleType() == RoleType.WOLF.getType()){
+                    gameData.gameState.setResult(PlayerResult.WIN.getType());
+                } else {
+                    gameData.gameState.setResult(PlayerResult.LOSE.getType());
+                }
+            }
         }
         if(myPlayer != null) {
             boolean shareRoleInfo = gameInfo.getGameConfig().getShareInfoRoles().contains(myPlayer.getRoleType());
@@ -60,19 +85,7 @@ public class ResultConvertor {
             }
         }
         gameData.actionList = convertActionList(gameInfo, myPlayer);
-        int gameStatus = GameEngine.checkGameStatus(gameInfo);
-        if(gameStatus == GameStatus.PROCESS.getType()) {
-            gameData.gameState = new GameState();
-            gameData.gameState.setRoundStatus(gameInfo.getCurrentRound().getRoundStatus());
-            gameData.gameState.setRoundNo(gameInfo.getCurrentRound().getRoundNo());
-            List<Integer> stageList = new ArrayList<>();
-            for(Stage stage : gameInfo.getCurrentRound().getAllStageList()) {
-                if(stage.status == StageStatus.WAITING_ACTION.getType()) {
-                    stageList.add(stage.stageType.getType());
-                }
-            }
-            gameData.gameState.setStageTypeList(stageList);
-        }
+
         return gameData;
     }
 
