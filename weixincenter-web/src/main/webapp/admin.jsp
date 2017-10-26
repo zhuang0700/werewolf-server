@@ -112,6 +112,34 @@
 			write.flush();
 			write.close();
 		}
+		if(actionType.equals("sheriffAction")) {
+			PlayerAction action = new PlayerAction();
+			action.fromPlayerId = fromId > 0?fromId:3;
+			action.toPlayerId = toId > 0?toId:2;
+			action.setGameId(gameId);
+			action.actionType = ActionType.RUN_SHERIFF.getType();
+			UserDO userDO = userManager.mockUser(request);
+			action.setUserDO(userDO);
+			WeBaseResult<ActionResult> baseResult = gameProcessor.playerAction(action);
+			write.print(baseResult.isSuccess());
+			write.print(baseResult.getResultMsg());
+			write.flush();
+			write.close();
+		}
+		if(actionType.equals("voteAction")) {
+			PlayerAction action = new PlayerAction();
+			action.fromPlayerId = fromId > 0?fromId:3;
+			action.toPlayerId = toId > 0?toId:2;
+			action.setGameId(gameId);
+			action.actionType = ActionType.VOTE.getType();
+			UserDO userDO = userManager.mockUser(request);
+			action.setUserDO(userDO);
+			WeBaseResult<ActionResult> baseResult = gameProcessor.playerAction(action);
+			write.print(baseResult.isSuccess());
+			write.print(baseResult.getResultMsg());
+			write.flush();
+			write.close();
+		}
 		if(actionType.equals("addPlayer")) {
 			OperateGameParam param = new OperateGameParam();
 			UserDO userDO = userManager.mockUser(request);

@@ -19,6 +19,7 @@ public class GameInfo extends BaseGameInfo {
     private Round currentRound;
     @JSONField(serialize=false)
     private List<Round> roundHistory;
+    private long sheriffPlayerId = 0;
 
     public void init() {
         this.playerMap = new HashMap<>();
@@ -87,6 +88,14 @@ public class GameInfo extends BaseGameInfo {
             }
         }
         return null;
+    }
+
+    public long getSheriffPlayerId() {
+        return sheriffPlayerId;
+    }
+
+    public void setSheriffPlayerId(long sheriffPlayerId) {
+        this.sheriffPlayerId = sheriffPlayerId;
     }
 
     public List<Player> getPlayerList() {

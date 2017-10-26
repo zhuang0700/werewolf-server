@@ -55,7 +55,7 @@ public class GameProcessor {
 	private final static Logger log	= LoggerFactory.getLogger(GameProcessor.class);
 
 	public void loadAllLiveGame() {
-		memGameManager.loadAllLiveGame();
+		memGameManager.init();
 		for(GameInfo gameInfo : memGameManager.gameMap.values()) {
 			if(gameInfo.getGameStatus() == GameStatus.CREATE.getType()) {
 				eraseGameIfQuit(gameInfo);

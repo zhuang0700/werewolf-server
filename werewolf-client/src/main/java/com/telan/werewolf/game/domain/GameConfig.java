@@ -26,7 +26,7 @@ public class GameConfig implements Serializable {
     //法官角色id
     private long judgePlayerId = 0;
 
-    private String victoryRule = VICTORY_RULE_SIDE;
+    private String victoryRule = VICTORY_RULE_CAMP;
 
     private List<Integer> shareInfoRoles = new ArrayList<>();
 

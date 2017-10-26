@@ -114,7 +114,13 @@ public class MemGameManager {
 		return player;
 	}
 
-	public void loadAllLiveGame() {
+	public void init() {
+		gameMap = new HashMap<>();
+		playerMap = new HashMap<>();
+		userPlayerMap = new HashMap<>();
+	}
+
+	public void loadAllAliveGame(){
 		GamePageQuery gamePageQuery = new GamePageQuery();
 		gamePageQuery.setStatusList(GameStatus.getLiveStatus());
 		gamePageQuery.setNeedPageQuery(false);
@@ -126,10 +132,9 @@ public class MemGameManager {
 		playerPageQuery.setNeedPageQuery(false);
 		playerPageQuery.setGameStatus(BaseStatus.AVAILABLE.getType());
 		List<PlayerDO> playerDOList = playerManager.pageQuery(playerPageQuery);
+
 		Map<Long, UserDO> userDOMap = userManager.getUserByIds(PlayerConvertor.convertUserIdList(playerDOList));
 
-		Map<Long, Player> playerMap = new HashMap<>();
-		Map<Long, Player> userPlayerMap = new HashMap<>();
 		if(!CollectionUtils.isEmpty(userDOMap) && !CollectionUtils.isEmpty(playerDOList)) {
 			for(PlayerDO playerDO : playerDOList) {
 				Player player = PlayerConvertor.convertPlayer(playerDO, userDOMap.get(playerDO.getUserId()));
@@ -141,11 +146,7 @@ public class MemGameManager {
 				userPlayerMap.put(player.getUserId(), player);
 			}
 		}
-		this.playerMap = playerMap;
-
-		Map<Long, GameInfo> gameInfoMap = GameConvertor.convertGameInfoMap(gameDOList, playerMap);
-		this.gameMap = gameInfoMap;
-		this.userPlayerMap = userPlayerMap;
+		this.gameMap = GameConvertor.convertGameInfoMap(gameDOList, playerMap);
 	}
 
 	public void syncAllGameToDB(boolean eraseExpireGame) {

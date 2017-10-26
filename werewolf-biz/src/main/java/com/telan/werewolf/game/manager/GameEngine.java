@@ -82,4 +82,9 @@ public class GameEngine {
             throw new Exception();
         }
     }
+
+    public static void changeSheriff(GameInfo gameInfo, long newSheriffId) {
+        gameInfo.setSheriffPlayerId(newSheriffId);
+        gameInfo.getCurrentRound().setSheriffPlayerId(newSheriffId);
+    }
 }

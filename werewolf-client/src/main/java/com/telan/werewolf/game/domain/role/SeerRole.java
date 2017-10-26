@@ -9,5 +9,7 @@ public class SeerRole extends BaseRole {
 
     public SeerRole(){
         this.setRole(RoleType.SEER.getType());
+        this.setName(RoleType.SEER.getName());
+        this.setDesc(RoleType.SEER.getDescription());
     }
 }

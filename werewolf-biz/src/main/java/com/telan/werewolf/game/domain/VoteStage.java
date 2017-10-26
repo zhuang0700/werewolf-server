@@ -1,6 +1,7 @@
 package com.telan.werewolf.game.domain;
 
 import com.telan.werewolf.enums.WeErrorCode;
+import com.telan.werewolf.factory.GameMsgFactory;
 import com.telan.werewolf.game.domain.record.BaseRecord;
 import com.telan.werewolf.game.domain.role.BaseRole;
 import com.telan.werewolf.game.enums.*;
@@ -33,6 +34,8 @@ public class VoteStage extends Stage {
 
     @Override
     public void roleStart() {
+        GameMsg msg = GameMsgFactory.createGameMsg(GameMsgSubType.STAGE_START, Visibility.ALL, new Object[]{stageType.getDesc()});
+        RecordEngine.sendNormalMsg(gameInfo, msg);
         waitingAction();
     }
 

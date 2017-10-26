@@ -23,6 +23,15 @@ public class Round implements Serializable{
     private List<BaseRecord> recordList;
     private Stage hunterStage;
     private List<Stage> allStageList;
+    private long sheriffPlayerId;
+
+    public long getSheriffPlayerId() {
+        return sheriffPlayerId;
+    }
+
+    public void setSheriffPlayerId(long sheriffPlayerId) {
+        this.sheriffPlayerId = sheriffPlayerId;
+    }
 
     public int getRoundNo() {
         return roundNo;

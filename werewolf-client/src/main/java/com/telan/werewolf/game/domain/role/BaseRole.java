@@ -1,5 +1,8 @@
 package com.telan.werewolf.game.domain.role;
 
+import com.telan.werewolf.game.enums.RoleType;
+import org.springframework.util.StringUtils;
+
 /**
  * Created by weiwenliang on 17/5/15.
  */
@@ -9,6 +12,9 @@ public class BaseRole {
     private int role;
 
     public String getDesc() {
+        if(StringUtils.isEmpty(desc)) {
+            return RoleType.getByType(role).getDescription();
+        }
         return desc;
     }
 
@@ -17,6 +23,9 @@ public class BaseRole {
     }
 
     public String getName() {
+        if(StringUtils.isEmpty(name)) {
+            return RoleType.getByType(role).getName();
+        }
         return name;
     }
 

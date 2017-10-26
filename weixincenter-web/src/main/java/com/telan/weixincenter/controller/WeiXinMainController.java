@@ -157,4 +157,55 @@ public class WeiXinMainController extends BaseController {
 		map.put("status", 1);
 		return map;
 	}
+
+	@ResponseBody
+	@RequestMapping(value = "/encypt", method=RequestMethod.POST )
+	public Map encypt() throws IOException
+	{
+		HttpServletRequest request = SpringHttpHolder.getRequest();
+		HttpServletResponse response = SpringHttpHolder.getResponse();
+		// 将请求、响应的编码均设置为UTF-8（防止中文乱码）
+		request.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
+
+//		InputStream input = request.getInputStream();
+//		Map requestMap = request.getParameterMap();
+		String encryptedData = request.getParameter("encryptedData");
+		String iv = request.getParameter("iv");
+		String code = request.getParameter("code");
+		LOGGER.info("encryptedData={}, iv={}, code={}",encryptedData, iv, code);
+
+		//处理请求
+		UserSessionInfo userSessionInfo = wxSessionManager.getSessionInfo(encryptedData, iv, code);
+		Map map = new HashMap();
+		if(userSessionInfo == null) {
+			LOGGER.error("wxSessionManager.getSessionInfo(encryptedData, iv, code); failed.");
+			map.put("status", 0);
+			map.put("msg", "解析用户信息失败");
+			return map;
+		}
+		String sessionKey = userSessionInfo.getSessionKey();
+		String unionId = userSessionInfo.getUnionId();
+		String openId = userSessionInfo.getOpenId();
+		UserDO userDO = new UserDO();
+		userDO.setSessionKey(sessionKey);
+		userDO.setStatus(BaseStatus.AVAILABLE.getType());
+		userDO.setGmtCreated(new Date());
+		userDO.setGmtModified(new Date());
+		userDO.setNick(userSessionInfo.getNickName());
+		userDO.setAvatar(userSessionInfo.getAvatarUrl());
+		userDO.setUnionId(unionId);
+		userDO.setOpenId(openId);
+		String werewolfSessionKey = userManager.login(sessionKey, userDO);
+//
+//		PrintWriter out = response.getWriter();
+//		//写入响应内容到response中
+//		out.print(responseContent);
+//		out.close();
+		map.put("userInfo", userSessionInfo);
+		map.put("thirdSessionKey", werewolfSessionKey);
+		map.put("msg", "success");
+		map.put("status", 1);
+		return map;
+	}
 }
