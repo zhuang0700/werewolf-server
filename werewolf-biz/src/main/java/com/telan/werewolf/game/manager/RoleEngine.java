@@ -43,7 +43,7 @@ public class RoleEngine {
             case 4:
             case 5:
             case 6:
-                int[] roleTypes_6 = {RoleType.WOLF.getType(),RoleType.WOLF.getType(),RoleType.SEER.getType(),RoleType.VILLAGER.getType(),RoleType.VILLAGER.getType(),RoleType.VILLAGER.getType()};
+                int[] roleTypes_6 = {RoleType.WOLF.getType(),RoleType.VILLAGER.getType(),RoleType.VILLAGER.getType(),RoleType.VILLAGER.getType(),RoleType.VILLAGER.getType(),RoleType.VILLAGER.getType()};
                 return formRoleList(roleTypes_6);
             case 7:
             case 8:

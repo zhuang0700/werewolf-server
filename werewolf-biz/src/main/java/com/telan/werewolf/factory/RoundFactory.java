@@ -19,7 +19,7 @@ public class RoundFactory {
         Round round = new Round();
         round.setRoundNo(roundNo);
         round.setRoundStatus(RoundStatus.NOT_START.getType());
-        List<Stage> dayStageList = StageFactory.createDefaultDayStages(roundNo==1, gameInfo);
+        List<Stage> dayStageList = StageFactory.createDefaultDayStages(roundNo==1&&gameInfo.getGameConfig().isNeedSheriff(), gameInfo);
         round.setDayStageList(findHeadStages(dayStageList));
         round.addStageList(dayStageList);
         List<Stage> nightStageList = StageFactory.createDefaultNightStages(gameInfo.getRoleList(), gameInfo);

@@ -100,8 +100,9 @@ public class SheriffStage extends Stage {
                 voteMap.get(action.toPlayerId).add(action);
             }
             analyse();
+        }else{
+            resultSupport.setErrorCode(WeErrorCode.UNSUPPORT_ACTION);
         }
-        resultSupport.setErrorCode(WeErrorCode.UNSUPPORT_ACTION);
         return resultSupport;
     }
 

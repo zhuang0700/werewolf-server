@@ -42,12 +42,22 @@ public class GameConfig implements Serializable {
 
     private boolean customRoleList = false;
 
+    private boolean needSheriff = false;
+
     public GameConfig(){
         shareInfoRoles.add(RoleType.WOLF.getType());
         actionTimeoutMap = new HashMap<>();
         for(StageType stageType : StageType.values()) {
             actionTimeoutMap.put(stageType.getType(), defaultActionTimeout);
         }
+    }
+
+    public boolean isNeedSheriff() {
+        return needSheriff;
+    }
+
+    public void setNeedSheriff(boolean needSheriff) {
+        this.needSheriff = needSheriff;
     }
 
     public int getMaxEqualVoteBeforeNight() {

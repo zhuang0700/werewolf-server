@@ -92,6 +92,9 @@ public class ResultConvertor {
     //只填装该用户可用action
     public static List<Action> convertActionList(GameInfo gameInfo, Player player) {
         Round currentRound = gameInfo.getCurrentRound();
+        if(player.getStatus() != PlayerStatus.LIVE.getType()) {
+            return new ArrayList<>();
+        }
         List<Action> actionList = new ArrayList<>();
         if(currentRound != null) {
             if((currentRound.getRoundStatus() == RoundStatus.DAY.getType() || currentRound.getRoundStatus() == RoundStatus.DARK.getType()) && !CollectionUtils.isEmpty(currentRound.getAllStageList())) {
