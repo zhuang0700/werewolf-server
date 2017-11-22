@@ -314,7 +314,7 @@ public class GameProcessor {
 	public void eraseGameIfQuit(GameInfo gameInfo) {
 		Player player = memGameManager.getPlayerByUserId(gameInfo.getCreatorId(), gameInfo.getGameId());
 		if(GameEngine.checkGameStatus(gameInfo) == GameStatus.FINISH.getType()) {
-			gameInfo.setGameStatus(GameStatus.PROCESS.getType());
+			gameInfo.setGameStatus(GameStatus.FINISH.getType());
 			PlayerEngine.setGameEnd(gameInfo.getPlayerMap());
 		}
 	}

@@ -26,6 +26,9 @@ public class ResultConvertor {
         if(gameInfo == null || userDO == null) {
             return null;
         }
+        if(GameEngine.checkGameStatus(gameInfo) == -1) {
+            return null;
+        }
         gameData.gameDO = gameInfo.getGameDO();
         gameData.playerVOList = new ArrayList<>();
         Player myPlayer = null;

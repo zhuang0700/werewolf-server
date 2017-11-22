@@ -28,6 +28,8 @@ public class GameEngine {
                 check(!CollectionUtils.isEmpty(gameInfo.getPlayerMap()));
                 check(!CollectionUtils.isEmpty(gameInfo.getRoleList()));
             } catch (Exception e) {
+                PlayerEngine.setGameEnd(gameInfo.getPlayerMap());
+                gameInfo.setGameStatus(GameStatus.FINISH.getType());
                 return -1;
             }
             return gameInfo.getGameStatus();
